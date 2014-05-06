@@ -1,0 +1,627 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"macro",
+				"macro_rules	macro_rules! … ( … )"
+			],
+			[
+				"post",
+				"postid"
+			],
+			[
+				"test",
+				"test_variable"
+			],
+			[
+				"re",
+				"request"
+			],
+			[
+				"test_",
+				"test_mustache"
+			],
+			[
+				"Route",
+				"RouteInfo"
+			],
+			[
+				"Rou",
+				"RouteInfo"
+			],
+			[
+				"oxid",
+				"oxidize_new"
+			],
+			[
+				"R",
+				"Router"
+			],
+			[
+				"Res",
+				"Response"
+			],
+			[
+				"Respo",
+				"Response"
+			],
+			[
+				"bas",
+				"base_path"
+			],
+			[
+				"mustac",
+				"mustache_render"
+			],
+			[
+				"TEMP",
+				"TEMPLATE_DIR"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"TEMPLATE",
+				"TEMPLATE_PATH"
+			],
+			[
+				"absolu",
+				"absolute_path"
+			],
+			[
+				"fle",
+				"file_name"
+			],
+			[
+				"hell",
+				"hello_files"
+			],
+			[
+				"rust",
+				"rust-mustache"
+			],
+			[
+				"Re",
+				"Request"
+			],
+			[
+				"data",
+				"database"
+			],
+			[
+				"fin",
+				"find_equiv"
+			],
+			[
+				"Tri",
+				"TrieNodeDetails"
+			],
+			[
+				"Tr",
+				"TrieNode"
+			],
+			[
+				"find",
+				"find_or_insert"
+			],
+			[
+				"Trie",
+				"TrieNode"
+			],
+			[
+				"chi",
+				"children"
+			],
+			[
+				"current",
+				"current_node"
+			],
+			[
+				"and",
+				"and_then"
+			],
+			[
+				"rever",
+				"reverse_routes"
+			],
+			[
+				"conver",
+				"convert_simple_regex"
+			],
+			[
+				"Me",
+				"MediaTypeTextHTML"
+			],
+			[
+				"write",
+				"write_content_auto"
+			],
+			[
+				"Str",
+				"StructC"
+			],
+			[
+				"str",
+				"struct	struct … { … }"
+			],
+			[
+				"Regex",
+				"RegexRoute"
+			],
+			[
+				"to",
+				"to_owned"
+			],
+			[
+				"isn",
+				"is_not_null"
+			],
+			[
+				"my",
+				"my_request"
+			],
+			[
+				"reg",
+				"regex_result"
+			],
+			[
+				"Response",
+				"ResponseWriter"
+			],
+			[
+				"Resp",
+				"ResponseWriter"
+			],
+			[
+				"de",
+				"deriving"
+			],
+			[
+				"co",
+				"compile_routes"
+			],
+			[
+				"comp",
+				"compile_routes"
+			],
+			[
+				"rend",
+				"render_str"
+			],
+			[
+				"Hash",
+				"HashMap"
+			],
+			[
+				"ser",
+				"serialize"
+			],
+			[
+				"get",
+				"get_reverse_route_str"
+			],
+			[
+				"reverse",
+				"reverse_routes_str"
+			],
+			[
+				"revere",
+				"reverse_routes_str"
+			],
+			[
+				"get_c",
+				"get_compiled_regex"
+			],
+			[
+				"com",
+				"compiled_routes"
+			],
+			[
+				"compiled",
+				"compiled_routes"
+			],
+			[
+				"he",
+				"hello_world"
+			],
+			[
+				"request",
+				"request_uri"
+			],
+			[
+				"from",
+				"from_str"
+			],
+			[
+				"compil",
+				"compiled_routes"
+			],
+			[
+				"Ex",
+				"ExtraOption"
+			],
+			[
+				"opt",
+				"opt_m2"
+			],
+			[
+				"ass",
+				"assert"
+			],
+			[
+				"mar",
+				"mark_c_str"
+			],
+			[
+				"is",
+				"is_not_null"
+			],
+			[
+				"c_",
+				"c_buffer"
+			],
+			[
+				"rege",
+				"regex_c_str"
+			],
+			[
+				"O",
+				"OVECCOUNT"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "source/entities/Character.hx",
+			"settings":
+			{
+				"buffer_size": 5879,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "source/Main.hx",
+			"settings":
+			{
+				"buffer_size": 1954,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 117.0,
+		"selected_items":
+		[
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/jrowe7/slf/flixel-demos/Platformers/FlipRotationAnimationTiles/source/Main.hx",
+		"/home/jrowe7/slf/flixel-demos/Platformers/FlipRotationAnimationTiles/source/map/TileAnims.hx",
+		"/home/jrowe7/slf/oxidize/src/route/matchrouter.rs",
+		"/home/jrowe7/slf/oxidize/src/oxidize_new.rs",
+		"/home/jrowe7/slf/oxidize/src/app.rs",
+		"/home/jrowe7/slf/oxidize/src/request.rs",
+		"/home/jrowe7/slf/oxidize/example/hello_world/index.rs",
+		"/home/jrowe7/slf/oxidize/example/hello_world_old/templates/500.html",
+		"/home/jrowe7/slf/oxidize/src/middleware/mod.rs",
+		"/home/jrowe7/slf/oxidize/src/conf.rs",
+		"/home/jrowe7/slf/oxidize/src/route/trierouter.rs",
+		"/home/jrowe7/slf/oxidize/src/route/regexrouter.rs",
+		"/home/jrowe7/slf/oxidize/tmp/matchblockheroes.rs",
+		"/home/jrowe7/slf/oxidize/tmp/shared_ptr.rs",
+		"/home/jrowe7/slf/oxidize/tmp/arc.rs",
+		"/home/jrowe7/slf/oxidize/src/oxidize",
+		"/home/jrowe7/slf/oxidize/src/oxidize.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/server/mod.rs",
+		"/home/jrowe7/slf/oxidize/tmp/transmute_vec.rs",
+		"/home/jrowe7/slf/oxidize/tmp/comp.rs",
+		"/home/jrowe7/slf/oxidize/tmp/pattern_match.rs",
+		"/home/jrowe7/slf/oxidize/tmp/better_plan.rs",
+		"/home/jrowe7/slf/oxidize/tmp/bad_idea.rs",
+		"/home/jrowe7/slf/oxidize/tmp/bad_idea.c",
+		"/home/jrowe7/slf/oxidize/example/hello_world/renderer.rs",
+		"/home/jrowe7/slf/oxidize/example/hello_world/Makefile",
+		"/home/jrowe7/slf/oxidize/src/renderer.rs",
+		"/home/jrowe7/slf/oxidize/tmp/tuple.rs",
+		"/home/jrowe7/slf/oxidize/CMakeLists.txt",
+		"/home/jrowe7/slf/oxidize/Makefile",
+		"/home/jrowe7/slf/oxidize/.gitmodules",
+		"/home/jrowe7/slf/oxidize/src/lib.rs",
+		"/home/jrowe7/slf/oxidize/src/route/mod.rs",
+		"/home/jrowe7/slf/oxidize/tmp/struct.rs",
+		"/home/jrowe7/slf/oxidize/src/route/trierouter_tmp.rs",
+		"/home/jrowe7/slf/oxidize/tmp/recursive.rs",
+		"/home/jrowe7/slf/oxidize/tmp/extends2.rs",
+		"/home/jrowe7/slf/oxidize/tmp/extends.rs",
+		"/home/jrowe7/slf/oxidize/example/hello_world/templates/500.html",
+		"/home/jrowe7/slf/oxidize/src/route.rs",
+		"/home/jrowe7/slf/oxidize/tmp/test.rs",
+		"/home/jrowe7/slf/oxidize/rust-pcre/src/pcre/mod.rs",
+		"/home/jrowe7/slf/oxidize/rust-pcre/src/pcre/test.rs",
+		"/home/jrowe7/slf/oxidize/tmp/rwarc.rs",
+		"/home/jrowe7/slf/oxidize/example/hello_world/templates/index.html",
+		"/home/jrowe7/slf/oxidize/build/examples/hello_world/templates/mustache.html",
+		"/home/jrowe7/slf/oxidize/rust-pcre/Makefile",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/method.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/buffer.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/server/request.rs",
+		"/home/jrowe7/slf/oxidize/rust-mustache/src/mustache/mustache.rs",
+		"/home/jrowe7/slf/oxidize/rust-mustache/src/mustache/test.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/test_utils.rs",
+		"/home/jrowe7/slf/oxidize/README.md",
+		"/home/jrowe7/slf/oxidize/rust-mustache/src/mustache/encoder.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/mod.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/host.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/etag.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/content_type.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/headers/connection.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/codegen/status.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/lib.rs",
+		"/home/jrowe7/slf/oxidize/rust-http/src/http/rfc2616.rs",
+		"/home/jrowe7/slf/oxidize/tmp/test_pcre.rs",
+		"/home/jrowe7/slf/oxidize/rust-pcre/src/pcre/detail/mod.rs",
+		"/home/jrowe7/slf/oxidize/rust-pcre/AUTHORS",
+		"/home/jrowe7/slf/rust-pcre/pkg.rs",
+		"/home/jrowe7/slf/rust-pcre/src/pcre/mod.rs",
+		"/home/jrowe7/slf/oxidize/src/pcre.rs",
+		"/home/jrowe7/slf/pcre-8.32/pcre.h",
+		"/home/jrowe7/slf/pcre-8.32/pcredemo.c",
+		"/home/jrowe7/slf/oxidize/src/test_pcre.rs",
+		"/home/jrowe7/slf/rust-pcre/src/pcre/detail/mod.rs",
+		"/home/jrowe7/slf/rust-pcre/src/pcredemo/main.rs",
+		"/home/jrowe7/slf/rust-bindgen/pcre.rs",
+		"/home/jrowe7/dev/www/public/admin/.htaccess",
+		"/home/jrowe7/dev/www/public/.htaccess",
+		"/home/jrowe7/dev/www/public/nginx.conf",
+		"/home/jrowe7/slf/rust-mustache/src/mustache/lib.rs",
+		"/home/jrowe7/dev/www/includes/classes/Database.class.php",
+		"/home/jrowe7/slf/oxidize/src/views.rs",
+		"/home/jrowe7/slf/rust-http/src/examples/client/main.rs"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"acceleration",
+			"seperate",
+			"//!",
+			"OxidizeTrieNode",
+			"OxidizeTrie",
+			"TODO",
+			"Mat",
+			"Ser",
+			"Sta",
+			"status",
+			"Sta",
+			"!",
+			"render_str",
+			"str",
+			"map",
+			"content_coding",
+			"transfer_coding",
+			"push_parameters",
+			"RenderCon",
+			"Option",
+			"extra",
+			"static",
+			"#define",
+			"persons_select_html",
+			"rdr",
+			"compileco"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"///",
+			"TrieNodeDetails",
+			"TrieRouter",
+			"pub static",
+			"static",
+			"reader"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "source/entities/Character.hx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5879,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5879,
+								5879
+							]
+						],
+						"settings":
+						{
+							"haxe-build-id": 0,
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 3428.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "source/Main.hx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1954,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								761,
+								761
+							]
+						],
+						"settings":
+						{
+							"haxe-build-id": 0,
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "CrystalLink.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 234.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
