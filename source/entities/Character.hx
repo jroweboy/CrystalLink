@@ -10,6 +10,7 @@ import flixel.FlxG;
 import haxe.io.Path;
 import haxe.Json;
 import openfl.Assets;
+import helper.Input;
 
 /**
  * ...
@@ -51,7 +52,7 @@ class Character extends FlxExtendedSprite {
 	{
 		if (controllable) {
 			acceleration.set(0, 0);
-			if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
+			if (Input.checkAction(Actions.MOVE_RIGHT)) {
 				if (FlxG.keys.anyPressed(["UP", "DOWN", "W", "S"])) {
 					maxVelocity.set(diaganolMaxVelocity.x, diaganolMaxVelocity.y);
 				} else {
