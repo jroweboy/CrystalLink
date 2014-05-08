@@ -1,13 +1,16 @@
 package helper;
 
 import flixel.FlxG;
+import flixel.util.FlxSave;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKeyList;
 /**
  * A generic handler for several kinds of input. 
  * 
  * @author James Rowe
  */
 enum Actions {
-	JUMP;
+	SPELL;
 	ATTACK;
 	SWITCH_LEFT;
 	SWITCH_RIGHT;
@@ -19,31 +22,50 @@ enum Actions {
 	
 class Input
 {
-	private static var move_left : Array<String>;
-	private static var move_right : Array<String>;
-	private static var move_up : Array<String>;
-	private static var move_down : Array<String>;
+	private static var move_left : Int;
+	private static var move_right : Int;
+	private static var move_up : Int;
+	private static var move_down : Int;
+	private static var attack : Int;
+	private static var spell : Int;
+	private static var switch_left : Int;
+	private static var switch_right : Int;
+	private static var justPressed : FlxKeyList;
+	private static var pressed : FlxKeyList;
+	
+	public static function init(config: FlxSave) {
+		move_left = (config.data.left_key) ? config.data.left_key : FlxKey.A;
+		move_right = (config.data.right_key) ? config.data.right_key : FlxKey.D;
+		move_up = (config.data.up_key) ? config.data.up_key : FlxKey.W;
+		move_down = (config.data.down_key) ? config.data.down_key : FlxKey.S;
+		attack = (config.data.attack) ? config.data.attack : FlxKey.K;
+		spell = (config.data.spell) ? config.data.spell : FlxKey.L;
+		switch_left = (config.data.switch_left) ? config.data.switch_left : FlxKey.U;
+		switch_right = (config.data.switch_right) ? config.data.switch_right : FlxKey.I;
+		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
+		pressed = new FlxKeyList(FlxKey.PRESSED);
+	}
 	
 	// TODO: Make the keys be bound in a menu state instead of hardcoded
 	public static function checkAction(a : Actions) : Bool {
 		#if (web || desktop)
 		switch (a) {
-			case JUMP:
-				if (FlxG.keys.justPressed.Z) return true;
+			case SPELL:
+				if (justPressed.check(spell)) return true;
 			case ATTACK:
-				if (FlxG.keys.justPressed.X) return true;
+				if (justPressed.check(attack)) return true;
 			case SWITCH_LEFT:
-				if (FlxG.keys.justPressed.A) return true;
+				if (justPressed.check(switch_left)) return true;
 			case SWITCH_RIGHT:
-				if (FlxG.keys.justPressed.S) return true;
+				if (justPressed.check(switch_right)) return true;
 			case MOVE_UP:
-				if (FlxG.keys.pressed.UP) return true;
+				if (pressed.check(move_up)) return true;
 			case MOVE_DOWN:
-				if (FlxG.keys.pressed.DOWN) return true;
+				if (pressed.check(move_down)) return true;
 			case MOVE_LEFT:
-				if (FlxG.keys.pressed.LEFT) return true;
+				if (pressed.check(move_left)) return true;
 			case MOVE_RIGHT:
-				if (FlxG.keys.pressed.RIGHT) return true;
+				if (pressed.check(move_right)) return true;
 		}
 		#end
 

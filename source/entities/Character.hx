@@ -53,15 +53,15 @@ class Character extends FlxExtendedSprite {
 		if (controllable) {
 			acceleration.set(0, 0);
 			if (Input.checkAction(Actions.MOVE_RIGHT)) {
-				if (FlxG.keys.anyPressed(["UP", "DOWN", "W", "S"])) {
+				if (Input.checkAction(Actions.MOVE_UP) || Input.checkAction(Actions.MOVE_DOWN)) {
 					maxVelocity.set(diaganolMaxVelocity.x, diaganolMaxVelocity.y);
 				} else {
 					maxVelocity.set(initialMaxVelocity.x, initialMaxVelocity.y);
 				}
 				acceleration.x = drag.x;
 				facing = FlxObject.RIGHT;
-			} else if (FlxG.keys.anyPressed(["LEFT", "A"])) {
-				if (FlxG.keys.anyPressed(["UP", "DOWN", "W", "S"])) {
+			} else if (Input.checkAction(Actions.MOVE_LEFT)) {
+				if (Input.checkAction(Actions.MOVE_UP) || Input.checkAction(Actions.MOVE_DOWN)) {
 					maxVelocity.set(diaganolMaxVelocity.x, diaganolMaxVelocity.y);
 				} else {
 					maxVelocity.set(initialMaxVelocity.x, initialMaxVelocity.y);
@@ -70,16 +70,16 @@ class Character extends FlxExtendedSprite {
 				facing = FlxObject.LEFT;
 			}
 			
-			if (FlxG.keys.anyPressed(["UP", "W"])) {
-				if (FlxG.keys.anyPressed(["LEFT", "RIGHT", "A", "D"])) {
+			if (Input.checkAction(Actions.MOVE_UP)) {
+				if (Input.checkAction(Actions.MOVE_LEFT) || Input.checkAction(Actions.MOVE_RIGHT)) {
 					maxVelocity.set(diaganolMaxVelocity.x, diaganolMaxVelocity.y);
 				} else {
 					maxVelocity.set(initialMaxVelocity.x, initialMaxVelocity.y);
 				}
 				acceleration.y = -drag.y;
 				facing = FlxObject.UP;
-			} else if (FlxG.keys.anyPressed(["DOWN", "S"])) {
-				if (FlxG.keys.anyPressed(["LEFT", "RIGHT", "A", "D"])) {
+			} else if (Input.checkAction(Actions.MOVE_DOWN)) {
+				if (Input.checkAction(Actions.MOVE_LEFT) || Input.checkAction(Actions.MOVE_RIGHT)) {
 					maxVelocity.set(diaganolMaxVelocity.x, diaganolMaxVelocity.y);
 				} else {
 					maxVelocity.set(initialMaxVelocity.x, initialMaxVelocity.y);

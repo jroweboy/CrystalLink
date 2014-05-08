@@ -7,6 +7,8 @@ import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
+import flixel.util.FlxSave;
+import helper.Input;
 
 class Main extends Sprite 
 {
@@ -51,6 +53,9 @@ class Main extends Sprite
 	
 	private function setupGame():Void
 	{
+		var gameSave = new FlxSave();
+		gameSave.bind("GlobalConfig");
+		Input.init(gameSave);
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
