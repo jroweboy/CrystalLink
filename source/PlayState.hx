@@ -22,7 +22,7 @@ class PlayState extends FlxState
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
-		level = new Level("maps/test2.tmx", "maps/test2.tanim");
+		level = new Level("tileset/outdoors.tmx", null);
 		
 		add(level.backgroundGroup);
 		add(level.characterGroup);

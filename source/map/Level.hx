@@ -23,7 +23,7 @@ import flixel.util.FlxSort;
  */
 class Level extends TiledMap
 {
-	private inline static var PATH_TILESETS = "maps/";
+	private inline static var PATH_TILESETS = "tileset/";
 	
 	public var backgroundGroup:FlxTypedGroup<FlxTilemapExt>;
 	public var foregroundGroup:FlxTypedGroup<FlxTilemapExt>;
@@ -53,17 +53,18 @@ class Level extends TiledMap
 		var layer:TiledLayer;
 		
 		// Prepare the tile animations
-		var animations = TileAnims.getAnimations(animFile);
+		//var animations = TileAnims.getAnimations(animFile);
 		
 		for (layer in layers) {
 			if (layer.properties.contains("tileset")) {
 				tileset = this.getTileSet(layer.properties.get("tileset"));
 			} else {
-				throw "Each layer needs a tileset property with the tileset name";
+				throw "Each layer needs a tileset property with the tileset name"; 
 			}
 			
 			if (tileset == null) {
-				throw "The tileset is null";
+				//throw "The tileset is null";
+				continue;
 			}
 			
 			tilemap = new FlxTilemapExt();
@@ -82,29 +83,29 @@ class Level extends TiledMap
 			
 			var specialTiles:Array<FlxTileSpecial> = new Array<FlxTileSpecial>();
 			var tile:TiledTile;
-			var animData;
+			//var animData;
 			var specialTile:FlxTileSpecial;
 			// For each tile in the layer
 			for (i in 0...layer.tiles.length) { 
 				tile = layer.tiles[i];
-				if (tile != null && isSpecialTile(tile, animations)) {
-					specialTile = new FlxTileSpecial(tile.tilesetID, tile.isFlipHorizontally, tile.isFlipVertically, tile.rotate);
-					// add animations if exists
-					if (animations.exists(tile.tilesetID)) {
-						// Right now, a special tile only can have one animation.
-						animData = animations.get(tile.tilesetID)[0];
-						// add some speed randomization to the animation
-						var randomize:Float = FlxRandom.floatRanged( -animData.randomizeSpeed, animData.randomizeSpeed);
-						var speed:Float = animData.speed + randomize;
-						
-						specialTile.addAnimation(animData.frames, speed, animData.framesData);
-					}
-					specialTiles[i] = specialTile;
-				} else {
+				//if (tile != null && isSpecialTile(tile, animations)) {
+					//specialTile = new FlxTileSpecial(tile.tilesetID, tile.isFlipHorizontally, tile.isFlipVertically, tile.rotate);
+					//// add animations if exists
+					//if (animations.exists(tile.tilesetID)) {
+						//// Right now, a special tile only can have one animation.
+						//animData = animations.get(tile.tilesetID)[0];
+						//// add some speed randomization to the animation
+						//var randomize:Float = FlxRandom.floatRanged( -animData.randomizeSpeed, animData.randomizeSpeed);
+						//var speed:Float = animData.speed + randomize;
+						//
+						//specialTile.addAnimation(animData.frames, speed, animData.framesData);
+					//}
+					//specialTiles[i] = specialTile;
+				//} else {
 					specialTiles[i] = null;
-				}
+				//}
 			}
-			// set the special tiles (flipped, rotated and/or animated tiles)
+			//// set the special tiles (flipped, rotated and/or animated tiles)
 			tilemap.setSpecialTiles(specialTiles);
 			// set the alpha of the layer
 			tilemap.alpha = layer.opacity;

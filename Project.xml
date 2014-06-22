@@ -81,4 +81,5 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<assets path="assets/images" rename ="images" />
 	<assets path="assets/maps" rename ="maps" />
+	<assets path="assets/tileset" rename ="tileset" />
 </project>
