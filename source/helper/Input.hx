@@ -38,8 +38,8 @@ class Input
 		move_right = (config.data.right_key) ? config.data.right_key : FlxKey.D;
 		move_up = (config.data.up_key) ? config.data.up_key : FlxKey.W;
 		move_down = (config.data.down_key) ? config.data.down_key : FlxKey.S;
-		attack = (config.data.attack) ? config.data.attack : FlxKey.K;
-		spell = (config.data.spell) ? config.data.spell : FlxKey.L;
+		attack = (config.data.attack) ? config.data.attack : FlxKey.J;
+		spell = (config.data.spell) ? config.data.spell : FlxKey.K;
 		switch_left = (config.data.switch_left) ? config.data.switch_left : FlxKey.U;
 		switch_right = (config.data.switch_right) ? config.data.switch_right : FlxKey.I;
 		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
