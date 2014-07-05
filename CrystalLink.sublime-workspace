@@ -279,7 +279,7 @@
 			"file": "source/entities/Character.hx",
 			"settings":
 			{
-				"buffer_size": 5879,
+				"buffer_size": 5901,
 				"line_ending": "Windows"
 			}
 		},
@@ -332,12 +332,14 @@
 	},
 	"file_history":
 	[
+		"/home/jrowe7/slf/oxidize/src/request.rs",
+		"/home/jrowe7/Downloads/graph(1).svg",
+		"/home/jrowe7/Downloads/graph.svg",
 		"/home/jrowe7/slf/flixel-demos/Platformers/FlipRotationAnimationTiles/source/Main.hx",
 		"/home/jrowe7/slf/flixel-demos/Platformers/FlipRotationAnimationTiles/source/map/TileAnims.hx",
 		"/home/jrowe7/slf/oxidize/src/route/matchrouter.rs",
 		"/home/jrowe7/slf/oxidize/src/oxidize_new.rs",
 		"/home/jrowe7/slf/oxidize/src/app.rs",
-		"/home/jrowe7/slf/oxidize/src/request.rs",
 		"/home/jrowe7/slf/oxidize/example/hello_world/index.rs",
 		"/home/jrowe7/slf/oxidize/example/hello_world_old/templates/500.html",
 		"/home/jrowe7/slf/oxidize/src/middleware/mod.rs",
@@ -490,15 +492,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5879,
+						"buffer_size": 5901,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5879,
-								5879
+								0,
+								0
 							]
 						],
 						"settings":
@@ -507,7 +509,7 @@
 							"syntax": "Packages/Haxe/Haxe.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 3428.0,
 						"zoom_level": 1.0
 					},
@@ -527,8 +529,8 @@
 						"selection":
 						[
 							[
-								761,
-								761
+								1028,
+								1028
 							]
 						],
 						"settings":
