@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="25" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="terrain" tilewidth="32" tileheight="32">
+  <image source="mountain_landscape_25.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="bg0_grass" width="50" height="25">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJyVltttxDAMBNmh1YHYfxVJgBgYj5e65MM4WCZX5C4ft6qqv5/9/Vx6fs7X79OwW7BZwZ/2SxjE3sBbwjfeqmdMG3gbdlfA2PXOxzaMp+sZ/65nbD1gXwHfXJrjq975nr4xhvuddzMW49zfnNv1D0z6n+xubPJA7viN8d7vSSf6NmypDXPewjOfLRzXlb+lOmbNOcYlG8d2yXd/wOE5dXBv8Nw9MdXTVIdLtuTG92/4L723zj7Vm7kiljkktnNyfOSF2joW16xjs79nWKrbFXxT7NaCOPfjeHie6r/rybM1Os2xv+qZOPb89oxNmJNvyjnlm2be5Ld1D/N2jKl+zZdnpeMn3jQDT7lMu4t6tPzS/XxPeXnPuQ+sUdc75g4YaWamvLqyBq7TrqcO5tC8JP5T391+3h/Wxz1vjc2Da52xW+OkU+rDVJPux66nPunek63v9i50nUz71jZ/mQ0tnFQ/xr7fXQvkPc1r1zSxaLvrzeGqd8zk57Q/ee65TK6Ix/iN6z3mXWqOT/Pf9eH+2wHL89vxM/e0r1Ju1jHxl+rEmnrGWFvjmwPPX++MpN80c7ve3KYZN+2BqT8m3vxfw3r4fu8982ROqIl37MQVubZO/HVfpvmauHUte++0vns+f6oh7wn3qXPxvk994Rj8P8F2xJt2rfv1foybdlfXrClztZ/nDrVw7n5cq+k/SFeug4Tnfe8ZlfRKeflu7w33gzWYdmTL1zzQzrHZt3V++6TZ4N1lv9NMdC951n/SnbnQfg94aZc4vlSTU/2neew40l6c/nP0wcZ7j/x+ASNnqs4=
+  </data>
+ </layer>
+ <layer name="bg1_path" width="50" height="25" opacity="0.99">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJy9lktOQkEQRWuOGOaAkMgMf4kMBV2AuAJ1C7oDiYyMA42M/G8AXIHuza7QN17KbuB9KzmRB0jqpKqrWqT42HHcOJqeU0fbcUbvga3Ib2wbOvS3U1zq/6Ihix41CXtcOzYD/3/oCXn0Cs6dw3q0JOwBl6qh5/OGT48cyvTg3lKPofeoGEJeqIN16NBzLKaOr8hnL0s+W8eFPepExbwGnD87ZPF4c8xSemg0jEeXqJvX7NEzoKfSekxz8gidc3aCg/rwnLJOeH6P8OB4jLyfZz1C56Ep4b5irMcsJUV7cF/drmDs+EnIp/fQWn1k8Fg2d7ke6vMUgT2SxncGlw3HlSzf51wP1ERznvh82WGcwSOtCxyOHPuyuq94bsGDQf4gbazjorljH7ODzqoTx6XPeeTY9WBX8jnnnCeyWA/UKUtYFzvb7n3ufQ/qwA72boj7C/cV52z7Kg8P62JRD+wKzb8t8/N94BiQh70boq9sPZB/ER5wCc029Th3XBDH3inkUjW/i3mFnHG/LcojFugRvv+pV8wFsAfmleaNncfnvEyPuskTLjXjwt/jc867Ql/fybzW8JgU7IH7Lfc6gEubXDBnLXb/PTteJZ+5m9TF5sYu3GPdAHZ3c22z7MGk0QjkZuuCOdZPyKBkj5Es7jquDZ8XpS3zGg39c0v+5jbeb8nf3b8sD+2tPXq29UFdLlKg+7QsDxvqFatNDJ5XuG9lue/mHaGzEzvrjPX4BaOR0sw=
+  </data>
+ </layer>
+ <layer name="bg1" width="50" height="25">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzdlk1uwjAQhc0ZOAFH4Agl7CmFC1C4Qtkjtd1X6qJHgFMAB0CUPWIHlWABG/pDF+0bKZZGkZPYwcYWT/riJDbOJOM3WIhwNYzbChj4DMSSquDFdxAWRPl49B2EBVE+Xi/0rJHDuW9ADUQxdYfPcqkmuAMt0AZTUDacY5g/RLwZzsm1BhvwkTGmA+5BF/TAQoRXv47gE3wZ/Ib8cgnfP4C+xr2iovrlwvdJjz+BZ417RXUt/yekPJ8v2fkKbMHOXTiFpHoHWSu+wY+i/wR+XQZloLJIz4NOrdCpjS4l94lZaylvzcxEsdpoUzq+NlkzvvLC9yX1mCjR8nykeUTKV16S+5IxmLBras/NR96721ByXzIH7+yaWl5XZ3G7BwdFnL59kiVVXf2jQ0k93nftSpNuTDJXoebEJKZQc0Ey2XOEmgsS94b0PP/uDXCb0heSKB4Zo/Q8/+6yXqn6QtI/T/57mw==
+  </data>
+ </layer>
+ <layer name="bg2" width="50" height="25">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt1s9KAkEcwPF5Fa28a1ln07pX5r1SHyTfQH0Pe4PKrKuW1rXMf1B0KCuhIPrKujQMuyyazC44X/jgnxmW346gCmEVQhhLWMaxh4K0dwUREYyiiGEVayh6KEl741jXP7JjCWwiiRQqOMEFNsTf7GVpzd67hW39Izu2g13sIY1TnOEc1YnxPdWkNXvvPjIO13xRHnV0gEMcIYs6GrjGjbDOvokW7vEg7c0hL13LbW6d96PWxqOwzr6Dro+z/KdXvAnr7Id499jvdeZO65e4mn60wHWLO7+HUJrl8+ihj8H8x9HaBz4x8nsQpSB+X03TE56l1378fsyjL3zjx2Xd7X2TKQjZ/1PV5yaTyWQyLWq/p6NL3Q==
+  </data>
+ </layer>
+ <layer name="bg3" width="50" height="25">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztzrERgCAQRFGa1g6kOOwAO4AOIHFLuODwGOe/mZ9stCkB+NKhTsO2u0tlwwasVtQdfcJBVU/0CQdN9egTDoaa0ScAAADwOy/CYgsB
+  </data>
+ </layer>
+ <objectgroup name="player" width="50" height="25">
+  <object name="princess" type="player" x="768" y="224" width="32" height="32"/>
+ </objectgroup>
+ <layer name="fg0" width="50" height="25">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztls0KAjEMhIsXvepF3/9dVFDx5j/e9eIzODkEQuhPCu42q34wCJtV0k4zNYQ/v8JdfQ6NVN9DXY+FJbSC1q0bUZT2XNcP0BE6ddNOEzx5UuuH5Js86YoNtK18t0VecVacoQu0E7U9dIVuxt/S7376/hhDE2gWqXFWPKBn4vu12fiqfG5hBM2hRaJuOTOts3Ea4h5IrGeG8HpnEdIPnpEUrX3JIf3IzQgR86O09r4o5arsM+ZHae19UcpV3afXGantyeuM1PTk1QvC+p+D8OoFIWeDZz6277maB6gf7pFnXu4751Ws5gnqR2aWzmEvuWpF77t8Rujz5OX+Y963WnN/
+  </data>
+ </layer>
+ <layer name="fg1" width="50" height="25">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="objects"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAgLcBE4gAAQ==
+  </data>
+ </layer>
+ <layer name="fg2" width="50" height="25">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="objects"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAgLcBE4gAAQ==
+  </data>
+ </layer>
+ <objectgroup name="collision" width="50" height="25">
+  <object x="608" y="352" width="64" height="64"/>
+  <object x="96" y="128" width="96" height="32"/>
+  <object x="256" y="128" width="128" height="64"/>
+  <object x="288" y="192" width="96" height="32"/>
+  <object x="384" y="128" width="32" height="32"/>
+  <object x="480" y="128" width="96" height="32"/>
+  <object x="672" y="384" width="32" height="32"/>
+  <object x="864" y="384" width="32" height="32"/>
+  <object x="736" y="352" width="32" height="32"/>
+  <object x="800" y="352" width="32" height="32"/>
+  <object x="864" y="320" width="32" height="32"/>
+  <object x="896" y="256" width="32" height="32"/>
+  <object x="896" y="192" width="32" height="32"/>
+  <object x="864" y="128" width="32" height="32"/>
+  <object x="800" y="96" width="32" height="32"/>
+  <object x="736" y="96" width="32" height="32"/>
+  <object x="640" y="192" width="32" height="32"/>
+  <object x="640" y="256" width="32" height="32"/>
+  <object x="672" y="320" width="32" height="32"/>
+  <object name="tr1" x="1024" y="192" width="96" height="64"/>
+  <object name="tr2" x="1056" y="256" width="96" height="64"/>
+  <object name="tr3" x="1088" y="320" width="64" height="64"/>
+  <object x="80" y="0" width="511" height="127"/>
+  <object x="1332" y="0" width="266" height="191"/>
+  <object x="1344" y="192" width="256" height="32"/>
+  <object x="1344" y="544" width="96" height="32"/>
+  <object x="1504" y="544" width="96" height="32"/>
+  <object x="1456" y="225" width="156" height="126"/>
+  <object x="1440" y="352" width="160" height="32"/>
+  <object x="1376" y="384" width="224" height="32"/>
+  <object x="1330" y="416" width="269" height="127"/>
+  <object x="256" y="352" width="64" height="64"/>
+  <object x="288" y="416" width="96" height="64"/>
+  <object x="352" y="480" width="96" height="128"/>
+  <object x="384" y="608" width="96" height="64"/>
+  <object x="352" y="672" width="96" height="64"/>
+  <object x="128" y="352" width="32" height="32"/>
+  <object x="224" y="352" width="32" height="32"/>
+  <object x="64" y="384" width="64" height="32"/>
+  <object x="0" y="384" width="64" height="64"/>
+  <object x="0" y="448" width="32" height="128"/>
+  <object x="0" y="576" width="64" height="128"/>
+  <object x="0" y="704" width="29" height="91"/>
+  <object x="32" y="768" width="288" height="32"/>
+  <object x="96" y="736" width="160" height="32"/>
+  <object x="320" y="736" width="160" height="64"/>
+  <object x="96" y="512" width="64" height="32"/>
+  <object x="256" y="576" width="64" height="32"/>
+  <object x="512" y="544" width="64" height="32"/>
+  <object name="Amazing Awesome Thing of Awesomeness" x="175" y="589" width="33" height="48"/>
+  <object x="672" y="128" width="32" height="32"/>
+  <object x="693" y="143" width="22" height="43"/>
+  <object x="854" y="268" width="22" height="43"/>
+  <object x="694" y="268" width="22" height="43"/>
+  <object x="854" y="140" width="22" height="43"/>
+ </objectgroup>
+</map>

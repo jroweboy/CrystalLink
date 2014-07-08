@@ -1,22 +1,52 @@
-export
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Mac
+.DS_Store
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+#Java
+*.class
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# XCode
+*.moved-aside
+build/*
+*.xcworkspace
+*.mode1v3
+*.mode2v3
+*.pbxuser
+!default.xcworkspace
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+*.perspectivev3
+profile
+xcuserdata
+.idea/*
 
-# Executables
-*.exe
-*.out
-*.app
+#Cocoa pods
+*.old
+Pods/*
+
+#cocos2d-x
+libs/
+bin/
+obj/
+assets/
+gen/
+out/
+.classpath
+.project
+.cproject
+linux-build/
+cocos2d/
+publish/
+
+# backup files
+*.bak
+*.bak[0-9][0-9]
+*.orig
+*.orig[0-9][0-9]
+
+# source packages - anywhere
+*.tar.bz2
+*.tar.gz
+*.tar
+*.tgz
+*.gtgz
