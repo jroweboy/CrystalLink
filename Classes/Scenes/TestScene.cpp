@@ -36,7 +36,7 @@ bool TestScene::init()
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TileMap.caf");
     
-    _tileMap = TMXTiledMap::create("TileGameResources/TileMap.tmx");
+    _tileMap = TMXTiledMap::create("maps/AdventurerPath.tmx");
     _background = _tileMap->layerNamed("BackGround");
     _foreground = _tileMap->layerNamed("ForeGround");
     

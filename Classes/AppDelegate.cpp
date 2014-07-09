@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "RayTutorial/TestScene.h"
+#include "Scenes/TestScene.h"
 
 USING_NS_CC;
 
