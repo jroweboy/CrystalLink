@@ -6,18 +6,18 @@
 
 using namespace cocos2d;
 
-class HelloWorld : public cocos2d::CCLayer
+class TestScene: public cocos2d::CCLayer
 {
 private:
-    CCTMXTiledMap *_tileMap;
+    TMXTiledMap *_tileMap;
     
-    CCTMXLayer *_background;
+    TMXLayer *_background;
     
-    CCSprite *_player;
+    Sprite *_player;
     
-    CCTMXLayer *_meta;
+    TMXLayer *_meta;
     
-    CCTMXLayer *_foreground;
+    TMXLayer *_foreground;
     
     HudLayer *_hud;
     
@@ -28,25 +28,25 @@ public:
     virtual bool init();
     
     // there's no 'id' in cpp, so we recommend to return the class instance pointer
-    static CCScene* scene();
+    static Scene* createScene();
     
     // a selector callback
     void menuCloseCallback(CCObject* pSender);
     
     void setViewPointCenter(CCPoint position);
     
-    void registerWithTouchDispatcher();
+    //void registerWithTouchDispatcher();
     
     void setPlayerPosition(CCPoint position);
     
-    bool ccTouchBegan(CCTouch *touch, CCEvent *event);
+    //bool ccTouchBegan(CCTouch *touch, CCEvent *event);
     
-    void ccTouchEnded(CCTouch *touch, CCEvent *event);
+    //void ccTouchEnded(CCTouch *touch, CCEvent *event);
     
     CCPoint tileCoordForPosition(CCPoint position);
 
     // preprocessor macro for "static create()" constructor ( node() deprecated )
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(TestScene);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

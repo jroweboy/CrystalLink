@@ -50,3 +50,9 @@ publish/
 *.tar
 *.tgz
 *.gtgz
+
+#Visual Studio
+*.opensdf
+*.sdf
+*.suo
+Debug.win32/
