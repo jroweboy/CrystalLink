@@ -35,14 +35,17 @@ bool TestScene::init()
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("hit.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TileMap.caf");
-    
     _tileMap = TMXTiledMap::create("maps/AdventurerPath.tmx");
-    _background = _tileMap->layerNamed("BackGround");
-    _foreground = _tileMap->layerNamed("ForeGround");
+    _background.push_back(_tileMap->layerNamed("Ground"));
+    _background.push_back(_tileMap->layerNamed("GroundHelper"));
+	_background.push_back(_tileMap->layerNamed("Path"));
+	
     
     _meta = _tileMap->layerNamed("Meta");
-    _meta->setVisible(false);
-    
+	if (_meta) {
+	    _meta->setVisible(false);
+	}
+
     this->addChild(_tileMap);
     
     TMXObjectGroup *objectGroup = _tileMap->objectGroupNamed("Objects");

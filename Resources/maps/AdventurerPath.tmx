@@ -21,24 +21,27 @@
    eJzt2lFqg0AUhtFZQJutNAsorQtIs4K2W2j3/9QxIEiDxhCT+UnOgfumMPCBCt5SAAAAAAAAAO7Hrs5HnX3rg3CgRxY9suiR47XOS9EjwbhFV+e76WkemxY5tMgyvL+7okUC31NZ9MiiRxY9suiRRY8semTRI4seWfRY31Od54nZnLhXj/UMHX5mrvkt8330uNySDkvpcZm+xRodBnqcb/y8WbNFT48semTRI4seOcb/zrd13toe56GNWwyjSRv/d0q+6rwXTVqY2u/5LJrc2qldK01uZ+nemybXd+4OoiYAAAAAAAAAAAAAAAAAAAAAAABw7A9O2C0t
   </data>
  </layer>
- <layer name="Walls" width="100" height="100">
+ <layer name="Walls" width="100" height="100" visible="0">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
- <layer name="Items" width="100" height="100">
+ <layer name="Items" width="100" height="100" visible="0">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
- <layer name="Exit" width="100" height="100">
+ <layer name="Exit" width="100" height="100" visible="0">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
- <layer name="Meta" width="100" height="100">
+ <layer name="Meta" width="100" height="100" visible="0">
   <data encoding="base64" compression="zlib">
    eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
+ <objectgroup name="Objects" width="100" height="100">
+  <object name="SpawnPoint" x="1671" y="1431" width="27" height="26"/>
+ </objectgroup>
 </map>

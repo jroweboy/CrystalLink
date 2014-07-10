@@ -6,18 +6,18 @@
 
 using namespace cocos2d;
 
-class TestScene: public cocos2d::CCLayer
+class TestScene: public cocos2d::Layer
 {
 private:
     TMXTiledMap *_tileMap;
     
-    TMXLayer *_background;
+    std::vector<TMXLayer *> _background;
     
     Sprite *_player;
     
     TMXLayer *_meta;
     
-    TMXLayer *_foreground;
+    std::vector<TMXLayer *> _foreground;
     
     HudLayer *_hud;
     
