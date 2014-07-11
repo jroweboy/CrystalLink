@@ -1,7 +1,10 @@
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 
+#pragma warning(push, 0)
+#pragma GCC system_header
 #include "cocos2d.h"
+#pragma warning(pop)
 
 /**
 @brief    The cocos2d Application.

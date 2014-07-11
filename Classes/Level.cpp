@@ -37,26 +37,26 @@ bool Level::init()
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TileMap.caf");
     tileMap = TMXTiledMap::create("maps/AdventurerPath.tmx");
-    background.push_back(tileMap->layerNamed("Ground"));
-    background.push_back(tileMap->layerNamed("GroundHelper"));
-	background.push_back(tileMap->layerNamed("Path"));
+    background.push_back(tileMap->getLayer("Ground"));
+    background.push_back(tileMap->getLayer("GroundHelper"));
+	background.push_back(tileMap->getLayer("Path"));
 	
     
-    meta = tileMap->layerNamed("Meta");
+    meta = tileMap->getLayer("Meta");
 	if (meta) {
 	    meta->setVisible(false);
 	}
 
     this->addChild(tileMap);
     
-    TMXObjectGroup *objectGroup = tileMap->objectGroupNamed("Objects");
+    TMXObjectGroup *objectGroup = tileMap->getObjectGroup("Objects");
     
     if(objectGroup == NULL){
-        CCLog("tile map has no objects object layer");
+        log("tile map has no objects object layer");
         return false;
     }
     
-    auto spawnPoint = objectGroup->objectNamed("SpawnPoint");
+    auto spawnPoint = objectGroup->getObject("SpawnPoint");
     
     int x = spawnPoint["x"].asInt();
     int y = spawnPoint["y"].asInt();
@@ -69,23 +69,23 @@ bool Level::init()
     }
     this->setViewPointCenter(_player->getPosition());
     
-    this->setTouchEnabled(true);
+    // this->setTouchEnabled(true);
     
     return true;
 }
 
 void Level::setViewPointCenter(Point position)
 {
-    Size winSize = Director::sharedDirector()->getWinSize();
+    Size winSize = Director::getInstance()->getWinSize();
     
     int x = MAX(position.x, winSize.width/2);
     int y = MAX(position.y, winSize.height/2);
     x = MIN(x, (tileMap->getMapSize().width * this->tileMap->getTileSize().width) - winSize.width / 2);
     y = MIN(y, (tileMap->getMapSize().height * tileMap->getTileSize().height) - winSize.height/2);
-    Point actualPosition = ccp(x, y);
+    Point actualPosition = Vec2(x, y);
     
-    Point centerOfView = ccp(winSize.width/2, winSize.height/2);
-    Point viewPoint = ccpSub(centerOfView, actualPosition);
+    Point centerOfView = Vec2(winSize.width/2, winSize.height/2);
+    Point viewPoint = centerOfView - actualPosition;
     this->setPosition(viewPoint);
 }
 

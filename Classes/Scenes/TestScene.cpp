@@ -37,57 +37,57 @@ bool TestScene::init()
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TileMap.caf");
     _tileMap = TMXTiledMap::create("maps/AdventurerPath.tmx");
-    _background.push_back(_tileMap->layerNamed("Ground"));
-    _background.push_back(_tileMap->layerNamed("GroundHelper"));
-	_background.push_back(_tileMap->layerNamed("Path"));
+    _background.push_back(_tileMap->getLayer("Ground"));
+    _background.push_back(_tileMap->getLayer("GroundHelper"));
+	_background.push_back(_tileMap->getLayer("Path"));
 	
     
-    _meta = _tileMap->layerNamed("Meta");
+    _meta = _tileMap->getLayer("Meta");
 	if (_meta) {
 	    _meta->setVisible(false);
 	}
 
     this->addChild(_tileMap);
     
-    TMXObjectGroup *objectGroup = _tileMap->objectGroupNamed("Objects");
+    TMXObjectGroup *objectGroup = _tileMap->getObjectGroup("Objects");
     
     if(objectGroup == NULL){
-        CCLog("tile map has no objects object layer");
+        log("tile map has no objects object layer");
         return false;
     }
     
-    auto spawnPoint = objectGroup->objectNamed("SpawnPoint");
+    auto spawnPoint = objectGroup->getObject("SpawnPoint");
     
     int x = spawnPoint["x"].asInt();
     int y = spawnPoint["y"].asInt();
     
     _player = Sprite::create("TileGameResources/Player.png");
-    _player->setPosition(ccp(x,y));
+    _player->setPosition(Vec2(x,y));
     
     this->addChild(_player);
     this->setViewPointCenter(_player->getPosition());
     
-    this->setTouchEnabled(true);
+    // this->setTouchEnabled(true);
     
     return true;
 }
 
 void TestScene::setViewPointCenter(Point position)
 {
-    Size winSize = Director::sharedDirector()->getWinSize();
+    Size winSize = Director::getInstance()->getWinSize();
     
     int x = MAX(position.x, winSize.width/2);
     int y = MAX(position.y, winSize.height/2);
     x = MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width) - winSize.width / 2);
     y = MIN(y, (_tileMap->getMapSize().height * _tileMap->getTileSize().height) - winSize.height/2);
-    Point actualPosition = ccp(x, y);
+    Point actualPosition = Vec2(x, y);
     
-    Point centerOfView = ccp(winSize.width/2, winSize.height/2);
-    Point viewPoint = ccpSub(centerOfView, actualPosition);
+    Point centerOfView = Vec2(winSize.width/2, winSize.height/2);
+    Point viewPoint = centerOfView - actualPosition;
     this->setPosition(viewPoint);
 }
 
-#pragma mark - handle touches
+// #pragma mark - handle touches
 
 //void TestScene::registerWithTouchDispatcher()
 //{
@@ -169,5 +169,5 @@ Point TestScene::tileCoordForPosition(Point position)
 {
     int x = position.x / _tileMap->getTileSize().width;
     int y = ((_tileMap->getMapSize().height * _tileMap->getTileSize().height) - position.y) / _tileMap->getTileSize().height;
-    return ccp(x, y);
+    return Vec2(x, y);
 }

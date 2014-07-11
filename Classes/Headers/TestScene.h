@@ -1,6 +1,7 @@
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 
+#pragma GCC system_header
 #include "cocos2d.h"
 #include "HudLayer.h"
 
@@ -31,7 +32,7 @@ public:
     static Scene* createScene();
     
     // a selector callback
-    void menuCloseCallback(Object* pSender);
+    // void menuCloseCallback(Ref* pSender);
     
     void setViewPointCenter(Point position);
     

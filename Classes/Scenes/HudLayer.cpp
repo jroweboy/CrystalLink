@@ -4,15 +4,19 @@ using namespace cocos2d;
 
 bool HudLayer::init()
 {
-    if (CCLayer::init()) {
-        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    if (Layer::init()) {
+        Size winSize = Director::getInstance()->getWinSize();
         
-        _label = new CCLabelTTF();
-        _label->initWithString("0", "Verdana-Bold", 18.0);
-        _label->setColor(ccc3(0,0,0));
+        _label = Label::createWithSystemFont("0", "Veranda", 18.0);
+        _label->setColor(Color3B(255,0,0));
         
         int margin = 10;
-        _label->setPosition(ccp(winSize.width - (_label->getContentSize().width/2) - margin, _label->getContentSize().height/2 + margin));
+        _label->setPosition(
+            Vec2(winSize.width - 
+                    (_label->getContentSize().width/2) - 
+                    margin, 
+                _label->getContentSize().height/2 + margin)
+        );
         this->addChild(_label);
     }
     
@@ -21,7 +25,5 @@ bool HudLayer::init()
 
 void HudLayer::numCollectedChanged(int numCollected)
 {
-    CCString *labelCollected = new CCString();
-    labelCollected->initWithFormat("%d",numCollected);
-    _label->setString(labelCollected->getCString());
+    _label->setString(StringUtils::toString(numCollected));
 }

@@ -1,24 +1,27 @@
 #ifndef __HUDLAYER_H__
 #define __HUDLAYER_H__
 
+#pragma warnings(push, 0)
+#pragma GCC system_header
 #include "cocos2d.h"
+#pragma warnings(pop)
 
 using namespace cocos2d;
 
 class HudLayer : public cocos2d::CCLayer
 {
 private:
-    CCLabelTTF *_label;
+    Label* _label;
     
 public:
     // Method 'init' in cocos2d-x returns bool, instead of 'id' in cocos2d-iphone (an object pointer)
     virtual bool init();
     
     // there's no 'id' in cpp, so we recommend to return the class instance pointer
-    static CCScene* scene();
+    static Scene* scene();
     
     // a selector callback
-    void menuCloseCallback(CCObject* pSender);
+    void menuCloseCallback(Ref* pSender);
     
     // preprocessor macro for "static create()" constructor ( node() deprecated )
     CREATE_FUNC(HudLayer);

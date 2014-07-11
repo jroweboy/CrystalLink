@@ -9,6 +9,11 @@ Player::Player()
     state     = State::STAND;
 }
 
+Player::Player(Direction d) 
+    : direction(d) {
+    state = State::STAND;
+}
+
 Player::~Player(void)
 {
     actionStateDefault->release();
@@ -23,29 +28,26 @@ bool Player::init(Layer *layer, b2World *world, std::string filename)
     Point origin = Director::getInstance()->getVisibleOrigin();
     
     // node and spite
-    batchNode = SpriteBatchNode::create(filename + ".pvr.ccz");
+    batchNode = SpriteBatchNode::create(filename + ".png");
     
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(filename + ".plist");
-    sprite = Sprite::createWithSpriteFrameName("Orc_move_right0001.png");
+    sprite = Sprite::createWithSpriteFrameName("soldier_"+this->direction+"_0.png");
     
     sprite->setPosition(Point(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
-    // animation for default state
-    animationDefault = Animation::create();
+    // TODO: Implement idle animations.
+    // For now we just return to the 0 frame and it'll look fine
     
-    for (int i = 1; i < 2; i++)
-    {
-        char szImageFileName[128] = {0};
-        sprintf(szImageFileName, "Orc_move_right00%02i.png", i);
-        animationDefault->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(szImageFileName));
-    }
+    // animationIdle = Animation::create();
+    // char szImageFileName[128] = {0};
+    // sprintf(szImageFileName, "Orc_move_right00%02i.png", i);
+    // animationIdle->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(szImageFileName));
+    // animationIdle->setDelayPerUnit(1.0 / 1);
+    // animationIdle->setRestoreOriginalFrame(true);
     
-    animationDefault->setDelayPerUnit(1.0 / 1);
-    animationDefault->setRestoreOriginalFrame(true);
-    
-    animateDefault = Animate::create(animationDefault);
-    actionStateDefault = RepeatForever::create(animateDefault);
-    actionStateDefault->retain();
+    // animateIdle = Animate::create(animationIdle);
+    // actionStateDefault = RepeatForever::create(animateIdle);
+    // actionStateDefault->retain();
 
     // animation for moving state
     animationMoving = Animation::create();

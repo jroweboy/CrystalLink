@@ -35,6 +35,7 @@ out/
 .project
 .cproject
 linux-build/
+cocos2d
 cocos2d/
 publish/
 
