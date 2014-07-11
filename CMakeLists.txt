@@ -15,6 +15,12 @@ else(DEBUG_MODE)
   set(CMAKE_BUILD_TYPE RELEASE)
 endif(DEBUG_MODE)
 
+set(CMAKE_C_FLAGS_DEBUG "-g -Wall -DCOCOS2D_DEBUG=1")
+set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=c99")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11")
+
 if (MSVC)
 	set(CMAKE_C_FLAGS_DEBUG "-DCOCOS2D_DEBUG=1")
 	set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
@@ -74,6 +80,13 @@ endif()
 set(COCOS2D_ROOT ${CMAKE_SOURCE_DIR}/cocos2d)
 if (WIN32)
 include_directories(
+  /usr/include
+  /usr/include/GLFW
+  /usr/local/include/GLFW
+  ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
+  ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
+  ${COCOS2D_ROOT}/external/lua/lua
+  ${COCOS2D_ROOT}/external/lua/tolua
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
   ${COCOS2D_ROOT}/cocos/audio/include
@@ -107,6 +120,7 @@ include_directories(
   ${COCOS2D_ROOT}/external/win32-specific/icon/include
   ${COCOS2D_ROOT}/external/win32-specific/zlib/include
   ${COCOS2D_ROOT}/external/xxhash
+  ${COCOS2D_ROOT}/external/xxtea
 )
 link_directories(
   /usr/local/lib
@@ -192,6 +206,9 @@ add_subdirectory(${COCOS2D_ROOT}/cocos)
 # extensions
 add_subdirectory(${COCOS2D_ROOT}/extensions)
 
+# xxtea library
+add_subdirectory(${COCOS2D_ROOT}/external/xxtea)
+
 ## Editor Support
 
 # spine
@@ -202,6 +219,16 @@ add_subdirectory(${COCOS2D_ROOT}/cocos/editor-support/cocosbuilder)
 
 # cocostudio
 add_subdirectory(${COCOS2D_ROOT}/cocos/editor-support/cocostudio)
+
+## Scripting
+# lua
+add_subdirectory(${COCOS2D_ROOT}/external/lua/lua)
+
+# tolua
+add_subdirectory(${COCOS2D_ROOT}/external/lua/tolua)
+
+# luabinding
+add_subdirectory(${COCOS2D_ROOT}/cocos/scripting/lua-bindings)
 
 if ( WIN32 )
 	# add the executable
@@ -223,12 +250,14 @@ set(FMOD_LIB "fmodex")
 endif()
 
 target_link_libraries(${APP_NAME}
+  luabinding
   spine
   cocostudio
   cocosbuilder
   extensions
   audio
   cocos2d
+  xxtea
   )
 
 set(APP_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
@@ -241,6 +270,7 @@ if ( WIN32 )
   pre_build(${APP_NAME}
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${APP_BIN_DIR}/Resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Levels ${APP_BIN_DIR}/Levels
     COMMAND ${CMAKE_COMMAND} -E copy ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll ${APP_BIN_DIR}/${CMAKE_BUILD_TYPE}
 	COMMAND ${CMAKE_COMMAND} -E copy ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll ${APP_BIN_DIR}/${CMAKE_BUILD_TYPE}
 	)
@@ -248,6 +278,7 @@ else()
   pre_build(${APP_NAME}
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${APP_BIN_DIR}/Resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Levels ${APP_BIN_DIR}/Levels
     )
 
 endif()
