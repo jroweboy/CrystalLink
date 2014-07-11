@@ -3,6 +3,7 @@
 
 using namespace cocos2d;
 
+//TODO convert this into a LUA file with most the work done in C++
 Scene* TestScene::createScene()
 {
     // 'scene' is an autorelease object

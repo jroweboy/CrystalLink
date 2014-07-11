@@ -6,14 +6,37 @@
 
 #define PTM_RATIO 32.0
 
+enum State {
+    STAND,
+    WALK,
+    SPRINT, // Maybe we can add this somehow?
+    FLY,
+}
+
+enum Direction {
+    LEFT,
+    LEFTUP,
+    UP,
+    UPRIGHT,
+    RIGHT,
+    RIGHTDOWN,
+    DOWN,
+    DOWNLEFT
+}
+
+enum Tag {
+    PLAYER,
+    NPC
+}
+
 class Entity
 {
 
 public:
 
-    static const int TAG_PLAYER = 1;
-    static const int TAG_GROUND = 2;
-    static const int TAG_WALL   = 3;
+    // static const int TAG_PLAYER = 1;
+    // static const int TAG_NPC = 2;
+    // static const int TAG_WALL   = 3;
 
     Entity();
     virtual ~Entity();

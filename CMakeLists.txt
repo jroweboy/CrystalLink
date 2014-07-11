@@ -83,6 +83,7 @@ include_directories(
   /usr/include
   /usr/include/GLFW
   /usr/local/include/GLFW
+  Classes/Headers
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
   ${COCOS2D_ROOT}/external/lua/lua
@@ -141,7 +142,10 @@ link_directories(
 
 elseif(UNIX) #assumed linux
 include_directories(
+  /usr/include
+  /usr/include/GLFW
   /usr/local/include/GLFW
+  Classes/Headers
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
   ${COCOS2D_ROOT}/cocos/audio/include

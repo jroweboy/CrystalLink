@@ -4,8 +4,8 @@ USING_NS_CC;
 
 Player::Player()
 {
-    direction = 2; // 1 = left, 2 = right
-    state     = 1;
+    direction = Direction.DOWN;
+    state     = State.STAND;
 }
 
 Player::~Player(void)
