@@ -11,23 +11,25 @@ enum State {
     WALK,
     SPRINT, // Maybe we can add this somehow?
     FLY,
-}
+};
 
 enum Direction {
     LEFT,
-    LEFTUP,
+    //LEFTUP,
     UP,
-    UPRIGHT,
+    //UPRIGHT,
     RIGHT,
-    RIGHTDOWN,
-    DOWN,
-    DOWNLEFT
-}
+    //RIGHTDOWN,
+    DOWN
+    //DOWNLEFT
+};
 
 enum Tag {
     PLAYER,
+    MONSTER,
+    BOSS,
     NPC
-}
+};
 
 class Entity
 {

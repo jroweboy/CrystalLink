@@ -31,19 +31,19 @@ public:
     static Scene* createScene();
     
     // a selector callback
-    void menuCloseCallback(CCObject* pSender);
+    void menuCloseCallback(Object* pSender);
     
-    void setViewPointCenter(CCPoint position);
+    void setViewPointCenter(Point position);
     
     //void registerWithTouchDispatcher();
     
-    void setPlayerPosition(CCPoint position);
+    void setPlayerPosition(Point position);
     
-    //bool ccTouchBegan(CCTouch *touch, CCEvent *event);
+    //bool ccTouchBegan(Touch *touch, Event *event);
     
-    //void ccTouchEnded(CCTouch *touch, CCEvent *event);
+    //void ccTouchEnded(Touch *touch, Event *event);
     
-    CCPoint tileCoordForPosition(CCPoint position);
+    Point tileCoordForPosition(Point position);
 
     // preprocessor macro for "static create()" constructor ( node() deprecated )
     CREATE_FUNC(TestScene);

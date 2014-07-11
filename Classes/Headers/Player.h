@@ -14,7 +14,7 @@ public:
 
     Player();
     virtual ~Player();
-    virtual bool init(cocos2d::Layer *layer, b2World *world);
+    virtual bool init(cocos2d::Layer *layer, b2World *world, std::string filename);
     void update(float dt);
     void updateVelocity(cocos2d::Point velocity);
     void move(cocos2d::Point velocity);

@@ -62,6 +62,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\dev\CrystalLink\Classes\Headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
@@ -134,16 +135,27 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\Entities\Player.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\Level.cpp" />
     <ClCompile Include="..\Classes\Scenes\HudLayer.cpp" />
     <ClCompile Include="..\Classes\Scenes\TestScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\Headers\AppDelegate.h" />
+    <ClInclude Include="..\Classes\Headers\ContactListener.h" />
+    <ClInclude Include="..\Classes\Headers\Entity.h" />
+    <ClInclude Include="..\Classes\Headers\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\Headers\HudLayer.h" />
+    <ClInclude Include="..\Classes\Headers\Player.h" />
+    <ClInclude Include="..\Classes\Headers\SneakyButton.h" />
+    <ClInclude Include="..\Classes\Headers\SneakyButtonSkinnedBase.h" />
+    <ClInclude Include="..\Classes\Headers\SneakyJoystick.h" />
+    <ClInclude Include="..\Classes\Headers\SneakyJoystickSkinnedBase.h" />
+    <ClInclude Include="..\Classes\Headers\TestScene.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
-    <ClInclude Include="..\Classes\Scenes\HudLayer.h" />
-    <ClInclude Include="..\Classes\Scenes\TestScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

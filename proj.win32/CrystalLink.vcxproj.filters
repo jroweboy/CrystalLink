@@ -13,6 +13,9 @@
     <Filter Include="Classes\Scenes">
       <UniqueIdentifier>{5ad6b410-ff3b-423b-aa29-17973a8584b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{c4459563-ff99-4296-8db0-0b03b8454554}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="..\Classes\Scenes\TestScene.cpp">
       <Filter>Classes\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Level.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entities\Player.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -41,11 +50,38 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>Classes\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Scenes\HudLayer.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\Headers\TestScene.h">
+      <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Scenes\TestScene.h">
-      <Filter>Classes\Scenes</Filter>
+    <ClInclude Include="..\Classes\Headers\AppDelegate.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\ContactListener.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\Entity.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\HelloWorldScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\HudLayer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\Player.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\SneakyButton.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\SneakyButtonSkinnedBase.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\SneakyJoystick.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\SneakyJoystickSkinnedBase.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
