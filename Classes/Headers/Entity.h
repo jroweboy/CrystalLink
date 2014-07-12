@@ -9,7 +9,7 @@
 
 // #define PTM_RATIO 32.0
 
-typedef STATE int;
+typedef int STATE;
 enum State {
     STAND,
     WALK,
@@ -17,8 +17,9 @@ enum State {
     FLY,
 };
 
-typedef DIRECTION char;
+typedef char DIRECTION;
 class Direction {
+public:
     static char const LEFT = 'l';
     //LEFTUP,
     static char const UP = 'u';
@@ -29,12 +30,13 @@ class Direction {
     //DOWNLEFT
 };
 
-typedef TAG int;
+typedef int TAG;
 enum Tag {
     PLAYER,
     MONSTER,
     BOSS,
-    NPC
+    NPC,
+    ENTITY
 };
 
 
@@ -42,15 +44,18 @@ class Entity
 {
 
 public:
-
-    Entity();
-    virtual ~Entity();
+    
+    Entity() {}
+    Entity(DIRECTION d) : direction(d){}
+    ~Entity() {}
     void setBatchNode(cocos2d::SpriteBatchNode *batchNode);
     cocos2d::SpriteBatchNode* getBatchNode();
-    cocos2d::Sprite* getSprite();
+    cocos2d::Sprite* getSprite() { return this->sprite; }
     DIRECTION getDirection();
     STATE getState();
-    virtual TAG getTag();
+    TAG getTag() { return Tag::ENTITY; }
+    cocos2d::Vec2 getPosition() { return this->sprite->getPosition();}
+    void setPosition(cocos2d::Vec2 p) { this->sprite->setPosition(p); }
 
 protected:
 
@@ -65,8 +70,8 @@ protected:
     cocos2d::SpriteBatchNode *batchNode;
 
     DIRECTION direction;
-    b2Body *body;
-    b2World *world;
+    //b2Body *body;
+    //b2World *world;
     STATE state;
 
 };

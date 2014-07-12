@@ -60,14 +60,16 @@ bool Level::init()
     
     int x = spawnPoint["x"].asInt();
     int y = spawnPoint["y"].asInt();
-    Sprite::create("TileGameResources/Player.png");
-    player.push_back();
-    player->setPosition(ccp(x,y));
+    //Sprite::create("TileGameResources/Player.png");
+    auto player1 = std::unique_ptr<Player>(new Player);
+    player1->initWithFilename("chars/Soldier");
+    player.push_back(std::move(player1));
+    player1->setPosition(Vec2(x,y));
     
     for (auto it = player.begin(); it != player.end(); ++it) {
-        this->addChild(it);
+        this->addChild(it->get()->getSprite());
     }
-    this->setViewPointCenter(_player->getPosition());
+    this->setViewPointCenter(player1->getPosition());
     
     // this->setTouchEnabled(true);
     

@@ -23,9 +23,9 @@ public:
 
     // Characters
     TMXTiledMap *tileMap;
-    std::vector<Player*> player;
-    std::map<String, Entity*> npc;
-    std::vector<Entity*> monster;
+    std::vector<std::unique_ptr<Player>> player;
+    std::map<std::string, std::unique_ptr<Entity>> npc;
+    std::vector<std::unique_ptr<Entity>> monster;
 
     // Methods
     virtual bool init();

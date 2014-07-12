@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Entity.h"
 
 USING_NS_CC;
 
@@ -9,29 +8,34 @@ Player::Player()
     state     = State::STAND;
 }
 
-Player::Player(Direction d) 
-    : direction(d) {
+Player::Player(DIRECTION d) 
+    : Entity(d) {
     state = State::STAND;
 }
 
 Player::~Player(void)
 {
-    actionStateDefault->release();
-	actionStateMoving->release();
-    body = NULL;
+    //actionStateDefault->release();
+    for (auto it = actionStateMoving.begin(); it != actionStateMoving.end(); ++it) {
+        it->second->release();
+    }
 }
 
-bool Player::init(Layer *layer, b2World *world, std::string filename)
+bool Player::init() {
+    return true;
+}
+
+bool Player::initWithFilename(std::string filename)
 {
     // some variables
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Point origin = Director::getInstance()->getVisibleOrigin();
     
     // node and spite
-    batchNode = SpriteBatchNode::create(filename + ".png");
+    batchNode = SpriteBatchNode::create(StringUtils::format("chars/%s.png", filename));
     
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(filename + ".plist");
-    sprite = Sprite::createWithSpriteFrameName("soldier_"+this->direction+"_0.png");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(StringUtils::format("chars/%s.plist", filename));
+    sprite = Sprite::createWithSpriteFrameName(StringUtils::format("%s_%c_0.png", filename, this->direction));
     
     sprite->setPosition(Point(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
@@ -49,22 +53,22 @@ bool Player::init(Layer *layer, b2World *world, std::string filename)
     // actionStateDefault = RepeatForever::create(animateIdle);
     // actionStateDefault->retain();
 
-    // animation for moving state
-    animationMoving = Animation::create();
-    
-    for (int i = 1; i < 17; i++)
-    {
-        char szImageFileName[128] = {0};
-        sprintf(szImageFileName, "Orc_move_right00%02i.png", i);
-        animationMoving->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(szImageFileName));
-    }
-    
-    animationMoving->setDelayPerUnit(0.04f);
-    animationMoving->setRestoreOriginalFrame(true);
-    
-    animateMoving = Animate::create(animationMoving);
-    actionStateMoving = RepeatForever::create(animateMoving);
-    actionStateMoving->retain();
+    // TODO: implement moving animations :p
+    //animationMoving = Animation::create();
+    //
+    //for (int i = 1; i < 17; i++)
+    //{
+    //    char szImageFileName[128] = {0};
+    //    sprintf(szImageFileName, "Orc_move_right00%02i.png", i);
+    //    animationMoving->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(szImageFileName));
+    //}
+    //
+    //animationMoving->setDelayPerUnit(0.04f);
+    //animationMoving->setRestoreOriginalFrame(true);
+    //
+    //animateMoving = Animate::create(animationMoving);
+    //actionStateMoving = RepeatForever::create(animateMoving);
+    //actionStateMoving->retain();
 
     // create physics
     //this->world = world;
@@ -151,7 +155,7 @@ void Player::setStateDefault()
     {
         state = 1;
 		sprite->stopAllActions();
-        sprite->runAction(actionStateDefault);
+        //sprite->runAction(actionStateDefault);
         
     }
 }
@@ -162,7 +166,7 @@ void Player::setStateMoving()
     {
         state = 2;
 		sprite->stopAllActions();
-        sprite->runAction(actionStateMoving);
+        //sprite->runAction(actionStateMoving);
     }
 }
 
@@ -170,7 +174,7 @@ void Player::stopMoving()
 {
     if (state == 2)
     {
-        body->SetLinearVelocity(b2Vec2(0, 0));
+        //body->SetLinearVelocity(b2Vec2(0, 0));
     }
 }
 
