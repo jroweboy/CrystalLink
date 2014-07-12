@@ -121,32 +121,7 @@ void Player::updateVelocity(Point velocity)
 
 void Player::move(Point velocity)
 {
-    //b2Vec2 impulse;
-    //
-    //if (velocity.x > 0)
-    //{
-    //    // move right
-    //    setStateMoving();
-    //    
-    //    changeDirection(2);
-    //    
-    //    impulse = b2Vec2(0.25f * body->GetMass(), 0.0f);
-    //    body->ApplyLinearImpulse(impulse, body->GetWorldCenter());
-    //}
-    //else if (velocity.x < 0)
-    //{
-    //    // move left
-    //    setStateMoving();
-    //    changeDirection(1);
-    //    
-    //    impulse = b2Vec2(-0.25f * body->GetMass(), 0.0f);
-    //    body->ApplyLinearImpulse(impulse, body->GetWorldCenter());
-    //}
-    //else
-    //{
-    //    // not moving
-    //    setStateDefault();
-    //}
+ 
 }
 
 void Player::setStateDefault()
