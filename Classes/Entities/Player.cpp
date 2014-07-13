@@ -32,10 +32,10 @@ bool Player::initWithFilename(std::string filename)
     Point origin = Director::getInstance()->getVisibleOrigin();
     
     // node and spite
-    batchNode = SpriteBatchNode::create(StringUtils::format("chars/%s.png", filename));
+    batchNode = SpriteBatchNode::create(StringUtils::format("chars/%s.png", filename.c_str()));
     
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(StringUtils::format("chars/%s.plist", filename));
-    sprite = Sprite::createWithSpriteFrameName(StringUtils::format("%s_%c_0.png", filename, this->direction));
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(StringUtils::format("chars/%s.plist", filename.c_str()));
+    sprite = Sprite::createWithSpriteFrameName(StringUtils::format("%s_%c_0.png", filename.c_str(), this->direction));
     
     sprite->setPosition(Point(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
@@ -54,6 +54,18 @@ bool Player::initWithFilename(std::string filename)
     // actionStateDefault->retain();
 
     // TODO: implement moving animations :p
+    for (int i=0; i < sizeof(_ALL_DIRECTIONS); ++i) {
+        for (int j=0; j < 9; ++j) {
+            if (j==0) {
+                animationMoving[_ALL_DIRECTIONS[i]] = Animation::create();
+            }
+            animationMoving[_ALL_DIRECTIONS[i]]->addSpriteFrame(
+                SpriteFrameCache::getInstance()->getSpriteFrameByName(
+                    StringUtils::format("%s_%c_%d.png", filename.c_str(), _ALL_DIRECTIONS[i], j)
+                )
+            );
+        }
+    }
     //animationMoving = Animation::create();
     //
     //for (int i = 1; i < 17; i++)
@@ -70,29 +82,6 @@ bool Player::initWithFilename(std::string filename)
     //actionStateMoving = RepeatForever::create(animateMoving);
     //actionStateMoving->retain();
 
-    // create physics
-    //this->world = world;
-    //b2BodyDef bodyDef;
-    //bodyDef.type = b2_dynamicBody;
-    //bodyDef.position.Set(sprite->getPositionX() /PTM_RATIO, sprite->getPositionY()/PTM_RATIO);
-    //bodyDef.userData = this;
-    //bodyDef.fixedRotation = true;
-    //body = world->CreateBody(&bodyDef);
-    //
-    //b2PolygonShape shape;
-    //shape.SetAsBox(1,1);
-    //
-    //b2FixtureDef shapeDef;
-    //shapeDef.shape = &shape;
-    //shapeDef.density = 3.0f;
-    //shapeDef.friction = 4.0f;
-    //shapeDef.restitution = 0.0f;
-    //body->CreateFixture(&shapeDef);
-    //
-    //// set default state
-    //setStateDefault();
-    //changeDirection(direction);
-    //
     batchNode->addChild(sprite);
     
     return true;

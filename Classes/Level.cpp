@@ -62,14 +62,16 @@ bool Level::init()
     int y = spawnPoint["y"].asInt();
     //Sprite::create("TileGameResources/Player.png");
     auto player1 = std::unique_ptr<Player>(new Player);
-    player1->initWithFilename("chars/Soldier");
-    player.push_back(std::move(player1));
+    player1->initWithFilename("soldier");
     player1->setPosition(Vec2(x,y));
+    this->setViewPointCenter(player1->getPosition());
+
+    // TODO: I don't know how I'm going to make the players work in multiplayer online :p
+    player.push_back(std::move(player1));
     
     for (auto it = player.begin(); it != player.end(); ++it) {
-        this->addChild(it->get()->getSprite());
+        this->addChild((*it)->getBatchNode());
     }
-    this->setViewPointCenter(player1->getPosition());
     
     // this->setTouchEnabled(true);
     

@@ -1,0 +1,25 @@
+﻿Build started 7/13/2014 12:50:43 PM.
+     1>Project "C:\dev\CrystalLink\miniupnpc-1.9.20140701\msvc\miniupnpc.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D MINIUPNP_STATICLIB /D DEBUG /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\minisoap.c ..\miniwget.c
+         miniwget.c
+         minisoap.c
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\dev\CrystalLink\proj.win32\Debug\miniupnpc.lib" /NOLOGO Debug\connecthostport.obj
+         Debug\igd_desc_parse.obj
+         Debug\minisoap.obj
+         Debug\miniupnpc.obj
+         Debug\miniwget.obj
+         Debug\minixml.obj
+         Debug\portlistingparse.obj
+         Debug\receivedata.obj
+         Debug\upnpcommands.obj
+         Debug\upnperrors.obj
+         Debug\upnpreplyparse.obj
+         miniupnpc.vcxproj -> C:\dev\CrystalLink\proj.win32\Debug\miniupnpc.lib
+     1>Done Building Project "C:\dev\CrystalLink\miniupnpc-1.9.20140701\msvc\miniupnpc.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.93

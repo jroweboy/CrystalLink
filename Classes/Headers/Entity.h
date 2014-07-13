@@ -18,6 +18,7 @@ enum State {
 };
 
 typedef char DIRECTION;
+static char _ALL_DIRECTIONS[4] = {'l', 'u', 'r', 'd'};
 class Direction {
 public:
     static char const LEFT = 'l';
@@ -49,7 +50,7 @@ public:
     Entity(DIRECTION d) : direction(d){}
     ~Entity() {}
     void setBatchNode(cocos2d::SpriteBatchNode *batchNode);
-    cocos2d::SpriteBatchNode* getBatchNode();
+    cocos2d::SpriteBatchNode* getBatchNode() { return this->batchNode; }
     cocos2d::Sprite* getSprite() { return this->sprite; }
     DIRECTION getDirection();
     STATE getState();

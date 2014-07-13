@@ -4,6 +4,11 @@
 #pragma warnings(push, 0)
 #pragma GCC system_header
 #include "cocos2d.h"
+#pragma GCC system_header
+#include "CocosGUI.h"
+#pragma GCC system_header
+#include "cocos-ext.h"
+#pragma warning(pop)
 #pragma warnings(pop)
 
 using namespace cocos2d;
