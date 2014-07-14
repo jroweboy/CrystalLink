@@ -55,8 +55,8 @@ public:
     DIRECTION getDirection();
     STATE getState();
     TAG getTag() { return Tag::ENTITY; }
-    cocos2d::Vec2 getPosition() { return this->sprite->getPosition();}
-    void setPosition(cocos2d::Vec2 p) { this->sprite->setPosition(p); }
+	cocos2d::Vec2 getPosition() { return this->batchNode->getPosition();}
+    void setPosition(cocos2d::Vec2 p) { this->batchNode->setPosition(p); }
 
 protected:
 

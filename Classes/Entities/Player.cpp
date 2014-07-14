@@ -37,7 +37,7 @@ bool Player::initWithFilename(std::string filename)
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(StringUtils::format("chars/%s.plist", filename.c_str()));
     sprite = Sprite::createWithSpriteFrameName(StringUtils::format("%s_%c_0.png", filename.c_str(), this->direction));
     
-    sprite->setPosition(Point(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    batchNode->setPosition(Point(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
     // TODO: Implement idle animations.
     // For now we just return to the 0 frame and it'll look fine
@@ -89,18 +89,8 @@ bool Player::initWithFilename(std::string filename)
 
 void Player::update(float dt)
 {
-    //if (world)
-    //{
-    //    for(b2Body *b = world->GetBodyList(); b; b=b->GetNext())
-    //    {
-    //        if (b->GetUserData() != NULL)
-    //        {
-    //            Player *userData = (Player *)b->GetUserData();
-    //            userData->sprite->setPosition(Point(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
-    //            userData->sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
-    //        }
-    //    }
-    //}
+
+	this->setPosition(Vec2(0,.001) + this->getPosition());
 }
 
 void Player::updateVelocity(Point velocity)
@@ -110,7 +100,7 @@ void Player::updateVelocity(Point velocity)
 
 void Player::move(Point velocity)
 {
- 
+	
 }
 
 void Player::setStateDefault()
