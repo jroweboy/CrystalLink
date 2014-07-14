@@ -1,3 +1,12 @@
+# other
+*.o
+*.a
+*.lib
+*.so
+upnpc-shared
+upnpc-static
+*miniupnpcstrings.h
+
 # Mac
 .DS_Store
 

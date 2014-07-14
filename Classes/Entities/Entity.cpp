@@ -1,4 +1,6 @@
-#include "Entity.h"
+// Moved this to be a header only class. Keeping this around if we need to change that
+
+/*#include "Entity.h"
 
 USING_NS_CC;
 
@@ -39,3 +41,4 @@ int Entity::getTag()
 {
     return 0;
 }
+*/

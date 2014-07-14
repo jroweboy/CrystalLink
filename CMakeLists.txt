@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
 
-set(APP_NAME MyGame)
+set(APP_NAME CrystalLink)
 project (${APP_NAME})
 
 include(cocos2d/build/BuildHelpers.CMakeLists.txt)
 
-option(USE_CHIPMUNK "Use chipmunk for physics library" ON)
-option(USE_BOX2D "Use box2d for physics library" OFF)
+option(USE_CHIPMUNK "Use chipmunk for physics library" OFF)
+option(USE_BOX2D "Use box2d for physics library" ON)
 option(DEBUG_MODE "Debug or release?" ON)
 
 if(DEBUG_MODE)
@@ -43,12 +43,14 @@ if(USE_CHIPMUNK)
   if(UNIX) # assuming linux
     add_definitions(-DLINUX )
   endif()
+# endif(USE_CHIPMUNK)
 elseif(USE_BOX2D)
   message("Using box2d ...")
   add_definitions(-DCC_ENABLE_BOX2D_INTEGRATION=1)
   if(UNIX) # assuming linux
     add_definitions(-DLINUX )
   endif()
+# endif(USE_BOX2D)
 else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
 endif(USE_CHIPMUNK)
@@ -60,30 +62,39 @@ else()
 set(ARCH_DIR "32-bit")
 endif()
 
-if( UNIX ) #assume linux
+# Platform specific includes
+if( UNIX )
 set(GAME_SRC
   proj.linux/main.cpp
-  Classes/AppDelegate.cpp
-  Classes/Scenes/TestScene.cpp
-  Classes/Scenes/HudLayer.cpp
 )
 elseif ( WIN32 )
 set(GAME_SRC
   proj.win32/main.cpp
   proj.win32/main.h
   proj.win32/resource.h
-  Classes/AppDelegate.cpp
-  Classes/HelloWorldScene.cpp
 )
 endif()
 
+# Add all the other source files here
+LIST(APPEND GAME_SRC 
+  Classes/AppDelegate.cpp
+  Classes/Scenes/HudLayer.cpp
+  Classes/Entities/Entity.cpp
+  Classes/Entities/Player.cpp
+  Classes/Level.cpp
+)
+
 set(COCOS2D_ROOT ${CMAKE_SOURCE_DIR}/cocos2d)
-if (WIN32)
+
+
+# Directories used by both windows and linux
 include_directories(
   /usr/include
   /usr/include/GLFW
   /usr/local/include/GLFW
-  Classes/Headers
+  ${CMAKE_SOURCE_DIR}/Classes/Headers
+  ${CMAKE_SOURCE_DIR}/Classes/RakNet
+  ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
   ${COCOS2D_ROOT}/external/lua/lua
@@ -93,26 +104,43 @@ include_directories(
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/win32
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
-  ${COCOS2D_ROOT}/cocos/physics
   ${COCOS2D_ROOT}/cocos/editor-support
   ${COCOS2D_ROOT}/cocos/math
+  ${COCOS2D_ROOT}/cocos/physics
+  ${COCOS2D_ROOT}/cocos/ui
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
   ${COCOS2D_ROOT}/external/edtaa3func
+  ${COCOS2D_ROOT}/external/tinyxml2
+  ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/sqlite3/include
+  ${COCOS2D_ROOT}/external/Box2D
+  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
+  ${COCOS2D_ROOT}/external/xxhash
+  ${COCOS2D_ROOT}/external/xxtea
+)
+
+
+link_directories(
+  ${COCOS2D_ROOT}/external/tinyxml2
+  ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/Box2D
+  ${COCOS2D_ROOT}/external/chipmunk/src
+  ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
+)
+
+if (WIN32)
+include_directories(
+  ${COCOS2D_ROOT}/cocos/platform/win32
   ${COCOS2D_ROOT}/external/jpeg/include/win32
   ${COCOS2D_ROOT}/external/png/include/win32
   ${COCOS2D_ROOT}/external/tiff/include/win32
   ${COCOS2D_ROOT}/external/webp/include/win32
   ${COCOS2D_ROOT}/external/curl/include/win32
-  ${COCOS2D_ROOT}/external/tinyxml2
-  ${COCOS2D_ROOT}/external/unzip
-  ${COCOS2D_ROOT}/external/sqlite3/include
-  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
   ${COCOS2D_ROOT}/external/freetype2/include/win32
   ${COCOS2D_ROOT}/external/websockets/include/win32
   ${COCOS2D_ROOT}/external/spidermonkey/include/win32
@@ -120,10 +148,16 @@ include_directories(
   ${COCOS2D_ROOT}/external/win32-specific/gles/include/OGLES
   ${COCOS2D_ROOT}/external/win32-specific/icon/include
   ${COCOS2D_ROOT}/external/win32-specific/zlib/include
-  ${COCOS2D_ROOT}/external/xxhash
-  ${COCOS2D_ROOT}/external/xxtea
 )
 link_directories(
+  # linked by both 
+  # ${COCOS2D_ROOT}/external/tinyxml2
+  # ${COCOS2D_ROOT}/external/unzip
+  # ${COCOS2D_ROOT}/external/Box2D
+  # ${COCOS2D_ROOT}/external/chipmunk
+  # ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
+
+  # windows only
   /usr/local/lib
   ${COCOS2D_ROOT}/external/png/prebuilt/win32
   ${COCOS2D_ROOT}/external/jpeg/prebuilt/win32
@@ -142,25 +176,10 @@ link_directories(
 
 elseif(UNIX) #assumed linux
 include_directories(
-  /usr/include
-  /usr/include/GLFW
-  /usr/local/include/GLFW
-  Classes/Headers
-  ${COCOS2D_ROOT}
-  ${COCOS2D_ROOT}/cocos
-  ${COCOS2D_ROOT}/cocos/audio/include
-  ${COCOS2D_ROOT}/cocos/platform
-  ${COCOS2D_ROOT}/cocos/platform/desktop
-  ${COCOS2D_ROOT}/cocos/platform/linux
-  ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/extensions
-  ${COCOS2D_ROOT}/external
-  ${COCOS2D_ROOT}/external/edtaa3func
+  ${COCOS2D_ROOT}/cocos/platform/linux/
   ${COCOS2D_ROOT}/external/jpeg/include/linux
   ${COCOS2D_ROOT}/external/tiff/include/linux
   ${COCOS2D_ROOT}/external/webp/include/linux
-  ${COCOS2D_ROOT}/external/tinyxml2
-  ${COCOS2D_ROOT}/external/unzip
   ${COCOS2D_ROOT}/external/freetype2/include/linux
   ${COCOS2D_ROOT}/external/websockets/include/linux
   ${COCOS2D_ROOT}/external/spidermonkey/include/linux
@@ -169,6 +188,13 @@ include_directories(
 )
 
 link_directories(
+  # linked by both
+  # ${COCOS2D_ROOT}/external/tinyxml2
+  # ${COCOS2D_ROOT}/external/unzip
+  # ${COCOS2D_ROOT}/external/Box2D
+  # ${COCOS2D_ROOT}/external/chipmunk
+  # ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
+  # linux only
   /usr/local/lib
   ${COCOS2D_ROOT}/external/jpeg/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/tiff/prebuilt/linux/${ARCH_DIR}
@@ -180,12 +206,11 @@ link_directories(
 )
 endif()
 
-if(USE_CHIPMUNK)
-
+# if(USE_CHIPMUNK)
 	include_directories(${COCOS2D_ROOT}/external/chipmunk/include/chipmunk)
 	# chipmunk library
 	add_subdirectory(${COCOS2D_ROOT}/external/chipmunk/src)
-endif()
+# endif(USE_CHIPMUNK)
 
 if(USE_BOX2D)
 	# box2d library
@@ -234,6 +259,14 @@ add_subdirectory(${COCOS2D_ROOT}/external/lua/tolua)
 # luabinding
 add_subdirectory(${COCOS2D_ROOT}/cocos/scripting/lua-bindings)
 
+## Networking
+# RakNet
+add_subdirectory(${CMAKE_SOURCE_DIR}/Classes/RakNet)
+
+# miniupnpc
+add_subdirectory(${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701)
+link_directories(${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701)
+
 if ( WIN32 )
 	# add the executable
 	add_executable(${APP_NAME}
@@ -248,9 +281,9 @@ else()
 endif()
 
 if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-set(FMOD_LIB "fmodex64")
+  set(FMOD_LIB "fmodex64")
 else()
-set(FMOD_LIB "fmodex")
+  set(FMOD_LIB "fmodex")
 endif()
 
 target_link_libraries(${APP_NAME}
@@ -262,7 +295,9 @@ target_link_libraries(${APP_NAME}
   audio
   cocos2d
   xxtea
-  )
+  box2d
+  miniupnpc
+)
 
 set(APP_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
 
@@ -276,7 +311,7 @@ if ( WIN32 )
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Levels ${APP_BIN_DIR}/Levels
     COMMAND ${CMAKE_COMMAND} -E copy ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll ${APP_BIN_DIR}/${CMAKE_BUILD_TYPE}
-	COMMAND ${CMAKE_COMMAND} -E copy ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll ${APP_BIN_DIR}/${CMAKE_BUILD_TYPE}
+	  COMMAND ${CMAKE_COMMAND} -E copy ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll ${APP_BIN_DIR}/${CMAKE_BUILD_TYPE}
 	)
 else()
   pre_build(${APP_NAME}
