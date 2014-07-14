@@ -64,6 +64,12 @@ bool Player::initWithFilename(std::string filename)
                     StringUtils::format("%s_%c_%d.png", filename.c_str(), _ALL_DIRECTIONS[i], j)
                 )
             );
+            animationMoving[_ALL_DIRECTIONS[i]]->setDelayPerUnit(0.04f);
+            animationMoving[_ALL_DIRECTIONS[i]]->setRestoreOriginalFrame(true);
+            
+            animateMoving[_ALL_DIRECTIONS[i]] = Animate::create(animationMoving[_ALL_DIRECTIONS[i]]);
+            actionStateMoving[_ALL_DIRECTIONS[i]] = RepeatForever::create(animateMoving[_ALL_DIRECTIONS[i]]);
+            actionStateMoving[_ALL_DIRECTIONS[i]]->retain();
         }
     }
     //animationMoving = Animation::create();
@@ -75,8 +81,6 @@ bool Player::initWithFilename(std::string filename)
     //    animationMoving->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(szImageFileName));
     //}
     //
-    //animationMoving->setDelayPerUnit(0.04f);
-    //animationMoving->setRestoreOriginalFrame(true);
     //
     //animateMoving = Animate::create(animationMoving);
     //actionStateMoving = RepeatForever::create(animateMoving);
@@ -87,81 +91,74 @@ bool Player::initWithFilename(std::string filename)
     return true;
 }
 
-void Player::update(float dt)
+void Player::move(DIRECTION d)
 {
-
-	this->setPosition(Vec2(0,.001) + this->getPosition());
-}
-
-void Player::updateVelocity(Point velocity)
-{
-    move(velocity);
-}
-
-void Player::move(Point velocity)
-{
-	
+    Vec2 delta;
+    switch (d) {
+    case Direction::UPRIGHT:
+        delta += Vec2(1,0);
+    case Direction::UP:
+        changeDirection(Direction::UP);
+        setPosition(getPosition() + delta + Vec2(0,1));
+        setStateMoving();
+        break;
+    case Direction::RIGHT:
+        break;
+    case Direction::RIGHTDOWN:
+        break;
+    case Direction::DOWN:
+        break;
+    case Direction::DOWNLEFT:
+        break;
+    case Direction::LEFT:
+        break;
+    case Direction::LEFTUP:
+        break;
+    default:
+        break;
+    }
 }
 
 void Player::setStateDefault()
 {
-    if (state == 2)
+    if (state == State::WALK)
     {
-        state = 1;
+        state = State::STAND;
 		sprite->stopAllActions();
         //sprite->runAction(actionStateDefault);
-        
     }
 }
 
 void Player::setStateMoving()
 {
-    if (state == 1)
+    if (state == State::STAND)
     {
-        state = 2;
+        state = State::WALK;
 		sprite->stopAllActions();
-        //sprite->runAction(actionStateMoving);
+        sprite->runAction(actionStateMoving[direction]);
     }
 }
 
 void Player::stopMoving()
 {
-    if (state == 2)
+    if (state == State::WALK)
     {
-        //body->SetLinearVelocity(b2Vec2(0, 0));
+        state = State::STAND;
+        sprite->stopAllActions();
     }
 }
 
-void Player::actionButtonPressed(int button)
-{
-    //if (button == 1)
-    //{
-    //    body->ApplyLinearImpulse(b2Vec2(0, body->GetMass() * 3), body->GetWorldCenter());
-    //}
-}
+//void Player::actionButtonPressed(int button)
+//{
+//    //if (button == 1)
+//    //{
+//    //    body->ApplyLinearImpulse(b2Vec2(0, body->GetMass() * 3), body->GetWorldCenter());
+//    //}
+//}
 
-void Player::changeDirection(int direction)
+void Player::changeDirection(DIRECTION d)
 {
-    if (this->direction != direction && direction == 1)
-    {
-        sprite->setFlipX(true);
-        this->direction = direction;
-        
-        if (state == 2)
-        {
-            stopMoving();
-        }
-    }
-    else if (this->direction != direction && direction == 2)
-    {
-        sprite->setFlipX(false);
-        this->direction = direction;
-        
-        if (state == 2)
-        {
-            stopMoving();
-        }
-    }
+    this->direction = d;
 }
 
 int Player::getTag()

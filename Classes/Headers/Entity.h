@@ -22,13 +22,13 @@ static char _ALL_DIRECTIONS[4] = {'l', 'u', 'r', 'd'};
 class Direction {
 public:
     static char const LEFT = 'l';
-    //LEFTUP,
+    static char const LEFTUP = 'q';
     static char const UP = 'u';
-    //UPRIGHT,
+    static char const UPRIGHT = 'w';
     static char const RIGHT = 'r';
-    //RIGHTDOWN,
+    static char const RIGHTDOWN = 'e';
     static char const DOWN = 'd';
-    //DOWNLEFT
+    static char const DOWNLEFT = 't';
 };
 
 typedef int TAG;

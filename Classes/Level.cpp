@@ -3,6 +3,8 @@
 
 using namespace cocos2d;
 
+#define KEYPRESSED(x) (std::find(keysPressed.begin(), keysPressed.end(), x) != keysPressed.end())
+
 //TODO convert this into a LUA file with most the work done in C++
 Scene* Level::createScene()
 {
@@ -32,6 +34,12 @@ bool Level::init()
         return false;
     }
     
+    // Add keyboard listeners
+    auto listener = EventListenerKeyboard::create();
+    listener->onKeyPressed = CC_CALLBACK_2(Level::onKeyPressed, this);
+    listener->onKeyReleased = CC_CALLBACK_2(Level::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("pickup.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("hit.caf");
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
@@ -72,9 +80,9 @@ bool Level::init()
     for (auto it = player.begin(); it != player.end(); ++it) {
         this->addChild((*it)->getBatchNode());
     }
-    
-    // this->setTouchEnabled(true);
-    
+
+    this->scheduleUpdate();
+
     return true;
 }
 
@@ -93,19 +101,32 @@ void Level::setViewPointCenter(Point position)
     this->setPosition(viewPoint);
 }
 
-//#pragma mark - handle touches
+void Level::update(float dt) {
+    super::update(dt);
+    if (KEYPRESSED(K_UP)) {
+        if (KEYPRESSED(K_RIGHT)) {
+            player[0]->move(Direction::UPRIGHT);
+        } else if (KEYPRESSED(K_LEFT)) {
+            player[0]->move(Direction::LEFTUP);
+        } else {
+            player[0]->move(Direction::UP);
+        }
+    } else { // add all the other keys as an else if
+        player[0]->stopMoving();
+    }
+}
 
-//void TestScene::registerWithTouchDispatcher()
-//{
-//    CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
-//}
+void Level::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
+{
+    keysPressed.insert(keyCode);
+}
 
-//bool TestScene::ccTouchBegan(CCTouch *touch, CCEvent *event)
-//{
-//    return true;
-//}
+void Level::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
+{
+    keysPressed.erase(keyCode);
+}
 
-void Level::setPlayerPosition(Point position)
+void Level::checkCollision(Point position)
 {
     // TODO: Implement position checking?
     // This should be abstracted to a single location
@@ -136,44 +157,13 @@ void Level::setPlayerPosition(Point position)
     //CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("move.caf");
 }
 
-//void TestScene::ccTouchEnded(CCTouch *touch, CCEvent *event)
-//{
-//    CCPoint touchLocation = touch->getLocationInView();
-//    touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
-//    touchLocation = this->convertToNodeSpace(touchLocation);
-//    
-//    CCPoint playerPos = _player->getPosition();
-//    CCPoint diff = ccpSub(touchLocation, playerPos);
-//    
-//    if ( abs(diff.x) > abs(diff.y) ) {
-//        if (diff.x > 0) {
-//            playerPos.x += _tileMap->getTileSize().width;
-//        } else {
-//            playerPos.x -= _tileMap->getTileSize().width;
-//        }
-//    } else {
-//        if (diff.y > 0) {
-//            playerPos.y += _tileMap->getTileSize().height;
-//        } else {
-//            playerPos.y -= _tileMap->getTileSize().height;
-//        }
-//    }
-//    
-//    // safety check on the bounds of the map
-//    if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getTileSize().width) &&
-//        playerPos.y <= (_tileMap->getMapSize().height * _tileMap->getTileSize().height) &&
-//        playerPos.y >= 0 &&
-//        playerPos.x >= 0 )
-//    {
-//        this->setPlayerPosition(playerPos);
-//    }
-//    
-//    this->setViewPointCenter(_player->getPosition());
-//}
-
 Point Level::tileCoordForPosition(Point position)
 {
     int x = position.x / tileMap->getTileSize().width;
     int y = ((tileMap->getMapSize().height * tileMap->getTileSize().height) - position.y) / tileMap->getTileSize().height;
     return Vec2(x, y);
+}
+
+void Level::initInput() {
+    // TODO save input and load them from file here
 }

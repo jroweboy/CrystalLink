@@ -16,15 +16,15 @@ public:
     ~Player();
     virtual bool init();
     bool initWithFilename(std::string filename);
-    void update(float dt);
-    void updateVelocity(cocos2d::Point velocity);
-    void move(cocos2d::Point velocity);
+    //void update(float dt);
+    //void updateVelocity(cocos2d::Point velocity);
+    void move(DIRECTION d);
     void stopMoving();
-    void actionButtonPressed(int button);
+    //void actionButtonPressed(int button);
     
     void setStateDefault();
     void setStateMoving();
-    void changeDirection(int direction);
+    void changeDirection(DIRECTION d);
 
     TAG getTag();
     
