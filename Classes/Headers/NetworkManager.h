@@ -28,11 +28,44 @@
 #include "Kbhit.h"
 #include "HTTPConnection2.h"
 
-typedef struct NetworkManager {
+typedef struct NetworkMger {
     RakNet::RakPeerInterface *rakPeer;
     RakNet::TeamManager *teamManager;
-} NetworkManager;
+    RakNet::ReplicaManager3 *replicaManager3;
+    RakNet::NetworkIDManager *networkIDManager;
+    RakNet::TCPInterface *tcp;
+    RakNet::ReadyEvent *readyEvent;
+    RakNet::NatPunchthroughClient *natPunchthroughClient;
+    RakNet::NatTypeDetectionClient *natTypeDetectionClient;
+    RakNet::RPC4 *rpc4;
+    RakNet::FullyConnectedMesh2 *fullyConnectedMesh2;
+    RakNet::HTTPConnection2 *httpConnection2;
+} NetworkMger;
 
-extern NetworkManager nm;
+class Game;
+class Team;
+class User;
+
+// the global state for the network manager :p
+// TOTALLY NOT EVIL I SWEAR
+extern NetworkMger *nm;
+extern Game *game;
+
+
+namespace NetworkManager {
+    void init();
+
+    void startSever();
+
+    void searchForGames();
+
+    void connect();
+
+    void isConnected();
+
+    void endConnection();
+
+    void destroy();
+}
 
 #endif  //__NETWORK_MANAGER_H__

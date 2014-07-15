@@ -26,6 +26,20 @@ private:
     void initInput();
 
 public:
+
+    enum NetworkPhase {
+        CONNECTING_TO_SERVER,
+        DETERMINE_NAT_TYPE,
+        SEARCH_FOR_GAMES,
+        NAT_PUNCH_TO_GAME_HOST,
+        CONNECTING_TO_GAME_HOST,
+        VERIFIED_JOIN,
+        IN_LOBBY_WAITING_FOR_HOST,
+        IN_LOBBY_WITH_HOST,
+        IN_GAME,
+        EXIT_SAMPLE,
+	};
+
     // TODO: Do these need to be private?
     Scene *_scene;
     HudLayer *_hud;
