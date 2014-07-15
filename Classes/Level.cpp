@@ -117,7 +117,15 @@ void Level::update(float dt) {
         } else {
             player[0]->move(Direction::RIGHT);
         }
-    } else { // add all the other keys as an else if
+    } else if (KEYPRESSED(K_DOWN)) {
+		if (KEYPRESSED(K_LEFT)) {
+			player[0]->move(Direction::DOWNLEFT);
+		} else {
+			player[0]->move(Direction::DOWN);
+		}
+	} else if (KEYPRESSED(K_LEFT)) {
+		player[0]->move(Direction::LEFT);
+	}else { // add all the other keys as an else if
         player[0]->stopMoving();
     }
 }

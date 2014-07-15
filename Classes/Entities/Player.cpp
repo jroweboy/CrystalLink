@@ -96,7 +96,7 @@ void Player::move(DIRECTION d)
     switch (d) {
     case Direction::UPRIGHT:
         changeDirection(Direction::UP);
-        setPosition(getPosition() + Vec2(1,1));
+        setPosition(getPosition() + Vec2(0.707,0.707));
         setStateMoving();
         break;
     case Direction::UP:
@@ -110,14 +110,29 @@ void Player::move(DIRECTION d)
         setStateMoving();
         break;
     case Direction::RIGHTDOWN:
+		changeDirection(Direction::DOWN);
+        setPosition(getPosition() + Vec2(0.707,-0.707));
+        setStateMoving();
         break;
     case Direction::DOWN:
+		changeDirection(Direction::DOWN);
+        setPosition(getPosition() + Vec2(0,-1));
+        setStateMoving();
         break;
     case Direction::DOWNLEFT:
+		changeDirection(Direction::DOWN);
+        setPosition(getPosition() + Vec2(-0.707,-0.707));
+        setStateMoving();
         break;
     case Direction::LEFT:
+		changeDirection(Direction::LEFT);
+        setPosition(getPosition() + Vec2(-1,0));
+        setStateMoving();
         break;
     case Direction::LEFTUP:
+		changeDirection(Direction::UP);
+        setPosition(getPosition() + Vec2(-0.707,0.707));
+        setStateMoving();
         break;
     default:
         break;
