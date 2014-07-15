@@ -93,16 +93,21 @@ bool Player::initWithFilename(std::string filename)
 
 void Player::move(DIRECTION d)
 {
-    Vec2 delta;
     switch (d) {
     case Direction::UPRIGHT:
-        delta += Vec2(1,0);
+        changeDirection(Direction::UP);
+        setPosition(getPosition() + Vec2(1,1));
+        setStateMoving();
+        break;
     case Direction::UP:
         changeDirection(Direction::UP);
-        setPosition(getPosition() + delta + Vec2(0,1));
+        setPosition(getPosition() + Vec2(0,1));
         setStateMoving();
         break;
     case Direction::RIGHT:
+        changeDirection(Direction::RIGHT);
+        setPosition(getPosition() + Vec2(1,0));
+        setStateMoving();
         break;
     case Direction::RIGHTDOWN:
         break;
@@ -161,7 +166,7 @@ void Player::changeDirection(DIRECTION d)
     this->direction = d;
 }
 
-int Player::getTag()
+TAG Player::getTag()
 {
     return Tag::PLAYER;
 }

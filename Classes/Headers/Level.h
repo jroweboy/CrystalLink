@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "cocos2d.h"
 #include "HudLayer.h"
+#include "NetworkManager.h"
 
 using namespace cocos2d;
 
