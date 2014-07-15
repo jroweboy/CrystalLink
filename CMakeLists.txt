@@ -65,23 +65,32 @@ endif()
 # Platform specific includes
 if( UNIX )
 set(GAME_SRC
-  proj.linux/main.cpp
+  ${CMAKE_SOURCE_DIR}/proj.linux/main.cpp
 )
 elseif ( WIN32 )
 set(GAME_SRC
-  proj.win32/main.cpp
-  proj.win32/main.h
-  proj.win32/resource.h
+  ${CMAKE_SOURCE_DIR}/proj.win32/main.cpp
+  ${CMAKE_SOURCE_DIR}/proj.win32/main.h
+  ${CMAKE_SOURCE_DIR}/proj.win32/resource.h
 )
 endif()
 
 # Add all the other source files here
 LIST(APPEND GAME_SRC 
-  Classes/AppDelegate.cpp
-  Classes/Scenes/HudLayer.cpp
-  Classes/Entities/Entity.cpp
-  Classes/Entities/Player.cpp
-  Classes/Level.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/AppDelegate.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/Scenes/HudLayer.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/Entities/Entity.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/Entities/Player.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/Level.cpp
+)
+
+file(GLOB RAKNET_SRC
+    "Classes/RakNet/*.h"
+    "Classes/RakNet/*.cpp"
+  )
+
+list(APPEND GAME_SRC
+  ${RAKNET_SRC}
 )
 
 set(COCOS2D_ROOT ${CMAKE_SOURCE_DIR}/cocos2d)

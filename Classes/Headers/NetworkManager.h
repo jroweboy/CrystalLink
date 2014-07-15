@@ -25,7 +25,6 @@
 #include "ReadyEvent.h"	
 #include "PacketLogger.h"
 #include "RPC4Plugin.h"
-#include "Kbhit.h"
 #include "HTTPConnection2.h"
 
 typedef struct NetworkMger {
