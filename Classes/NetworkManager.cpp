@@ -43,6 +43,47 @@ void NetworkManager::init() {
 	nm->rakPeer->AttachPlugin(nm->replicaManager3);
 	/// TCPInterface supports plugins too
 	nm->tcp->AttachPlugin(nm->httpConnection2);
+
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Setup plugins: Disable automatically adding new connections. Allocate initial objects and register for replication
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Allocate a world instance to be used for team operations
+	nm->teamManager->AddWorld(0);
+	// Do not automatically count new connections
+	nm->teamManager->SetAutoManageConnections(false);
+
+	// New connections do not count until after login.
+	nm->fullyConnectedMesh2->SetAutoparticipateConnections(false);	
+
+	// Tell ReplicaManager3 which networkIDManager to use for object lookup, used for automatic serialization
+	nm->replicaManager3->SetNetworkIDManager(networkIDManager);
+	// Do not automatically count new connections, but do drop lost connections automatically
+	nm->replicaManager3->SetAutoManageConnections(false, true);
+
+	// Reference static game objects that always exist
+	game = new Game;
+	game->SetNetworkIDManager(networkIDManager);
+	game->SetNetworkID(0);
+	nm->replicaManager3->Reference(game);
+
+	// Setup my own user
+	User *user = new User;
+	user->SetNetworkIDManager(networkIDManager);
+	user->userName = rakPeer->GetMyGUID().ToString();
+	// Inform TeamManager of my user's team member info
+	nm->teamManager->GetWorldAtIndex(0)->ReferenceTeamMember(&user->tmTeamMember, user->GetNetworkID());
+
+	// ------------------------------------------------------------------------------
+	// Startup RakNet on first available port
+	// ------------------------------------------------------------------------------
+	nm->sd.socketFamily = AF_INET; // Only IPV4 supports broadcast on 255.255.255.255
+	nm->sd.port = 0;
+	StartupResult sr = nm->rakPeer->Startup(8, &nm->sd, 1);
+	// ummm TODO, lets NOT have random asserts in the middle of the code :p
+	RakAssert(sr == RAKNET_STARTED);
+	nm->rakPeer->SetMaximumIncomingConnections(8);
+	nm->rakPeer->SetTimeoutTime(30000, UNASSIGNED_SYSTEM_ADDRESS);
 }
 
 void NetworkManager::startSever() {
@@ -61,12 +102,43 @@ void NetworkManager::isConnected() {
 
 }
 
+void NetworkManager::lock() {
+
+}
+
+void NetworkManager::unlock() {
+
+}
+
+void NetworkManager::isLocked() {
+
+}
+
 void NetworkManager::endConnection() {
 
 }
 
 void NetworkManager::destroy() {
+    rakPeer->Shutdown(100);
+    while (game->teams.Size()) {
+        delete game->teams[game->teams.Size()-1];
+    }
+    while (game->users.Size()) {
+        delete game->users[game->users.Size()-1];
+    }
+    delete game;
 
+    RakPeerInterface::DestroyInstance(nm->rakPeer);
+    TeamManager::DestroyInstance(nm->teamManager);
+    FullyConnectedMesh2::DestroyInstance(nm->fullyConnectedMesh2);
+    NatPunchthroughClient::DestroyInstance(nm->natPunchthroughClient);
+    NatTypeDetectionClient::DestroyInstance(nm->natTypeDetectionClient);
+    RPC4::DestroyInstance(nm->rpc4);
+    ReadyEvent::DestroyInstance(nm->readyEvent);
+    delete nm->replicaManager3;
+    NetworkIDManager::DestroyInstance(nm->networkIDManager);
+    HTTPConnection2::DestroyInstance(nm->httpConnection2);
+    delete nm;
 }
 
 
@@ -111,24 +183,34 @@ public:
 	NATTypeDetectionResult myNatType;
 	Phase phase;
 	// NAT punchthrough server runs RakNet project NatCompleteServer with NAT_TYPE_DETECTION_SERVER, and NAT_PUNCHTHROUGH_SERVER
-	RakNetGUID natPunchServerGuid;
+	// TODO: This is required for having a dedicated server. We should have that as an option later
+	// RakNetGUID natPunchServerGuid;
 	SystemAddress natPunchServerAddress;
-	char serverIPAddr[256];
+	// char serverIPAddr[256];
+	std::string serverIPAddr;
 	// Just tracks what other objects have been created
 	DataStructures::List<User*> users;
 	DataStructures::List<Team*> teams;
+	// TODO: Add password protection 
+	// RaKString passwordHash;
+	// Master server has to be refreshed periodically so it knows we didn't crash
+	RakNet::Time whenToNextUpdateMasterServer;
+
+	// The GET request returns a string. I use http://www.digip.org/jansson/ to parse the string, and store the results.
+	Document masterServerQueryResult;
+	// json_t *jsonArray;
 
 	Game() {
         myNatType = NAT_TYPE_UNKNOWN; 
         masterServerRow = -1; 
         Reset(); 
         whenToNextUpdateMasterServer = 0;
-        masterServerQueryResult = 0;
+        // masterServerQueryResult = 0;
     }
 	virtual ~Game() {
-        if (masterServerQueryResult) {
-            json_decref(masterServerQueryResult);
-        }
+        // if (masterServerQueryResult) {
+        //     json_decref(masterServerQueryResult);
+        // }
     }
 	virtual void WriteAllocationID(Connection_RM3 *destinationConnection, BitStream *allocationIdBitstream) const {}
 	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
@@ -235,12 +317,10 @@ public:
 				}
 			}
 			break;
-		#ifdef NAT_TYPE_DETECTION_SERVER
 		case DETERMINE_NAT_TYPE:
 				printf("Determining NAT type...\n");
 				nm->natTypeDetectionClient->DetectNATType(natPunchServerAddress);
 			break;
-		#endif
 		case SEARCH_FOR_GAMES:
 				SearchForGames();
 			break;
@@ -272,39 +352,32 @@ public:
 		nm->httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
 	}
 
-	// Master server has to be refreshed periodically so it knows we didn't crash
-	RakNet::Time whenToNextUpdateMasterServer;
-
 	// Helper function to store and read the JSON from the GET request
-	void SetMasterServerQueryResult(json_t *root)
-	{
-		if (masterServerQueryResult)
-			json_decref(masterServerQueryResult);
-		masterServerQueryResult = root;
-	}
+	// void SetMasterServerQueryResult(json_t *root) {
+	//     if (masterServerQueryResult) {
+	// 	       json_decref(masterServerQueryResult);
+	//     }
+	//     masterServerQueryResult = root;
+	// }
 
-	json_t* GetMasterServerQueryResult(void)
-	{
-		if (masterServerQueryResult == 0)
-			return 0;
-		void *iter = json_object_iter(masterServerQueryResult);
-		while (iter)
-		{
-			const char *firstKey = json_object_iter_key(iter);
-			if (stricmp(firstKey, "GET")==0)
-			{
-				return json_object_iter_value(iter);
-			}
-			iter = json_object_iter_next(masterServerQueryResult, iter);
-			RakAssert(iter != 0);
-		}
-		return 0;
-	}
-
-	// The GET request returns a string. I use http://www.digip.org/jansson/ to parse the string, and store the results.
-	json_t *masterServerQueryResult;
-	json_t *jsonArray;
-
+	// Document* GetMasterServerQueryResult(void)
+	// {
+	// 	if (masterServerQueryResult == 0) {
+	// 		return 0;
+	// 	}
+	// 	void *iter = json_object_iter(masterServerQueryResult);
+	// 	while (iter)
+	// 	{
+	// 		const char *firstKey = json_object_iter_key(iter);
+	// 		if (stricmp(firstKey, "GET")==0)
+	// 		{
+	// 			return json_object_iter_value(iter);
+	// 		}
+	// 		iter = json_object_iter_next(masterServerQueryResult, iter);
+	// 		RakAssert(iter != 0);
+	// 	}
+	// 	return 0;
+	// }
 };
 
 // Team represents a list of players
@@ -475,3 +548,246 @@ public:
         return 0;
     }
 };
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Helper functions
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Demonstrates how to use the RPC4 plugin
+void InGameChat(RakNet::BitStream *userData, Packet *packet)
+{
+	RakString rs;
+	userData->Read(rs);
+	printf("%s\n", rs.C_String());
+}
+// Register the function where it is defined, which is easier than maintaining a bunch of RegisterSlot() calls in main()
+RPC4GlobalRegistration __InGameChat("InGameChat", InGameChat, 0);
+
+// Write roomName and a list of NATTypeDetectionResult to a bitStream
+void SerializeToJSON(RakString &outputString, RakString &roomName, DataStructures::List<NATTypeDetectionResult> &natTypes)
+{
+	outputString.Set("'roomName': '%s', 'guid': '%s', 'natTypes' : [ ", roomName.C_String(), rakPeer->GetMyGUID().ToString());
+	for (unsigned short i=0; i < natTypes.Size(); i++)
+	{
+		if (i!=0)
+			outputString += ", ";
+		RakString appendStr("{'type': %i}", natTypes[i]);
+		outputString += appendStr;
+	}
+	outputString += " ] ";
+}
+
+// A system has connected and is ready to participate in the game
+// Register this system with the plugins that need to know about new participants
+// This operation happens after FullyConnectedMesh2 has told us about who the host is.
+void RegisterGameParticipant(RakNetGUID guid)
+{
+	Connection_RM3 *connection = replicaManager3->AllocConnection(rakPeer->GetSystemAddressFromGuid(guid), guid);
+	if (replicaManager3->PushConnection(connection)==false)
+		replicaManager3->DeallocConnection(connection);
+	teamManager->GetWorldAtIndex(0)->AddParticipant(guid);
+	readyEvent->AddToWaitList(0, guid);
+}
+
+// Upload details about the current game state to the cloud
+// This is the responsibility of the system that initially created that room.
+// If that system disconnects, the new host, as determined by FullyConnectedMesh2 will reupload the room
+void PostRoomToMaster(void)
+{
+	BitStream bsOut;
+	RakString jsonSerializedRoom;
+	DataStructures::List<NATTypeDetectionResult> natTypes;
+	for (unsigned int i=0; i < game->users.Size(); i++)
+		natTypes.Push(game->users[i]->natType, _FILE_AND_LINE_);
+	SerializeToJSON(jsonSerializedRoom, game->gameName, natTypes);
+
+	RakString rowStr;
+	if (game->masterServerRow!=-1)
+		rowStr.Set("\"__rowId\": %i,", game->masterServerRow);
+
+	// See http://masterserver2.raknet.com/
+	RakString rsRequest = RakString::FormatForPOST(
+		(const char*) MASTER_SERVER_ADDRESS "/testServer",
+		"text/plain; charset=UTF-8",
+		RakString("{'__gameId': 'comprehensivePCGame', '__clientReqId': '0', %s '__timeoutSec': '30', %s }", rowStr.C_String(), jsonSerializedRoom.C_String()));
+
+	// Refresh the room again slightly less than every 30 seconds
+	game->whenToNextUpdateMasterServer = RakNet::GetTime() + 30000 - 1000;
+
+	httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
+
+	printf("Posted game session. In room.\n");
+}
+void ReleaseRoomFromCloud(void)
+{
+	RakString rsRequest = RakString::FormatForDELETE(
+		RakString(MASTER_SERVER_ADDRESS "/testServer?__gameId=comprehensivePCGame&__rowId=%i", game->masterServerRow));
+	httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
+	game->masterServerRow=-1;
+}
+
+void CreateRoom(void)
+{
+	size_t arraySize;
+	if (game->GetMasterServerQueryResult())
+		arraySize = json_array_size(game->GetMasterServerQueryResult());
+	else
+		arraySize = 0;
+	
+	if (arraySize > 0)
+	{
+		printf("Enter room name: ");
+		char rn[128];
+		Gets(rn, 128);
+		if (rn[0]==0)
+			strcpy(rn, "Unnamed");
+		game->gameName = rn;
+	}
+	else
+	{
+		game->gameName = "Default room name";
+	}
+	
+	// Upload the room to the server
+	PostRoomToMaster();
+
+	// Room owner creates two teams and registers them for replication
+	Team *team1 = new Team;
+	team1->SetNetworkIDManager(networkIDManager);
+	team1->teamName = "Team1";
+	teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team1->tmTeam, team1->GetNetworkID(), false);
+	Team *team2 = new Team;
+	team2->SetNetworkIDManager(networkIDManager);
+	team2->teamName = "Team2";
+	teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team2->tmTeam, team2->GetNetworkID(), false);
+
+	game->EnterPhase(Game::IN_LOBBY_WAITING_FOR_HOST);
+
+	// So that time spent in single player does not count towards which system has been running the longest in multiplayer
+	fullyConnectedMesh2->ResetHostCalculation();
+
+	printf("(E)xit session\n");
+}
+
+#if USE_UPNP!=0
+struct UPNPOpenWorkerArgs
+{
+	char buff[256];
+	unsigned short portToOpen;
+	unsigned int timeout;
+	void *userData;
+	void (*resultCallback)(bool success, unsigned short portToOpen, void *userData);
+	void (*progressCallback)(const char *progressMsg, void *userData);
+};
+RAK_THREAD_DECLARATION(UPNPOpenWorker)
+{
+	UPNPOpenWorkerArgs *args = ( UPNPOpenWorkerArgs * ) arguments;
+	bool success=false;
+
+	// Behind a NAT. Try to open with UPNP to avoid doing NAT punchthrough
+	struct UPNPDev * devlist = 0;
+	RakNet::Time t1 = GetTime();
+	devlist = upnpDiscover(args->timeout, 0, 0, 0, 0, 0);
+	RakNet::Time t2 = GetTime();
+	if (devlist)
+	{
+		if (args->progressCallback)
+			args->progressCallback("List of UPNP devices found on the network :\n", args->userData);
+		struct UPNPDev * device;
+		for(device = devlist; device; device = device->pNext)
+		{
+			sprintf(args->buff, " desc: %s\n st: %s\n\n", device->descURL, device->st);
+			if (args->progressCallback)
+				args->progressCallback(args->buff, args->userData);
+		}
+
+		char lanaddr[64];	/* my ip address on the LAN */
+		struct UPNPUrls urls;
+		struct IGDdatas data;
+		if (UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr))==1)
+		{
+			char iport[32];
+			Itoa(args->portToOpen, iport,10);
+			char eport[32];
+			strcpy(eport, iport);
+
+			// Version miniupnpc-1.6.20120410
+			int r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
+				eport, iport, lanaddr, 0, "UDP", 0, "0");
+
+			if(r!=UPNPCOMMAND_SUCCESS)
+				printf("AddPortMapping(%s, %s, %s) failed with code %d (%s)\n",
+				eport, iport, lanaddr, r, strupnperror(r));
+
+			char intPort[6];
+			char intClient[16];
+
+			// Version miniupnpc-1.6.20120410
+			char desc[128];
+			char enabled[128];
+			char leaseDuration[128];
+			r = UPNP_GetSpecificPortMappingEntry(urls.controlURL,
+				data.first.servicetype,
+				eport, "UDP",
+				intClient, intPort,
+				desc, enabled, leaseDuration);
+
+			if(r!=UPNPCOMMAND_SUCCESS)
+			{
+				sprintf(args->buff, "GetSpecificPortMappingEntry() failed with code %d (%s)\n",
+					r, strupnperror(r));
+				if (args->progressCallback)
+					args->progressCallback(args->buff, args->userData);
+			}
+			else
+			{
+				if (args->progressCallback)
+					args->progressCallback("UPNP success.\n", args->userData);
+				// game->myNatType=NAT_TYPE_SUPPORTS_UPNP;
+
+				success=true;
+			}
+		}
+	}
+
+	if (args->resultCallback)
+		args->resultCallback(success, args->portToOpen, args->userData);
+	RakNet::OP_DELETE(args, _FILE_AND_LINE_);
+	return 1;
+}
+
+void UPNPOpenAsynch(unsigned short portToOpen,
+					unsigned int timeout,
+					void (*progressCallback)(const char *progressMsg, void *userData),
+					void (*resultCallback)(bool success, unsigned short portToOpen, void *userData),
+					void *userData
+					)
+{
+	UPNPOpenWorkerArgs *args = RakNet::OP_NEW<UPNPOpenWorkerArgs>(_FILE_AND_LINE_);
+	args->portToOpen = portToOpen;
+	args->timeout = timeout;
+	args->userData = userData;
+	args->progressCallback = progressCallback;
+	args->resultCallback = resultCallback;
+	RakThread::Create(UPNPOpenWorker, args);
+}
+
+void UPNPProgressCallback(const char *progressMsg, void *userData)
+{
+	printf(progressMsg);
+}
+void UPNPResultCallback(bool success, unsigned short portToOpen, void *userData)
+{
+	if (success)
+		game->myNatType=NAT_TYPE_SUPPORTS_UPNP;
+	game->EnterPhase(Game::SEARCH_FOR_GAMES);
+}
+
+void OpenUPNP(void)
+{
+	printf("Discovering UPNP...\n");
+
+	DataStructures::List<RakNetSocket2* > sockets;
+	rakPeer->GetSockets(sockets);
+	UPNPOpenAsynch(sockets[0]->GetBoundAddress().GetPort(), 2000, UPNPProgressCallback, UPNPResultCallback, 0);
+}

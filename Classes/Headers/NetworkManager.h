@@ -39,6 +39,7 @@ typedef struct NetworkMger {
     RakNet::RPC4 *rpc4;
     RakNet::FullyConnectedMesh2 *fullyConnectedMesh2;
     RakNet::HTTPConnection2 *httpConnection2;
+    RakNet::SocketDescriptor sd;
 } NetworkMger;
 
 class Game;
@@ -49,7 +50,6 @@ class User;
 // TOTALLY NOT EVIL I SWEAR
 extern NetworkMger *nm;
 extern Game *game;
-
 
 namespace NetworkManager {
     void init();
@@ -65,6 +65,10 @@ namespace NetworkManager {
     void endConnection();
 
     void destroy();
+
+    void lock();
+    void unlock();
+    void isLocked();
 }
 
 #endif  //__NETWORK_MANAGER_H__
