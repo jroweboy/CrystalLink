@@ -42,14 +42,10 @@ typedef struct NetworkMger {
     RakNet::SocketDescriptor sd;
 } NetworkMger;
 
-class Game;
-class Team;
-class User;
 
 // the global state for the network manager :p
 // TOTALLY NOT EVIL I SWEAR
 extern NetworkMger *nm;
-extern Game *game;
 
 namespace NetworkManager {
     void init();

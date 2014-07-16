@@ -425,6 +425,26 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="..\Classes\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Classes\RakNet\_FindFirst.h" />
+    <ClInclude Include="..\rapidjson\allocators.h" />
+    <ClInclude Include="..\rapidjson\document.h" />
+    <ClInclude Include="..\rapidjson\encodedstream.h" />
+    <ClInclude Include="..\rapidjson\encodings.h" />
+    <ClInclude Include="..\rapidjson\error\en.h" />
+    <ClInclude Include="..\rapidjson\error\error.h" />
+    <ClInclude Include="..\rapidjson\filereadstream.h" />
+    <ClInclude Include="..\rapidjson\filestream.h" />
+    <ClInclude Include="..\rapidjson\filewritestream.h" />
+    <ClInclude Include="..\rapidjson\internal\meta.h" />
+    <ClInclude Include="..\rapidjson\internal\pow10.h" />
+    <ClInclude Include="..\rapidjson\internal\stack.h" />
+    <ClInclude Include="..\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="..\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="..\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="..\rapidjson\prettywriter.h" />
+    <ClInclude Include="..\rapidjson\rapidjson.h" />
+    <ClInclude Include="..\rapidjson\reader.h" />
+    <ClInclude Include="..\rapidjson\stringbuffer.h" />
+    <ClInclude Include="..\rapidjson\writer.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

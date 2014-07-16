@@ -1,6 +1,13 @@
 #include "NetworkManager.h"
-
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include <iostream>
 using namespace RakNet;
+
+class Game;
+class Team;
+class User;
 
 NetworkMger *nm;
 Game *game;
@@ -14,132 +21,8 @@ Game *game;
 //#define MASTER_SERVER_ADDRESS "localhost"
 #define MASTER_SERVER_PORT 80
 
-// initialize the network manager
-
-void NetworkManager::init() {
-    nm = (NetworkMger*) malloc(sizeof(NetworkMger));
-    game = new Game;
-    nm->rakPeer = RakPeerInterface::GetInstance();
-	nm->teamManager = TeamManager::GetInstance();
-	nm->fullyConnectedMesh2 = FullyConnectedMesh2::GetInstance();
-	nm->networkIDManager = NetworkIDManager::GetInstance();
-	nm->tcp = TCPInterface::GetInstance();
-	nm->natPunchthroughClient = NatPunchthroughClient::GetInstance();
-	nm->natTypeDetectionClient = NatTypeDetectionClient::GetInstance();
-	nm->rpc4 = RPC4::GetInstance();
-	nm->readyEvent = ReadyEvent::GetInstance();
-	nm->replicaManager3 = new SimpleRM3;
-	nm->httpConnection2 = HTTPConnection2::GetInstance();
-
-	// ---------------------------------------------------------------------------------------------------------------------
-	// Attach plugins
-	// ---------------------------------------------------------------------------------------------------------------------
-	nm->rakPeer->AttachPlugin(nm->fullyConnectedMesh2);
-	nm->rakPeer->AttachPlugin(nm->teamManager);
-	nm->rakPeer->AttachPlugin(nm->natPunchthroughClient);
-	nm->rakPeer->AttachPlugin(nm->natTypeDetectionClient);
-	nm->rakPeer->AttachPlugin(nm->rpc4);
-	nm->rakPeer->AttachPlugin(nm->readyEvent);
-	nm->rakPeer->AttachPlugin(nm->replicaManager3);
-	/// TCPInterface supports plugins too
-	nm->tcp->AttachPlugin(nm->httpConnection2);
 
 
-	// ---------------------------------------------------------------------------------------------------------------------
-	// Setup plugins: Disable automatically adding new connections. Allocate initial objects and register for replication
-	// ---------------------------------------------------------------------------------------------------------------------
-	// Allocate a world instance to be used for team operations
-	nm->teamManager->AddWorld(0);
-	// Do not automatically count new connections
-	nm->teamManager->SetAutoManageConnections(false);
-
-	// New connections do not count until after login.
-	nm->fullyConnectedMesh2->SetAutoparticipateConnections(false);	
-
-	// Tell ReplicaManager3 which networkIDManager to use for object lookup, used for automatic serialization
-	nm->replicaManager3->SetNetworkIDManager(networkIDManager);
-	// Do not automatically count new connections, but do drop lost connections automatically
-	nm->replicaManager3->SetAutoManageConnections(false, true);
-
-	// Reference static game objects that always exist
-	game = new Game;
-	game->SetNetworkIDManager(networkIDManager);
-	game->SetNetworkID(0);
-	nm->replicaManager3->Reference(game);
-
-	// Setup my own user
-	User *user = new User;
-	user->SetNetworkIDManager(networkIDManager);
-	user->userName = rakPeer->GetMyGUID().ToString();
-	// Inform TeamManager of my user's team member info
-	nm->teamManager->GetWorldAtIndex(0)->ReferenceTeamMember(&user->tmTeamMember, user->GetNetworkID());
-
-	// ------------------------------------------------------------------------------
-	// Startup RakNet on first available port
-	// ------------------------------------------------------------------------------
-	nm->sd.socketFamily = AF_INET; // Only IPV4 supports broadcast on 255.255.255.255
-	nm->sd.port = 0;
-	StartupResult sr = nm->rakPeer->Startup(8, &nm->sd, 1);
-	// ummm TODO, lets NOT have random asserts in the middle of the code :p
-	RakAssert(sr == RAKNET_STARTED);
-	nm->rakPeer->SetMaximumIncomingConnections(8);
-	nm->rakPeer->SetTimeoutTime(30000, UNASSIGNED_SYSTEM_ADDRESS);
-}
-
-void NetworkManager::startSever() {
-
-}
-
-void NetworkManager::searchForGames() {
-
-}
-
-void NetworkManager::connect() {
-
-}
-
-void NetworkManager::isConnected() {
-
-}
-
-void NetworkManager::lock() {
-
-}
-
-void NetworkManager::unlock() {
-
-}
-
-void NetworkManager::isLocked() {
-
-}
-
-void NetworkManager::endConnection() {
-
-}
-
-void NetworkManager::destroy() {
-    rakPeer->Shutdown(100);
-    while (game->teams.Size()) {
-        delete game->teams[game->teams.Size()-1];
-    }
-    while (game->users.Size()) {
-        delete game->users[game->users.Size()-1];
-    }
-    delete game;
-
-    RakPeerInterface::DestroyInstance(nm->rakPeer);
-    TeamManager::DestroyInstance(nm->teamManager);
-    FullyConnectedMesh2::DestroyInstance(nm->fullyConnectedMesh2);
-    NatPunchthroughClient::DestroyInstance(nm->natPunchthroughClient);
-    NatTypeDetectionClient::DestroyInstance(nm->natTypeDetectionClient);
-    RPC4::DestroyInstance(nm->rpc4);
-    ReadyEvent::DestroyInstance(nm->readyEvent);
-    delete nm->replicaManager3;
-    NetworkIDManager::DestroyInstance(nm->networkIDManager);
-    HTTPConnection2::DestroyInstance(nm->httpConnection2);
-    delete nm;
-}
 
 
 void PostRoomToMaster();
@@ -197,7 +80,7 @@ public:
 	RakNet::Time whenToNextUpdateMasterServer;
 
 	// The GET request returns a string. I use http://www.digip.org/jansson/ to parse the string, and store the results.
-	Document masterServerQueryResult;
+    rapidjson::Document masterServerQueryResult;
 	// json_t *jsonArray;
 
 	Game() {
@@ -310,7 +193,7 @@ public:
 				if (port[0] == 0) {
 					strcpy(port, DEFAULT_SERVER_PORT);
                 }
-				ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr, atoi(port), 0, 0);
+				ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr.c_str(), atoi(port), 0, 0);
 				if (car!=RakNet::CONNECTION_ATTEMPT_STARTED) {
 					printf("Failed connect call to %s. Code=%i\n", serverIPAddr, car);
 					phase = EXIT_SAMPLE;
@@ -379,6 +262,9 @@ public:
 	// 	return 0;
 	// }
 };
+
+
+
 
 // Team represents a list of players
 // It uses TM_Team from the TeamManager plugin to do actual team functionality, store which players are on which teams, and networking
@@ -514,20 +400,6 @@ public:
 	SystemAddress playerAddress;
 };
 
-// Required by ReplicaManager3. Acts as a class factory for Connection_RM3 derived instances
-class SimpleRM3 : public ReplicaManager3
-{
-public:
-	SimpleRM3() {}
-	virtual ~SimpleRM3() {}
-	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const {
-        return new SimpleConnectionRM3(systemAddress,rakNetGUID);
-    }
-	virtual void DeallocConnection(Connection_RM3 *connection) const {
-        delete connection;
-    }
-};
-
 // Required by ReplicaManager3. Acts as a class factory for Replica3 derived instances
 class SimpleConnectionRM3 : public Connection_RM3
 {
@@ -549,9 +421,24 @@ public:
     }
 };
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Required by ReplicaManager3. Acts as a class factory for Connection_RM3 derived instances
+class SimpleRM3 : public ReplicaManager3
+{
+public:
+	SimpleRM3() {}
+	virtual ~SimpleRM3() {}
+	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const {
+        return new SimpleConnectionRM3(systemAddress,rakNetGUID);
+    }
+	virtual void DeallocConnection(Connection_RM3 *connection) const {
+        delete connection;
+    }
+};
+
+
+// ----------------------------------------------------------------------
 // Helper functions
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 // Demonstrates how to use the RPC4 plugin
 void InGameChat(RakNet::BitStream *userData, Packet *packet)
@@ -566,11 +453,12 @@ RPC4GlobalRegistration __InGameChat("InGameChat", InGameChat, 0);
 // Write roomName and a list of NATTypeDetectionResult to a bitStream
 void SerializeToJSON(RakString &outputString, RakString &roomName, DataStructures::List<NATTypeDetectionResult> &natTypes)
 {
-	outputString.Set("'roomName': '%s', 'guid': '%s', 'natTypes' : [ ", roomName.C_String(), rakPeer->GetMyGUID().ToString());
+	outputString.Set("'roomName': '%s', 'guid': '%s', 'natTypes' : [ ", roomName.C_String(), nm->rakPeer->GetMyGUID().ToString());
 	for (unsigned short i=0; i < natTypes.Size(); i++)
 	{
-		if (i!=0)
+		if (i != 0) {
 			outputString += ", ";
+        }
 		RakString appendStr("{'type': %i}", natTypes[i]);
 		outputString += appendStr;
 	}
@@ -582,11 +470,12 @@ void SerializeToJSON(RakString &outputString, RakString &roomName, DataStructure
 // This operation happens after FullyConnectedMesh2 has told us about who the host is.
 void RegisterGameParticipant(RakNetGUID guid)
 {
-	Connection_RM3 *connection = replicaManager3->AllocConnection(rakPeer->GetSystemAddressFromGuid(guid), guid);
-	if (replicaManager3->PushConnection(connection)==false)
-		replicaManager3->DeallocConnection(connection);
-	teamManager->GetWorldAtIndex(0)->AddParticipant(guid);
-	readyEvent->AddToWaitList(0, guid);
+	Connection_RM3 *connection = nm->replicaManager3->AllocConnection(nm->rakPeer->GetSystemAddressFromGuid(guid), guid);
+	if (nm->replicaManager3->PushConnection(connection)==false) {
+		nm->replicaManager3->DeallocConnection(connection);
+    }
+	nm->teamManager->GetWorldAtIndex(0)->AddParticipant(guid);
+	nm->readyEvent->AddToWaitList(0, guid);
 }
 
 // Upload details about the current game state to the cloud
@@ -614,7 +503,7 @@ void PostRoomToMaster(void)
 	// Refresh the room again slightly less than every 30 seconds
 	game->whenToNextUpdateMasterServer = RakNet::GetTime() + 30000 - 1000;
 
-	httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
+	nm->httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
 
 	printf("Posted game session. In room.\n");
 }
@@ -622,16 +511,16 @@ void ReleaseRoomFromCloud(void)
 {
 	RakString rsRequest = RakString::FormatForDELETE(
 		RakString(MASTER_SERVER_ADDRESS "/testServer?__gameId=comprehensivePCGame&__rowId=%i", game->masterServerRow));
-	httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
+	nm->httpConnection2->TransmitRequest(rsRequest, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
 	game->masterServerRow=-1;
 }
 
 void CreateRoom(void)
 {
 	size_t arraySize;
-	if (game->GetMasterServerQueryResult())
-		arraySize = json_array_size(game->GetMasterServerQueryResult());
-	else
+	//if (game->GetMasterServerQueryResult())
+	//	arraySize = json_array_size(game->GetMasterServerQueryResult());
+	//else
 		arraySize = 0;
 	
 	if (arraySize > 0)
@@ -653,23 +542,22 @@ void CreateRoom(void)
 
 	// Room owner creates two teams and registers them for replication
 	Team *team1 = new Team;
-	team1->SetNetworkIDManager(networkIDManager);
+	team1->SetNetworkIDManager(nm->networkIDManager);
 	team1->teamName = "Team1";
-	teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team1->tmTeam, team1->GetNetworkID(), false);
+	nm->teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team1->tmTeam, team1->GetNetworkID(), false);
 	Team *team2 = new Team;
-	team2->SetNetworkIDManager(networkIDManager);
+	team2->SetNetworkIDManager(nm->networkIDManager);
 	team2->teamName = "Team2";
-	teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team2->tmTeam, team2->GetNetworkID(), false);
+	nm->teamManager->GetWorldAtIndex(0)->ReferenceTeam(&team2->tmTeam, team2->GetNetworkID(), false);
 
 	game->EnterPhase(Game::IN_LOBBY_WAITING_FOR_HOST);
 
 	// So that time spent in single player does not count towards which system has been running the longest in multiplayer
-	fullyConnectedMesh2->ResetHostCalculation();
+	nm->fullyConnectedMesh2->ResetHostCalculation();
 
 	printf("(E)xit session\n");
 }
 
-#if USE_UPNP!=0
 struct UPNPOpenWorkerArgs
 {
 	char buff[256];
@@ -788,6 +676,135 @@ void OpenUPNP(void)
 	printf("Discovering UPNP...\n");
 
 	DataStructures::List<RakNetSocket2* > sockets;
-	rakPeer->GetSockets(sockets);
+	nm->rakPeer->GetSockets(sockets);
 	UPNPOpenAsynch(sockets[0]->GetBoundAddress().GetPort(), 2000, UPNPProgressCallback, UPNPResultCallback, 0);
+}
+
+
+
+// initialize the network manager
+
+void NetworkManager::init() {
+    nm = (NetworkMger*) malloc(sizeof(NetworkMger));
+    game = new Game();
+    nm->rakPeer = RakPeerInterface::GetInstance();
+	nm->teamManager = TeamManager::GetInstance();
+	nm->fullyConnectedMesh2 = FullyConnectedMesh2::GetInstance();
+	nm->networkIDManager = NetworkIDManager::GetInstance();
+	nm->tcp = TCPInterface::GetInstance();
+	nm->natPunchthroughClient = NatPunchthroughClient::GetInstance();
+	nm->natTypeDetectionClient = NatTypeDetectionClient::GetInstance();
+	nm->rpc4 = RPC4::GetInstance();
+	nm->readyEvent = ReadyEvent::GetInstance();
+	nm->replicaManager3 = new SimpleRM3();
+	nm->httpConnection2 = HTTPConnection2::GetInstance();
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Attach plugins
+	// ---------------------------------------------------------------------------------------------------------------------
+	nm->rakPeer->AttachPlugin(nm->fullyConnectedMesh2);
+	nm->rakPeer->AttachPlugin(nm->teamManager);
+	nm->rakPeer->AttachPlugin(nm->natPunchthroughClient);
+	nm->rakPeer->AttachPlugin(nm->natTypeDetectionClient);
+	nm->rakPeer->AttachPlugin(nm->rpc4);
+	nm->rakPeer->AttachPlugin(nm->readyEvent);
+	nm->rakPeer->AttachPlugin(nm->replicaManager3);
+	/// TCPInterface supports plugins too
+	nm->tcp->AttachPlugin(nm->httpConnection2);
+
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Setup plugins: Disable automatically adding new connections. Allocate initial objects and register for replication
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Allocate a world instance to be used for team operations
+	nm->teamManager->AddWorld(0);
+	// Do not automatically count new connections
+	nm->teamManager->SetAutoManageConnections(false);
+
+	// New connections do not count until after login.
+	nm->fullyConnectedMesh2->SetAutoparticipateConnections(false);	
+
+	// Tell ReplicaManager3 which networkIDManager to use for object lookup, used for automatic serialization
+	nm->replicaManager3->SetNetworkIDManager(nm->networkIDManager);
+	// Do not automatically count new connections, but do drop lost connections automatically
+	nm->replicaManager3->SetAutoManageConnections(false, true);
+
+	// Reference static game objects that always exist
+	game = new Game();
+	game->SetNetworkIDManager(nm->networkIDManager);
+	game->SetNetworkID(0);
+	nm->replicaManager3->Reference(game);
+
+	// Setup my own user
+	User *user = new User();
+	user->SetNetworkIDManager(nm->networkIDManager);
+	user->userName = nm->rakPeer->GetMyGUID().ToString();
+	// Inform TeamManager of my user's team member info
+	nm->teamManager->GetWorldAtIndex(0)->ReferenceTeamMember(&user->tmTeamMember, user->GetNetworkID());
+
+	// ------------------------------------------------------------------------------
+	// Startup RakNet on first available port
+	// ------------------------------------------------------------------------------
+	nm->sd.socketFamily = AF_INET; // Only IPV4 supports broadcast on 255.255.255.255
+	nm->sd.port = 0;
+	StartupResult sr = nm->rakPeer->Startup(8, &nm->sd, 1);
+	// ummm TODO, lets NOT have random asserts in the middle of the code :p
+	RakAssert(sr == RAKNET_STARTED);
+	nm->rakPeer->SetMaximumIncomingConnections(8);
+	nm->rakPeer->SetTimeoutTime(30000, UNASSIGNED_SYSTEM_ADDRESS);
+}
+
+void NetworkManager::startSever() {
+
+}
+
+void NetworkManager::searchForGames() {
+
+}
+
+void NetworkManager::connect() {
+
+}
+
+void NetworkManager::isConnected() {
+
+}
+
+void NetworkManager::lock() {
+
+}
+
+void NetworkManager::unlock() {
+
+}
+
+void NetworkManager::isLocked() {
+
+}
+
+void NetworkManager::endConnection() {
+
+}
+
+void NetworkManager::destroy() {
+    nm->rakPeer->Shutdown(100);
+    while (game->teams.Size()) {
+        delete game->teams[game->teams.Size()-1];
+    }
+    while (game->users.Size()) {
+        delete game->users[game->users.Size()-1];
+    }
+    delete game;
+
+    RakPeerInterface::DestroyInstance(nm->rakPeer);
+    TeamManager::DestroyInstance(nm->teamManager);
+    FullyConnectedMesh2::DestroyInstance(nm->fullyConnectedMesh2);
+    NatPunchthroughClient::DestroyInstance(nm->natPunchthroughClient);
+    NatTypeDetectionClient::DestroyInstance(nm->natTypeDetectionClient);
+    RPC4::DestroyInstance(nm->rpc4);
+    ReadyEvent::DestroyInstance(nm->readyEvent);
+    delete nm->replicaManager3;
+    NetworkIDManager::DestroyInstance(nm->networkIDManager);
+    HTTPConnection2::DestroyInstance(nm->httpConnection2);
+    delete nm;
 }
