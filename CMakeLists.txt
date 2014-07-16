@@ -29,7 +29,7 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_C_FLAGS_DEBUG "-g -Wall -DCOCOS2D_DEBUG=1")
+	set(CMAKE_C_FLAGS_DEBUG "-g -Wall -Wno-unknown-pragmas -DCOCOS2D_DEBUG=1")
 	set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
@@ -57,22 +57,22 @@ endif(USE_CHIPMUNK)
 
 # architecture
 if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-set(ARCH_DIR "64-bit")
+  set(ARCH_DIR "64-bit")
 else()
-set(ARCH_DIR "32-bit")
+  set(ARCH_DIR "32-bit")
 endif()
 
 # Platform specific includes
 if( UNIX )
-set(GAME_SRC
-  ${CMAKE_SOURCE_DIR}/proj.linux/main.cpp
-)
+  set(GAME_SRC
+    ${CMAKE_SOURCE_DIR}/proj.linux/main.cpp
+  )
 elseif ( WIN32 )
-set(GAME_SRC
-  ${CMAKE_SOURCE_DIR}/proj.win32/main.cpp
-  ${CMAKE_SOURCE_DIR}/proj.win32/main.h
-  ${CMAKE_SOURCE_DIR}/proj.win32/resource.h
-)
+  set(GAME_SRC
+    ${CMAKE_SOURCE_DIR}/proj.win32/main.cpp
+    ${CMAKE_SOURCE_DIR}/proj.win32/main.h
+    ${CMAKE_SOURCE_DIR}/proj.win32/resource.h
+  )
 endif()
 
 # Add all the other source files here
@@ -82,6 +82,7 @@ LIST(APPEND GAME_SRC
   ${CMAKE_SOURCE_DIR}/Classes/Entities/Entity.cpp
   ${CMAKE_SOURCE_DIR}/Classes/Entities/Player.cpp
   ${CMAKE_SOURCE_DIR}/Classes/Level.cpp
+  ${CMAKE_SOURCE_DIR}/Classes/NetworkManager.cpp
 )
 
 file(GLOB RAKNET_SRC
@@ -101,6 +102,10 @@ include_directories(
   /usr/include
   /usr/include/GLFW
   /usr/local/include/GLFW
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/rapidjson
+  ${CMAKE_SOURCE_DIR}/rapidjson/error
+  ${CMAKE_SOURCE_DIR}/rapidjson/internal
   ${CMAKE_SOURCE_DIR}/Classes/Headers
   ${CMAKE_SOURCE_DIR}/Classes/RakNet
   ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
@@ -144,6 +149,7 @@ link_directories(
 
 if (WIN32)
 include_directories(
+  ${CMAKE_SOURCE_DIR}/rapidjson/msinttypes
   ${COCOS2D_ROOT}/cocos/platform/win32
   ${COCOS2D_ROOT}/external/jpeg/include/win32
   ${COCOS2D_ROOT}/external/png/include/win32
@@ -159,13 +165,6 @@ include_directories(
   ${COCOS2D_ROOT}/external/win32-specific/zlib/include
 )
 link_directories(
-  # linked by both 
-  # ${COCOS2D_ROOT}/external/tinyxml2
-  # ${COCOS2D_ROOT}/external/unzip
-  # ${COCOS2D_ROOT}/external/Box2D
-  # ${COCOS2D_ROOT}/external/chipmunk
-  # ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
-
   # windows only
   /usr/local/lib
   ${COCOS2D_ROOT}/external/png/prebuilt/win32
@@ -197,13 +196,6 @@ include_directories(
 )
 
 link_directories(
-  # linked by both
-  # ${COCOS2D_ROOT}/external/tinyxml2
-  # ${COCOS2D_ROOT}/external/unzip
-  # ${COCOS2D_ROOT}/external/Box2D
-  # ${COCOS2D_ROOT}/external/chipmunk
-  # ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
-  # linux only
   /usr/local/lib
   ${COCOS2D_ROOT}/external/jpeg/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/tiff/prebuilt/linux/${ARCH_DIR}
@@ -274,7 +266,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Classes/RakNet)
 
 # miniupnpc
 add_subdirectory(${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701)
-link_directories(${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701)
 
 if ( WIN32 )
 	# add the executable
@@ -305,7 +296,7 @@ target_link_libraries(${APP_NAME}
   cocos2d
   xxtea
   box2d
-  miniupnpc
+  libminiupnpc.a
 )
 
 set(APP_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
@@ -327,6 +318,8 @@ else()
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Levels ${APP_BIN_DIR}/Levels
-    )
+    # TODO: miniupnpc needs to be dynamically loaded WHY?
+    # COMMAND ${CMAKE_COMMAND} -E copy miniupnpc-1.9.20140701/libminiupnpc.so ${APP_BIN_DIR} 
+  )
 
 endif()

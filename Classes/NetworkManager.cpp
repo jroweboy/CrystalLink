@@ -182,20 +182,20 @@ public:
 		{
 		case CONNECTING_TO_SERVER:
 			{
-				char port[256];
+				std::string port;
 				printf("Enter address of server running the NATCompleteServer project.\nEnter for default: ");
-				Gets(game->serverIPAddr, 256);
-				if (game->serverIPAddr[0]==0) {
-					strcpy(game->serverIPAddr, DEFAULT_SERVER_ADDRESS);
-                }
+				// Gets(game->serverIPAddr, 256);
+				// if (game->serverIPAddr[0]==0) {
+				game->serverIPAddr = DEFAULT_SERVER_ADDRESS;
+                // }
 				printf("Enter server port, or enter for default: ");
-				Gets(port, 256);
-				if (port[0] == 0) {
-					strcpy(port, DEFAULT_SERVER_PORT);
-                }
-				ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr.c_str(), atoi(port), 0, 0);
-				if (car!=RakNet::CONNECTION_ATTEMPT_STARTED) {
-					printf("Failed connect call to %s. Code=%i\n", serverIPAddr, car);
+				// Gets(port, 256);
+				// if (port[0] == 0) {
+				port = DEFAULT_SERVER_PORT;
+                // }
+				ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr.c_str(), stoi(port), 0, 0);
+				if (car != RakNet::CONNECTION_ATTEMPT_STARTED) {
+					printf("Failed connect call to %s. Code=%i\n", serverIPAddr.c_str(), car);
 					phase = EXIT_SAMPLE;
 				}
 			}
@@ -603,9 +603,10 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 			int r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
 				eport, iport, lanaddr, 0, "UDP", 0, "0");
 
-			if(r!=UPNPCOMMAND_SUCCESS)
+			if (r != UPNPCOMMAND_SUCCESS) {
 				printf("AddPortMapping(%s, %s, %s) failed with code %d (%s)\n",
 				eport, iport, lanaddr, r, strupnperror(r));
+			}
 
 			char intPort[6];
 			char intClient[16];
@@ -616,19 +617,17 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 			char leaseDuration[128];
 			r = UPNP_GetSpecificPortMappingEntry(urls.controlURL,
 				data.first.servicetype,
-				eport, "UDP",
+				eport, "UDP", NULL,
 				intClient, intPort,
 				desc, enabled, leaseDuration);
 
-			if(r!=UPNPCOMMAND_SUCCESS)
-			{
+			if(r != UPNPCOMMAND_SUCCESS) {
 				sprintf(args->buff, "GetSpecificPortMappingEntry() failed with code %d (%s)\n",
 					r, strupnperror(r));
 				if (args->progressCallback)
 					args->progressCallback(args->buff, args->userData);
 			}
-			else
-			{
+			else {
 				if (args->progressCallback)
 					args->progressCallback("UPNP success.\n", args->userData);
 				// game->myNatType=NAT_TYPE_SUPPORTS_UPNP;
@@ -638,10 +637,11 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 		}
 	}
 
-	if (args->resultCallback)
+	if (args->resultCallback) {
 		args->resultCallback(success, args->portToOpen, args->userData);
+	}
 	RakNet::OP_DELETE(args, _FILE_AND_LINE_);
-	return 1;
+	return (void*)1;
 }
 
 void UPNPOpenAsynch(unsigned short portToOpen,
