@@ -4,14 +4,8 @@
     <Filter Include="win32">
       <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes">
-      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resource">
       <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{c4459563-ff99-4296-8db0-0b03b8454554}</UniqueIdentifier>
     </Filter>
     <Filter Include="RakNet">
       <UniqueIdentifier>{2dda5bb8-ee50-484d-9740-6e7cf134a1f5}</UniqueIdentifier>
@@ -32,18 +26,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Level.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Entities\Player.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\NetworkManager.cpp">
-      <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\RakNet\_FindFirst.cpp">
       <Filter>RakNet</Filter>
@@ -375,52 +357,17 @@
     <ClCompile Include="..\Classes\RakNet\WSAStartupSingleton.cpp">
       <Filter>RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PauseMenu.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\HudLayer.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\Entities\*.cpp" />
+    <ClCompile Include="..\Classes\Entities\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\TestScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\AppDelegate.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\ContactListener.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\Entity.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\HelloWorldScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\HudLayer.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\Player.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\SneakyButton.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\SneakyButtonSkinnedBase.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\SneakyJoystick.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\SneakyJoystickSkinnedBase.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Headers\NetworkManager.h">
-      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\RakNet\_FindFirst.h">
       <Filter>RakNet</Filter>
@@ -884,9 +831,6 @@
     <ClInclude Include="..\Classes\RakNet\XBox360Includes.h">
       <Filter>RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Headers\Level.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\rapidjson\allocators.h">
       <Filter>rapidjson</Filter>
     </ClInclude>
@@ -947,9 +891,18 @@
     <ClInclude Include="..\rapidjson\msinttypes\stdint.h">
       <Filter>rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Headers\PauseMenu.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
