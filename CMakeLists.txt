@@ -108,7 +108,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/rapidjson/internal
   ${CMAKE_SOURCE_DIR}/Classes/Headers
   ${CMAKE_SOURCE_DIR}/Classes/RakNet
-  ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
+  ${CMAKE_SOURCE_DIR}/miniupnpc
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
   ${COCOS2D_ROOT}/external/lua/lua
@@ -144,7 +144,7 @@ link_directories(
   ${COCOS2D_ROOT}/external/unzip
   ${COCOS2D_ROOT}/external/Box2D
   ${COCOS2D_ROOT}/external/chipmunk/src
-  ${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701
+  ${CMAKE_BINARY_DIR}/miniupnpc
 )
 
 if (WIN32)
@@ -207,6 +207,14 @@ link_directories(
 )
 endif()
 
+## Networking
+# RakNet
+add_subdirectory(${CMAKE_SOURCE_DIR}/Classes/RakNet)
+
+# miniupnpc
+message("Adding miniupnpc")
+add_subdirectory(${CMAKE_SOURCE_DIR}/miniupnpc)
+
 # if(USE_CHIPMUNK)
 	include_directories(${COCOS2D_ROOT}/external/chipmunk/include/chipmunk)
 	# chipmunk library
@@ -260,13 +268,6 @@ add_subdirectory(${COCOS2D_ROOT}/external/lua/tolua)
 # luabinding
 add_subdirectory(${COCOS2D_ROOT}/cocos/scripting/lua-bindings)
 
-## Networking
-# RakNet
-add_subdirectory(${CMAKE_SOURCE_DIR}/Classes/RakNet)
-
-# miniupnpc
-add_subdirectory(${CMAKE_SOURCE_DIR}/miniupnpc-1.9.20140701)
-
 if ( WIN32 )
 	# add the executable
 	add_executable(${APP_NAME}
@@ -287,6 +288,7 @@ else()
 endif()
 
 target_link_libraries(${APP_NAME}
+  libminiupnpc.a
   luabinding
   spine
   cocostudio
@@ -296,7 +298,6 @@ target_link_libraries(${APP_NAME}
   cocos2d
   xxtea
   box2d
-  libminiupnpc.a
 )
 
 set(APP_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
@@ -318,8 +319,5 @@ else()
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${APP_BIN_DIR}/Resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Levels ${APP_BIN_DIR}/Levels
-    # TODO: miniupnpc needs to be dynamically loaded WHY?
-    # COMMAND ${CMAKE_COMMAND} -E copy miniupnpc-1.9.20140701/libminiupnpc.so ${APP_BIN_DIR} 
   )
-
 endif()

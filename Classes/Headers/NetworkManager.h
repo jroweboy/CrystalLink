@@ -26,10 +26,15 @@
 #include "PacketLogger.h"
 #include "RPC4Plugin.h"
 #include "HTTPConnection2.h"
+#include <atomic>
+
+class User;
 
 typedef struct NetworkMger {
     RakNet::RakPeerInterface *rakPeer;
+    // Hold references to users on which tem
     RakNet::TeamManager *teamManager;
+    // Replicates classes to be sent over the network
     RakNet::ReplicaManager3 *replicaManager3;
     RakNet::NetworkIDManager *networkIDManager;
     RakNet::TCPInterface *tcp;
@@ -37,9 +42,16 @@ typedef struct NetworkMger {
     RakNet::NatPunchthroughClient *natPunchthroughClient;
     RakNet::NatTypeDetectionClient *natTypeDetectionClient;
     RakNet::RPC4 *rpc4;
+    // Holds a fully connected P2P network topology
     RakNet::FullyConnectedMesh2 *fullyConnectedMesh2;
+    // Used to query the RakNet master server to join rooms
     RakNet::HTTPConnection2 *httpConnection2;
+    // 
     RakNet::SocketDescriptor sd;
+    // This computer's user object
+    User *user;
+    // change to atomic_flag if this is too slow
+    std::atomic_bool isAlive;
 } NetworkMger;
 
 
