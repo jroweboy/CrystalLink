@@ -193,7 +193,7 @@ public:
 				// if (port[0] == 0) {
 				port = DEFAULT_SERVER_PORT;
                 // }
-				ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr.c_str(), stoi(port), 0, 0);
+                ConnectionAttemptResult car = nm->rakPeer->Connect(serverIPAddr.c_str(), atoi(port.c_str()), 0, 0);
 				if (car != RakNet::CONNECTION_ATTEMPT_STARTED) {
 					printf("Failed connect call to %s. Code=%i\n", serverIPAddr.c_str(), car);
 					phase = EXIT_SAMPLE;
@@ -641,7 +641,7 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 		args->resultCallback(success, args->portToOpen, args->userData);
 	}
 	RakNet::OP_DELETE(args, _FILE_AND_LINE_);
-	return (void*)1;
+	return NULL;
 }
 
 void UPNPOpenAsynch(unsigned short portToOpen,

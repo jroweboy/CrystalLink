@@ -72,8 +72,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)cocos\ui;$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes\RakNet;..\Classes;..;../miniupnpc-1.9.20140701;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)cocos\ui;$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes\RakNet;..\Classes;..;../miniupnpc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;MINIUPNP_STATICLIB;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -83,9 +83,10 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;IPHlpApi.Lib;Debug\miniupnpc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -455,8 +456,17 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ProjectReference Include="..\cocos2d\cocos\audio\proj.win32\CocosDenshion.vcxproj">
       <Project>{f8edd7fa-9a51-4e80-baeb-860825d2eac6}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\cocos2d\cocos\ui\proj.win32\libGUI.vcxproj">
+      <Project>{7e06e92c-537a-442b-9e4a-4761c84f8a1a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\cocos2d\external\chipmunk\proj.win32\chipmunk.vcxproj">
       <Project>{207bc7a9-ccf1-4f2f-a04d-45f72242ae25}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\miniupnpc\msvc\miniupnpc.vcxproj">
+      <Project>{d28ce435-cb33-4bae-8a52-c6ef915956f5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\miniupnpc\msvc\upnpc-static.vcxproj">
+      <Project>{469e1cf6-08a2-4b7b-a2aa-5bdb089857c1}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

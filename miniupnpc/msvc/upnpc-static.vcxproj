@@ -91,6 +91,12 @@
   <ItemGroup>
     <ClCompile Include="..\upnpc.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="miniupnpc.vcxproj">
+      <Project>{d28ce435-cb33-4bae-8a52-c6ef915956f5}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
