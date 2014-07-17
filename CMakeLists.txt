@@ -76,13 +76,13 @@ elseif ( WIN32 )
 endif()
 
 # Add all the other source files here
-LIST(APPEND GAME_SRC 
-  ${CMAKE_SOURCE_DIR}/Classes/AppDelegate.cpp
-  ${CMAKE_SOURCE_DIR}/Classes/Scenes/HudLayer.cpp
-  ${CMAKE_SOURCE_DIR}/Classes/Entities/Entity.cpp
-  ${CMAKE_SOURCE_DIR}/Classes/Entities/Player.cpp
-  ${CMAKE_SOURCE_DIR}/Classes/Level.cpp
-  ${CMAKE_SOURCE_DIR}/Classes/NetworkManager.cpp
+file(GLOB PRIMARY_GAME_SRC 
+  "Classes/*.cpp"
+  "Classes/Entities/*.cpp"
+)
+
+list(APPEND GAME_SRC
+  ${PRIMARY_GAME_SRC}
 )
 
 file(GLOB RAKNET_SRC

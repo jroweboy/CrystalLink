@@ -1202,7 +1202,7 @@ void readPackets() {
 		}
 
 		if (kbhit()) {
-			ch=getch();
+			ch = getch();
 
 			if (game->phase==Game::SEARCH_FOR_GAMES) {
 				if (ch=='c' || ch=='C') {
@@ -1347,10 +1347,10 @@ void readPackets() {
 		// The game host updates the master server
 		RakNet::Time t = RakNet::GetTime();
 		if ((nm->fullyConnectedMesh2->IsConnectedHost() || game->users.Size()==1) &&
-			t > game->whenToNextUpdateMasterServer &&
-			(game->phase == Game::IN_LOBBY_WITH_HOST ||
-			game->phase == Game::IN_GAME ||
-			game->phase == Game::IN_LOBBY_WAITING_FOR_HOST)
+				t > game->whenToNextUpdateMasterServer &&
+				(game->phase == Game::IN_LOBBY_WITH_HOST ||
+				game->phase == Game::IN_GAME ||
+				game->phase == Game::IN_LOBBY_WAITING_FOR_HOST)
 			)
 		{
 			PostRoomToMaster();
@@ -1361,13 +1361,14 @@ void readPackets() {
 }
 
 
-void NetworkManager::startSever() {
+void NetworkManager::startNetwork() {
 	// Start TCPInterface and begin connecting to the NAT punchthrough server
 	nm->tcp->Start(0,0,1);
 
 	// Connect to hosting server
 	game->EnterPhase(Game::CONNECTING_TO_SERVER);
 
+	// TODO: make this the interruptable class and store it in the nm
 	std::thread packets(readPackets);
 }
 
@@ -1375,12 +1376,15 @@ void NetworkManager::searchForGames() {
 
 }
 
-void NetworkManager::connect() {
-
+bool NetworkManager::connect() {
+	if (!NetworkManager::isConnected()) {
+		return false;
+	}
+	return true;
 }
 
-void NetworkManager::isConnected() {
-
+bool NetworkManager::isConnected() {
+	return false;
 }
 
 void NetworkManager::lock() {
@@ -1395,8 +1399,8 @@ void NetworkManager::isLocked() {
 
 }
 
-void NetworkManager::endConnection() {
-
+void NetworkManager::endNetwork() {
+	// TODO: shutdown the packet reading thread
 }
 
 void NetworkManager::destroy() {

@@ -62,15 +62,15 @@ extern NetworkMger *nm;
 namespace NetworkManager {
     void init();
 
-    void startSever();
+    void startNetwork();
 
     void searchForGames();
 
-    void connect();
+    bool connect();
 
-    void isConnected();
+    bool isConnected();
 
-    void endConnection();
+    void endNetwork();
 
     void destroy();
 

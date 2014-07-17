@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "SimpleAudioEngine.h"
+#include "PauseMenu.h"
 
 using namespace cocos2d;
 
@@ -125,7 +126,9 @@ void Level::update(float dt) {
 		}
 	} else if (KEYPRESSED(K_LEFT)) {
 		player[0]->move(Direction::LEFT);
-	}else { // add all the other keys as an else if
+	} else if (KEYPRESSED(K_MENU)) {
+        Director::getInstance()->pushScene(PauseMenu::scene());
+    } else { // add all the other keys as an else if
         player[0]->stopMoving();
     }
 }
