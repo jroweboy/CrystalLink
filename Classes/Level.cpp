@@ -4,7 +4,6 @@
 
 using namespace cocos2d;
 
-#define KEYPRESSED(x) (std::find(keysPressed.begin(), keysPressed.end(), x) != keysPressed.end())
 
 //TODO convert this into a LUA file with most the work done in C++
 Scene* Level::createScene()
@@ -127,6 +126,7 @@ void Level::update(float dt) {
 	} else if (KEYPRESSED(K_LEFT)) {
 		player[0]->move(Direction::LEFT);
 	} else if (KEYPRESSED(K_MENU)) {
+        keysPressed.erase(K_MENU);
         Director::getInstance()->pushScene(PauseMenu::scene());
     } else { // add all the other keys as an else if
         player[0]->stopMoving();

@@ -23,16 +23,32 @@ Scene* PauseMenu::scene() {
     return scene;
 }
 
+void PauseMenu::update(float dt) {
+    super::update(dt);
+    if (KEYPRESSED(K_UP)) {
+    } else if (KEYPRESSED(K_RIGHT)) {
+    } else if (KEYPRESSED(K_DOWN)) {
+	} else if (KEYPRESSED(K_LEFT)) {
+	} else if (KEYPRESSED(K_MENU)) {
+        keysPressed.erase(K_MENU);
+        Director::getInstance()->popScene();
+    } else { // add all the other keys as an else if
+    }
+}
 
 // on "init" you need to initialize your instance
-bool PauseMenu::init()
-{
-    if (!CCLayer::init()) {
+bool PauseMenu::init() {
+    if (!Layer::init()) {
         return false;
     }
 
     // Enable touch/click actions
     this->setTouchEnabled(true);
+
+    auto listener = EventListenerKeyboard::create();
+    listener->onKeyPressed = CC_CALLBACK_2(PauseMenu::onKeyPressed, this);
+    listener->onKeyReleased = CC_CALLBACK_2(PauseMenu::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     MenuItemFont* item1 = MenuItemFont::create( "Save", this, menu_selector(PauseMenu::onSave) );
     MenuItemFont* item2 = MenuItemFont::create( "Load", this, menu_selector(PauseMenu::onLoad) );
@@ -47,6 +63,8 @@ bool PauseMenu::init()
 
     // add this to the layer
     this->addChild( menu, 1 );
+    
+    this->scheduleUpdate();
     return true;
 }
 
@@ -74,8 +92,16 @@ void PauseMenu::onOptions(Ref* pSender) {
 
 void PauseMenu::onQuit(Ref* pSender) {
     // TODO: We probably want a separate Quit to main menu and Quit button?
-    CCDirector::sharedDirector()->end();
+    Director::sharedDirector()->end();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+void PauseMenu::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
+    keysPressed.insert(keyCode);
+}
+
+void PauseMenu::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
+    keysPressed.erase(keyCode);
 }
