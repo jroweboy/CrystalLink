@@ -1,4 +1,5 @@
 #include "PauseMenu.h"
+#include "NetworkMenu.h"
 
 using namespace cocos2d;
 
@@ -82,7 +83,7 @@ void PauseMenu::onLoadLevel(Ref* pSender) {
 }
 
 void PauseMenu::onNetwork(Ref* pSender) {
-    
+    Director::getInstance()->pushScene(NetworkMenu::scene());
 }
 
 void PauseMenu::onOptions(Ref* pSender) {

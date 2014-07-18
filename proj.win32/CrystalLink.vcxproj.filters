@@ -364,6 +364,13 @@
     <ClCompile Include="..\Classes\*.cpp" />
     <ClCompile Include="..\Classes\Entities\*.cpp" />
     <ClCompile Include="..\Classes\Entities\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\*.cpp" />
+    <ClCompile Include="..\Classes\Entities\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -891,6 +898,19 @@
     <ClInclude Include="..\rapidjson\msinttypes\stdint.h">
       <Filter>rapidjson\msinttypes</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
+    <ClInclude Include="..\Classes\Headers\*.h" />
     <ClInclude Include="..\Classes\Headers\*.h" />
     <ClInclude Include="..\Classes\Headers\*.h" />
     <ClInclude Include="..\Classes\Headers\*.h" />

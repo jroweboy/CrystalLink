@@ -7,7 +7,7 @@
 class PauseMenu : public cocos2d::CCLayer
 {
 private:
-    typedef Layer super;
+    typedef cocos2d::Layer super;
 public:
     virtual bool init();
 
