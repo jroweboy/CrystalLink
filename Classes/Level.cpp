@@ -66,12 +66,14 @@ bool Level::init()
     
     auto spawnPoint = objectGroup->getObject("SpawnPoint");
     
+    //Point center(size.width/2 + origin.x, size.height/2 + origin.y);
     int x = spawnPoint["x"].asInt();
     int y = spawnPoint["y"].asInt();
     //Sprite::create("TileGameResources/Player.png");
     auto player1 = std::unique_ptr<Player>(new Player);
     player1->initWithFilename("soldier");
     player1->setPosition(Vec2(x,y));
+    this->runAction(Follow::create(player1->getBatchNode(), tileMap->getBoundingBox()));
     this->setViewPointCenter(player1->getPosition());
 
     // TODO: I don't know how I'm going to make the players work in multiplayer online :p
@@ -80,7 +82,7 @@ bool Level::init()
     for (auto it = player.begin(); it != player.end(); ++it) {
         this->addChild((*it)->getBatchNode());
     }
-
+ 
     this->scheduleUpdate();
 
     return true;

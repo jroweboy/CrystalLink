@@ -4,6 +4,7 @@
 #include "rapidjson/stringbuffer.h"
 #include <iostream>
 #include <thread>
+#include "cocos2d.h"
 
 using namespace RakNet;
 
@@ -11,8 +12,14 @@ class Game;
 class Team;
 class User;
 
+SocketDescriptor socketDescriptors[2];
 NetworkMger *nm;
 Game *game;
+
+
+#define FAST_RETURN if (!nm->isAlive) { return NULL; }
+std::thread read_thread;
+std::thread open_upnp_thread;
 
 
 #define DEFAULT_SERVER_PORT "61111"
@@ -158,11 +165,11 @@ public:
 				gameInLobby=b;
 				if (gameInLobby) {
 					nm->readyEvent->DeleteEvent(0);
-					game->EnterPhase(Game::IN_LOBBY_WITH_HOST);
+					game->EnterPhase(Phase::IN_LOBBY_WITH_HOST);
 					printf("Game is now in the lobby\n");
 				} else {
 					nm->readyEvent->ForceCompletion(0);
-					game->EnterPhase(Game::IN_GAME);
+					game->EnterPhase(Phase::IN_GAME);
 				}
 			}
 			deserializeParameters->serializationBitstream[0].Read(masterServerRow);
@@ -220,7 +227,7 @@ public:
     }
 
 	void SearchForGames(void) {
-		printf("Downloading rooms...\n");
+		//printf("Downloading rooms...\n");
 
 		RakString rsRequest = RakString::FormatForGET(
 			MASTER_SERVER_ADDRESS "/testServer?__gameId=comprehensivePCGame");
@@ -228,14 +235,17 @@ public:
 	}
 
 	// Helper function to store and read the JSON from the GET request
-	// void SetMasterServerQueryResult(json_t *root) {
-	//     if (masterServerQueryResult) {
-	// 	       json_decref(masterServerQueryResult);
-	//     }
-	//     masterServerQueryResult = root;
-	// }
+	 //void SetMasterServerQueryResult(rapidjson::Document *root) {
+	 //    if (masterServerQueryResult) {
+	 //	       json_decref(masterServerQueryResult);
+	 //    }
+	 //    masterServerQueryResult = root;
+	 //}
 
-	// Document* GetMasterServerQueryResult(void)
+    //Document* GetMaster
+	rapidjson::Document* GetMasterServerQueryResult(void) {
+
+    }
 	// {
 	// 	if (masterServerQueryResult == 0) {
 	// 		return 0;
@@ -578,15 +588,18 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 	// Behind a NAT. Try to open with UPNP to avoid doing NAT punchthrough
 	struct UPNPDev * devlist = 0;
 	RakNet::Time t1 = GetTime();
+    FAST_RETURN;
 	devlist = upnpDiscover(args->timeout, 0, 0, 0, 0, 0);
 	RakNet::Time t2 = GetTime();
 	if (devlist)
 	{
+        FAST_RETURN;
 		if (args->progressCallback)
 			args->progressCallback("List of UPNP devices found on the network :\n", args->userData);
 		struct UPNPDev * device;
 		for(device = devlist; device; device = device->pNext)
 		{
+            FAST_RETURN;
 			sprintf(args->buff, " desc: %s\n st: %s\n\n", device->descURL, device->st);
 			if (args->progressCallback)
 				args->progressCallback(args->buff, args->userData);
@@ -595,6 +608,7 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 		char lanaddr[64];	/* my ip address on the LAN */
 		struct UPNPUrls urls;
 		struct IGDdatas data;
+        FAST_RETURN;
 		if (UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr))==1)
 		{
 			char iport[32];
@@ -602,7 +616,7 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 			char eport[32];
 			strcpy(eport, iport);
 
-			// Version miniupnpc-1.6.20120410
+            FAST_RETURN;
 			int r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
 				eport, iport, lanaddr, 0, "UDP", 0, "0");
 
@@ -618,6 +632,7 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 			char desc[128];
 			char enabled[128];
 			char leaseDuration[128];
+            FAST_RETURN;
 			r = UPNP_GetSpecificPortMappingEntry(urls.controlURL,
 				data.first.servicetype,
 				eport, "UDP", NULL,
@@ -660,7 +675,8 @@ void UPNPOpenAsynch(unsigned short portToOpen,
 	args->userData = userData;
 	args->progressCallback = progressCallback;
 	args->resultCallback = resultCallback;
-	RakThread::Create(UPNPOpenWorker, args);
+	//RakThread::Create(UPNPOpenWorker, args);
+    open_upnp_thread = std::thread(UPNPOpenWorker, args);
 }
 
 void UPNPProgressCallback(const char *progressMsg, void *userData)
@@ -669,8 +685,9 @@ void UPNPProgressCallback(const char *progressMsg, void *userData)
 }
 void UPNPResultCallback(bool success, unsigned short portToOpen, void *userData)
 {
-	if (success)
+	if (success) {
 		game->myNatType=NAT_TYPE_SUPPORTS_UPNP;
+    }
 	game->EnterPhase(Game::SEARCH_FOR_GAMES);
 }
 
@@ -680,6 +697,8 @@ void OpenUPNP(void)
 
 	DataStructures::List<RakNetSocket2* > sockets;
 	nm->rakPeer->GetSockets(sockets);
+    // TODO: Change this to be a normal std thread and have it join on shutdown
+    // Also add in more spots for a KILL THREAD statement
 	UPNPOpenAsynch(sockets[0]->GetBoundAddress().GetPort(), 2000, UPNPProgressCallback, UPNPResultCallback, 0);
 }
 
@@ -689,7 +708,6 @@ void OpenUPNP(void)
 
 void NetworkManager::init() {
     nm = (NetworkMger*) malloc(sizeof(NetworkMger));
-    game = new Game();
     nm->rakPeer = RakPeerInterface::GetInstance();
 	nm->teamManager = TeamManager::GetInstance();
 	nm->fullyConnectedMesh2 = FullyConnectedMesh2::GetInstance();
@@ -748,31 +766,59 @@ void NetworkManager::init() {
 	// ------------------------------------------------------------------------------
 	// Startup RakNet on first available port
 	// ------------------------------------------------------------------------------
-	nm->sd.socketFamily = AF_INET; // Only IPV4 supports broadcast on 255.255.255.255
-	nm->sd.port = 0;
-	StartupResult sr = nm->rakPeer->Startup(8, &nm->sd, 1);
+    //nm->sd = (RakNet::SocketDescriptor*) malloc(sizeof(RakNet::SocketDescriptor) * 2);
+    //nm->sd[0].port=atoi(DEFAULT_SERVER_PORT);
+    //nm->sd[0].socketFamily=AF_INET; // Test out IPV4
+    //nm->sd[1].port=atoi(DEFAULT_SERVER_PORT);
+    //nm->sd[1].socketFamily=AF_INET6; // Test out IPV6
+    socketDescriptors[0].port=atoi(DEFAULT_SERVER_PORT);
+    socketDescriptors[0].socketFamily=AF_INET; // Test out IPV4
+    socketDescriptors[1].port=atoi(DEFAULT_SERVER_PORT);
+    socketDescriptors[1].socketFamily=AF_INET6; // Test out IPV6
+    auto startresult = nm->rakPeer->Startup(4, socketDescriptors, 2 );
+    nm->rakPeer->SetMaximumIncomingConnections(4);
+    if (startresult != RakNet::RAKNET_STARTED)
+    {
+        printf("Failed to start dual IPV4 and IPV6 ports. Trying IPV4 only.\n");
+        // Try again, but leave out IPV6
+        startresult = nm->rakPeer->Startup(4, socketDescriptors, 1 );
+        if (startresult != RakNet::RAKNET_STARTED)
+        {
+            //std::cout << "Server failed to start. Terminating." << std::endl;
+            //exit(1);
+            // TODO better error handling of bad network states
+	        RakAssert(startresult == RAKNET_STARTED);
+        }
+    }
+
+	//StartupResult sr = nm->rakPeer->Startup(8, &nm->sd, 1);
 	// ummm TODO, lets NOT have random asserts in the middle of the code :p
-	RakAssert(sr == RAKNET_STARTED);
+	RakAssert(startresult == RAKNET_STARTED);
 	nm->rakPeer->SetMaximumIncomingConnections(8);
 	nm->rakPeer->SetTimeoutTime(30000, UNASSIGNED_SYSTEM_ADDRESS);
 }
 
-void readPackets() {
+
+//RAK_THREAD_DECLARATION(readPackets, NULL) {
+unsigned int readPackets() {
 	// Read packets loop
 	char ch;
 	Packet *packet;
+    // TODO rethink this network code block.
 	while (nm->isAlive && game->phase != Game::EXIT_SAMPLE) {
-		for (packet = nm->rakPeer->Receive(); packet; nm->rakPeer->DeallocatePacket(packet), packet = nm->rakPeer->Receive()) {
+        for (packet = nm->rakPeer->Receive(); nm->isAlive && packet; nm->rakPeer->DeallocatePacket(packet), packet = nm->rakPeer->Receive()) {
+            FAST_RETURN;
 			switch (packet->data[0]) {
 			case ID_NEW_INCOMING_CONNECTION: {
-					printf("ID_NEW_INCOMING_CONNECTION from %s. guid=%s.\n", 
-						packet->systemAddress.ToString(true), packet->guid.ToString());
+					//printf("ID_NEW_INCOMING_CONNECTION from %s. guid=%s.\n", 
+					//	packet->systemAddress.ToString(true), packet->guid.ToString());
+                    FAST_RETURN;
 				}
 				break;
 			case ID_CONNECTION_REQUEST_ACCEPTED: {
-					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s,guid=%s\n", 
-						packet->systemAddress.ToString(true), packet->guid.ToString());
-
+					//printf("ID_CONNECTION_REQUEST_ACCEPTED from %s,guid=%s\n", 
+					//	packet->systemAddress.ToString(true), packet->guid.ToString());
+                    FAST_RETURN;
 					if (game->phase == Game::CONNECTING_TO_SERVER) {
 						game->natPunchServerAddress=packet->systemAddress;
 						game->natPunchServerGuid=packet->guid;
@@ -802,6 +848,7 @@ void readPackets() {
 				break;
 			case ID_CONNECTION_LOST:
 			case ID_DISCONNECTION_NOTIFICATION:
+                FAST_RETURN;
 				if (game->phase == Game::DETERMINE_NAT_TYPE) {
 					printf("Lost connection during NAT type detection. Reason %s. Retrying...\n", 
 						PacketLogger::BaseIDTOString(packet->data[0]));
@@ -944,11 +991,13 @@ void readPackets() {
 
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
+                    FAST_RETURN;
 					if (game->phase == Game::NAT_PUNCH_TO_GAME_HOST || game->phase == Game::VERIFIED_JOIN) {
 						// Connect to the session host
 						ConnectionAttemptResult car = nm->rakPeer->Connect(
 									packet->systemAddress.ToString(false), 
 									packet->systemAddress.GetPort(), 0, 0);
+                        FAST_RETURN;
 						if (car != RakNet::CONNECTION_ATTEMPT_STARTED) {
 							printf("Failed connect call to %s. Code=%i\n", 
 								packet->systemAddress.ToString(false), car);
@@ -981,7 +1030,7 @@ void readPackets() {
 						printf("Note: Your router must support UPNP or have the user manually forward ports.\n");
 						printf("Otherwise NATPunchthrough may not always succeed.\n");
 					}
-
+                    FAST_RETURN;
 					game->EnterPhase(Game::SEARCH_FOR_GAMES);
 				}
 				break;
@@ -1005,6 +1054,7 @@ void readPackets() {
 
 			// ID_USER_PACKET_ENUM is used by this sample as a custom message to ask to join a game
 			case ID_USER_PACKET_ENUM:
+                FAST_RETURN;
 				if (game->phase > Game::SEARCH_FOR_GAMES) {
 					printf("Got request from client to join session.\nExecuting StartVerifiedJoin()\n");
 					nm->fullyConnectedMesh2->StartVerifiedJoin(packet->guid);
@@ -1023,7 +1073,7 @@ void readPackets() {
 			case ID_FCM2_VERIFIED_JOIN_START:
 				{
 					game->EnterPhase(Game::VERIFIED_JOIN);
-
+                    FAST_RETURN;
 					// This message means the session host sent us a list of systems in the session
 					// Once we connect to, or fail to connect to, each of these systems we will get ID_FCM2_VERIFIED_JOIN_FAILED, ID_FCM2_VERIFIED_JOIN_ACCEPTED, or ID_FCM2_VERIFIED_JOIN_REJECTED
 					printf("Host sent us system list. Doing NAT punch to each system...\n");
@@ -1084,6 +1134,7 @@ void readPackets() {
 				{
 					BitStream additionalData;
 					nm->fullyConnectedMesh2->GetVerifiedJoinRejectedAdditionalData(packet, &additionalData);
+                    FAST_RETURN;
 					RakString reason;
 					additionalData.Read(reason);
 					printf("Join rejected. Reason=%s\n", reason.C_String());
@@ -1108,7 +1159,7 @@ void readPackets() {
 				}
 			}
 		}
-
+        FAST_RETURN;
 		// The following code is TCP operations for talking to the master server, and parsing the reply
 		SystemAddress sa;
 		// This is kind of crappy, but for TCP plugins, always do HasCompletedConnectionAttempt, then Receive(), then HasFailedConnectionAttempt(),HasLostConnection()
@@ -1123,12 +1174,14 @@ void readPackets() {
 		RakString responseReceived;
 		SystemAddress hostReceived;
 		int contentOffset;
+        FAST_RETURN;
 		if (nm->httpConnection2->GetResponse(stringTransmitted, hostTransmitted, responseReceived, hostReceived, contentOffset)) {
 			if (!responseReceived.IsEmpty()) {
 				if (contentOffset == -1) {
 					// No content
 					printf(responseReceived.C_String());
 				} else {
+                    FAST_RETURN;
 					// TODO: Parse the JSON response with rapidjson
 					rapidjson::Document t;
 					t.Parse(responseReceived.C_String() + contentOffset);
@@ -1136,7 +1189,7 @@ void readPackets() {
 				    rapidjson::StringBuffer buffer;
 				    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 				    t.Accept(writer);
-				    std::cout << "Testing response " << buffer.GetString() << std::endl;
+				    cocos2d::log("Testing response %s\n",buffer.GetString());
 					// json_error_t error;
 					// json_t *root = json_loads(responseReceived.C_String() + contentOffset, JSON_REJECT_DUPLICATES, &error);
 					// if (!root)
@@ -1200,149 +1253,149 @@ void readPackets() {
 				}
 			}
 		}
+        FAST_RETURN;
+		//if (kbhit()) {
+		//	ch = getch();
 
-		if (kbhit()) {
-			ch = getch();
+		//	if (game->phase==Game::SEARCH_FOR_GAMES) {
+		//		if (ch=='c' || ch=='C') {
+		//			CreateRoom();
+		//		}
+		//		if (ch=='s' || ch=='S') {
+		//			game->SearchForGames();
+		//		}
+		//		else if (ch=='j' || ch=='J') {
+		//			// size_t arraySize = 0;
+		//			// json_t *jsonArray = game->GetMasterServerQueryResult();
+		//			// if (jsonArray) {
+		//			// 	arraySize = json_array_size(jsonArray);
+		//			// }
 
-			if (game->phase==Game::SEARCH_FOR_GAMES) {
-				if (ch=='c' || ch=='C') {
-					CreateRoom();
-				}
-				if (ch=='s' || ch=='S') {
-					game->SearchForGames();
-				}
-				else if (ch=='j' || ch=='J') {
-					// size_t arraySize = 0;
-					// json_t *jsonArray = game->GetMasterServerQueryResult();
-					// if (jsonArray) {
-					// 	arraySize = json_array_size(jsonArray);
-					// }
+		//			// Join room
+		//			// if (arraySize == 0) {
+		//			// 	printf("No rooms to join.\n");
+		//			// } else {
+		//			// 	int index;
+		//			// 	if (arraySize > 1) {
+		//			// 		printf("Enter index of room to join.\n");
+		//			// 		char indexstr[64];
+		//			// 		Gets(indexstr,64);
+		//			// 		index = atoi(indexstr);
+		//			// 	} else {
+		//			// 		index = 0;
+		//			// 	}
 
-					// Join room
-					// if (arraySize == 0) {
-					// 	printf("No rooms to join.\n");
-					// } else {
-					// 	int index;
-					// 	if (arraySize > 1) {
-					// 		printf("Enter index of room to join.\n");
-					// 		char indexstr[64];
-					// 		Gets(indexstr,64);
-					// 		index = atoi(indexstr);
-					// 	} else {
-					// 		index = 0;
-					// 	}
+		//			// 	if (index < 0 || (unsigned int) index >= arraySize) {
+		//			// 		printf("Index out of range.\n");
+		//			// 	} else {
+		//			// 		json_t* object = json_array_get(jsonArray, index);
+		//			// 		json_t* guidVal = json_object_get(object, "guid");
+		//			// 		RakAssert(guidVal->type==JSON_STRING);
+		//			// 		RakNetGUID clientGUID;
+		//			// 		clientGUID.FromString(json_string_value(guidVal));
+		//			// 		if (clientGUID != rakPeer->GetMyGUID()) {
+		//			// 			nm->natPunchthroughClient->OpenNAT(clientGUID, game->natPunchServerAddress);
+		//			// 			game->EnterPhase(Game::NAT_PUNCH_TO_GAME_HOST);
+		//			// 		} else {
+		//			// 			printf("Cannot join your own room\n");
+		//			// 		}
+		//			// 	}
+		//			// }
+		//		}
+		//	} else {
+		//		if (game->phase == Game::IN_GAME) {
+		//			if (ch=='c' || ch=='C') {
+		//				DataStructures::List<RakNetGUID> participantList;
+		//				nm->fullyConnectedMesh2->GetParticipantList(participantList);
 
-					// 	if (index < 0 || (unsigned int) index >= arraySize) {
-					// 		printf("Index out of range.\n");
-					// 	} else {
-					// 		json_t* object = json_array_get(jsonArray, index);
-					// 		json_t* guidVal = json_object_get(object, "guid");
-					// 		RakAssert(guidVal->type==JSON_STRING);
-					// 		RakNetGUID clientGUID;
-					// 		clientGUID.FromString(json_string_value(guidVal));
-					// 		if (clientGUID != rakPeer->GetMyGUID()) {
-					// 			nm->natPunchthroughClient->OpenNAT(clientGUID, game->natPunchServerAddress);
-					// 			game->EnterPhase(Game::NAT_PUNCH_TO_GAME_HOST);
-					// 		} else {
-					// 			printf("Cannot join your own room\n");
-					// 		}
-					// 	}
-					// }
-				}
-			} else {
-				if (game->phase == Game::IN_GAME) {
-					if (ch=='c' || ch=='C') {
-						DataStructures::List<RakNetGUID> participantList;
-						nm->fullyConnectedMesh2->GetParticipantList(participantList);
+		//				if (participantList.Size() > 0)
+		//				{
+		//					printf("Enter in-game chat message: ");
+		//					char str[256];
+		//					Gets(str, 256);
+		//					RakString rs;
+		//					// Don't use RakString constructor to assign str, or will process % escape characters
+		//					rs = str;
+		//					BitStream bsOut;
+		//					bsOut.Write(rs);
+		//					for (unsigned int i=0; i < participantList.Size(); i++) {
+		//						nm->rpc4->Signal("InGameChat", &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, participantList[i], false, false);
+		//					}
+		//				}
+		//			}
+		//		}
 
-						if (participantList.Size() > 0)
-						{
-							printf("Enter in-game chat message: ");
-							char str[256];
-							Gets(str, 256);
-							RakString rs;
-							// Don't use RakString constructor to assign str, or will process % escape characters
-							rs = str;
-							BitStream bsOut;
-							bsOut.Write(rs);
-							for (unsigned int i=0; i < participantList.Size(); i++) {
-								nm->rpc4->Signal("InGameChat", &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, participantList[i], false, false);
-							}
-						}
-					}
-				}
+		//		if (ch == '1') {
+		//			nm->user->tmTeamMember.RequestTeamSwitch(&game->teams[0]->tmTeam, 0);
+		//		} else if (ch == '2') {
+		//			nm->user->tmTeamMember.RequestTeamSwitch(&game->teams[1]->tmTeam, 0);
+		//		} else if (ch == 'r' || ch == 'R') {
+		//			if (nm->readyEvent->SetEvent(0, true))
+		//				printf("We are ready to start.\n");
+		//		} else if (ch == 'u' || ch == 'U') {
+		//			if (nm->readyEvent->SetEvent(0, false)) {
+		//				printf("We are no longer ready to start.\n");
+		//			}
+		//		} else if (ch == 'l' || ch == 'L') {
+		//			if (nm->fullyConnectedMesh2->IsConnectedHost()) {
+		//				if (game->lockGame) {
+		//					printf("Game is no longer locked\n");
+		//					game->lockGame=false;
+		//				} else {
+		//					printf("Game is now locked\n");
+		//					game->lockGame=true;
+		//				}
+		//			}
+		//		} else if (ch == 'b' || ch == 'B') {
+		//			if (nm->fullyConnectedMesh2->IsConnectedHost()) {
+		//				if (game->gameInLobby) {
+		//					nm->readyEvent->ForceCompletion(0);
+		//					game->gameInLobby=false;
+		//					game->EnterPhase(Game::IN_GAME);
+		//				} else {
+		//					nm->readyEvent->DeleteEvent(0);
+		//					printf("Game ended, and now in lobby\n");
+		//					game->gameInLobby=true;
+		//					game->EnterPhase(Game::IN_LOBBY_WITH_HOST);
+		//				}
+		//			}
+		//		} else if (ch == 'e' || ch == 'E') {
+		//			// Disconnect from FullyConnectedMesh2 participants
+		//			DataStructures::List<RakNetGUID> participantList;
+		//			nm->fullyConnectedMesh2->GetParticipantList(participantList);
+		//			for (unsigned int i=0; i < participantList.Size(); i++) {
+		//				nm->rakPeer->CloseConnection(participantList[i], true);
+		//			}
 
-				if (ch == '1') {
-					nm->user->tmTeamMember.RequestTeamSwitch(&game->teams[0]->tmTeam, 0);
-				} else if (ch == '2') {
-					nm->user->tmTeamMember.RequestTeamSwitch(&game->teams[1]->tmTeam, 0);
-				} else if (ch == 'r' || ch == 'R') {
-					if (nm->readyEvent->SetEvent(0, true))
-						printf("We are ready to start.\n");
-				} else if (ch == 'u' || ch == 'U') {
-					if (nm->readyEvent->SetEvent(0, false)) {
-						printf("We are no longer ready to start.\n");
-					}
-				} else if (ch == 'l' || ch == 'L') {
-					if (nm->fullyConnectedMesh2->IsConnectedHost()) {
-						if (game->lockGame) {
-							printf("Game is no longer locked\n");
-							game->lockGame=false;
-						} else {
-							printf("Game is now locked\n");
-							game->lockGame=true;
-						}
-					}
-				} else if (ch == 'b' || ch == 'B') {
-					if (nm->fullyConnectedMesh2->IsConnectedHost()) {
-						if (game->gameInLobby) {
-							nm->readyEvent->ForceCompletion(0);
-							game->gameInLobby=false;
-							game->EnterPhase(Game::IN_GAME);
-						} else {
-							nm->readyEvent->DeleteEvent(0);
-							printf("Game ended, and now in lobby\n");
-							game->gameInLobby=true;
-							game->EnterPhase(Game::IN_LOBBY_WITH_HOST);
-						}
-					}
-				} else if (ch == 'e' || ch == 'E') {
-					// Disconnect from FullyConnectedMesh2 participants
-					DataStructures::List<RakNetGUID> participantList;
-					nm->fullyConnectedMesh2->GetParticipantList(participantList);
-					for (unsigned int i=0; i < participantList.Size(); i++) {
-						nm->rakPeer->CloseConnection(participantList[i], true);
-					}
+		//			// User instances are deleted automatically from ReplicaManager3.
+		//			// However, teams are not deleted since the Team class can migrate between systems. So delete Team instances manually
+		//			while (game->teams.Size()) {
+		//				delete game->teams[game->teams.Size()-1];
+		//			}
 
-					// User instances are deleted automatically from ReplicaManager3.
-					// However, teams are not deleted since the Team class can migrate between systems. So delete Team instances manually
-					while (game->teams.Size()) {
-						delete game->teams[game->teams.Size()-1];
-					}
+		//			// If we were the host, no longer list this session
+		//			// The new host will call PostRoomToCloud to reupload under a new IP address on ID_FCM2_NEW_HOST
+		//			ReleaseRoomFromCloud();
 
-					// If we were the host, no longer list this session
-					// The new host will call PostRoomToCloud to reupload under a new IP address on ID_FCM2_NEW_HOST
-					ReleaseRoomFromCloud();
+		//			// Clear out state data from plugins
+		//			nm->fullyConnectedMesh2->Clear();
+		//			nm->readyEvent->DeleteEvent(0);
+		//			nm->replicaManager3->Clear(false);
+		//			nm->replicaManager3->Reference(game);
 
-					// Clear out state data from plugins
-					nm->fullyConnectedMesh2->Clear();
-					nm->readyEvent->DeleteEvent(0);
-					nm->replicaManager3->Clear(false);
-					nm->replicaManager3->Reference(game);
+		//			game->Reset();
+		//			game->EnterPhase(Game::SEARCH_FOR_GAMES);
+		//		} else if (ch == 'q' || ch == 'Q') {
+		//			printf("Quitting.\n");
 
-					game->Reset();
-					game->EnterPhase(Game::SEARCH_FOR_GAMES);
-				} else if (ch == 'q' || ch == 'Q') {
-					printf("Quitting.\n");
+		//			RakString rspost = RakString::FormatForGET(
+		//				RakString(MASTER_SERVER_ADDRESS "/testServer?row=%i", game->masterServerRow));
+		//			nm->httpConnection2->TransmitRequest(rspost, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
 
-					RakString rspost = RakString::FormatForGET(
-						RakString(MASTER_SERVER_ADDRESS "/testServer?row=%i", game->masterServerRow));
-					nm->httpConnection2->TransmitRequest(rspost, MASTER_SERVER_ADDRESS, MASTER_SERVER_PORT);
-
-					game->EnterPhase(Game::EXIT_SAMPLE);
-				}
-			}
-		}
+		//			game->EnterPhase(Game::EXIT_SAMPLE);
+		//		}
+		//	}
+		//}
 
 		// The game host updates the master server
 		RakNet::Time t = RakNet::GetTime();
@@ -1355,11 +1408,10 @@ void readPackets() {
 		{
 			PostRoomToMaster();
 		}
-
+        FAST_RETURN;
 		RakSleep(30);
 	}
 }
-
 
 void NetworkManager::startNetwork() {
 	// Start TCPInterface and begin connecting to the NAT punchthrough server
@@ -1367,9 +1419,11 @@ void NetworkManager::startNetwork() {
 
 	// Connect to hosting server
 	game->EnterPhase(Game::CONNECTING_TO_SERVER);
-
+    
+    nm->isAlive = true;
+    read_thread = std::thread(readPackets);
 	// TODO: make this the interruptable class and store it in the nm
-	std::thread packets(readPackets);
+	//RakThread::Create(readPackets, NULL);
 }
 
 void NetworkManager::searchForGames() {
@@ -1400,10 +1454,17 @@ void NetworkManager::isLocked() {
 }
 
 void NetworkManager::endNetwork() {
-	// TODO: shutdown the packet reading thread
+	// TODO: shutdown the packet reading thread?
 }
 
 void NetworkManager::destroy() {
+    nm->isAlive = false;
+    if (open_upnp_thread.joinable()) {
+        open_upnp_thread.join();
+    }
+    if (read_thread.joinable()) {
+        read_thread.join();
+    }
     nm->rakPeer->Shutdown(100);
     while (game->teams.Size()) {
         delete game->teams[game->teams.Size()-1];
@@ -1423,5 +1484,7 @@ void NetworkManager::destroy() {
     delete nm->replicaManager3;
     NetworkIDManager::DestroyInstance(nm->networkIDManager);
     HTTPConnection2::DestroyInstance(nm->httpConnection2);
-    delete nm;
+    free(nm);
+
+    // also remove the SocketDescriptors
 }

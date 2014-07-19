@@ -71,6 +71,7 @@ protected:
     cocos2d::SpriteBatchNode *batchNode;
 
     DIRECTION direction;
+    DIRECTION lastDirection;
     //b2Body *body;
     //b2World *world;
     STATE state;

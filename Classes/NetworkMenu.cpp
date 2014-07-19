@@ -1,4 +1,5 @@
 #include "NetworkMenu.h"
+#include "NetworkManager.h"
 
 using namespace cocos2d;
 using namespace cocos2d::ui;
@@ -26,6 +27,11 @@ Scene* NetworkMenu::scene() {
 
 void NetworkMenu::update(float dt) {
     super::update(dt);
+    _timeSinceLastUpdate += dt;
+    if (_timeSinceLastUpdate > 1) {
+        _timeSinceLastUpdate = 0;
+        //NetworkManager::gameList();
+    }
     if (KEYPRESSED(K_UP)) {
     } else if (KEYPRESSED(K_RIGHT)) {
     } else if (KEYPRESSED(K_DOWN)) {
@@ -46,23 +52,7 @@ bool NetworkMenu::init() {
     // Enable touch/click actions
     this->setTouchEnabled(true);
 
-    //auto listener = EventListenerKeyboard::create();
-    //listener->onKeyPressed = CC_CALLBACK_2(PauseMenu::onKeyPressed, this);
-    //listener->onKeyReleased = CC_CALLBACK_2(PauseMenu::onKeyReleased, this);
-    //_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-    //auto uButton = ui::Button::create();
-    //uButton->setTouchEnabled(true);
-    //uButton->setPosition(Point(size.width / 2, size.height / 2) + Point(0, -50));
-    //uButton->setTitleText("Text Button");
-    //uButton->addTouchEventListener(this, toucheventselector(NetworkMenu::touchEvent));
-    //this->addChild(uButton);
-    //MenuItemFont* item1 = MenuItemFont::create( "Save", this, menu_selector(PauseMenu::onSave) );
-    //MenuItemFont* item2 = MenuItemFont::create( "Load", this, menu_selector(PauseMenu::onLoad) );
-    //MenuItemFont* item3 = MenuItemFont::create( "Load Level (debug)", this, menu_selector(PauseMenu::onLoadLevel) );
-    //MenuItemFont* item4 = MenuItemFont::create( "Online Play", this, menu_selector(PauseMenu::onNetwork) );
-    //MenuItemFont* item5 = MenuItemFont::create( "Options", this, menu_selector(PauseMenu::onOptions) );
-    //MenuItemFont* item6 = MenuItemFont::create( "Quit", this, menu_selector(PauseMenu::onQuit) );
-    
+    // TODO: Integrate cocos studio for this crap :p
     auto size = Director::getInstance()->getWinSize();
     CheckBox* checkBox = CheckBox::create();
     checkBox->setTouchEnabled(true);
@@ -71,24 +61,40 @@ bool NetworkMenu::init() {
                            "cocosgui/check_box_active.png",
                            "cocosgui/check_box_normal_disable.png",
                            "cocosgui/check_box_active_disable.png");
-    checkBox->setPosition(Point(size.width / 2.0f, size.height / 2.0f));
+    checkBox->setPosition(Point(size.width / 3.0f, size.height - 50));
     checkBox->addEventListenerCheckBox(this, checkboxselectedeventselector(NetworkMenu::selectedEvent));
-    //checkBox->addEventListener(CC_CALLBACK_2(NetworkMenu::selectedEvent), this);
+    online_label = Text::create();
+    online_label->setText("Offline");
+    online_label->setFontSize(32);
+    //online_label->setAnchorPoint(Point(0.5f, -1));
+    online_label->setPosition(Point(size.width / 3.0f + 75, size.height-50));
+    //gamename = TextField::create("Game Name:", "Veranda", 14);
+    //gamename->setPosition(Point(size.width / 3.0f + 75, size.height-100));
+    //gamename->setMaxLength(12);
+    //gamename->addEventListener(CC_CALLBACK_2(NetworkMenu::textFieldEvent, this));
+
+    gamename = cocos2d::extension::EditBox::create(Size(200,50), cocos2d::extension::Scale9Sprite::create("cocosgui/green_edit.png"));
+    gamename->setPosition(Point(size.width / 3.0f + 75, size.height-100));
+    gamename->setFontColor(Color3B(255,105,180));
+    gamename->setPlaceHolder("Game Name:");
+    gamename->setMaxLength(8);
+    gamename->setReturnType(cocos2d::extension::EditBox::KeyboardReturnType::DONE);
+    this->gamename->retain();
+
     this->addChild(checkBox);
-
-
-    //// combine to form a menu and allign Vertically
-    //Menu* menu = Menu::create( item1, item2, item3, item4, item5, item6, NULL );
-    //menu->alignItemsVertically();
-
-    // add this to the layer
-    //this->addChild( menu, 1 );
+    this->addChild(online_label);
+    //this->addChild(gamename);
+    //MenuItemFont* item1 = MenuItemFont::create( "Save", this, menu_selector(NetworkMenu::SelectGame) );
     
-    //this->scheduleUpdate();
+    this->scheduleUpdate();
     return true;
 }
 
 void NetworkMenu::touchEvent(void) {
+
+}
+
+void NetworkMenu::SelectGame(Ref* pSender) {
 
 }
 
@@ -97,11 +103,18 @@ void NetworkMenu::selectedEvent(Ref* pSender, CheckBoxEventType type)
     switch (type)
     {
         case CheckBox::EventType::SELECTED:
-            //_displayValueLabel->setString(String::createWithFormat("Selected")->getCString());
+            NetworkManager::init();
+            NetworkManager::startNetwork();
+            this->addChild(gamename);
+            //this->addChild(menu);
+            online_label->setString("Online");
             break;
 
         case CheckBox::EventType::UNSELECTED:
-            //_displayValueLabel->setString(String::createWithFormat("Unselected")->getCString());
+            NetworkManager::destroy();
+            //this->removeChild(menu);
+            this->removeChild(gamename);
+            online_label->setString("Offline");
             break;
 
         default:

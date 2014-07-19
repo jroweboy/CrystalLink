@@ -9,7 +9,9 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
-    
+    if (nm && nm->isAlive) {
+        NetworkManager::destroy();
+    }
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {

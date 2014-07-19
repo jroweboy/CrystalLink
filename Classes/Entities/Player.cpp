@@ -5,6 +5,7 @@ USING_NS_CC;
 Player::Player()
 {
     direction = Direction::DOWN;
+    lastDirection = direction;
     state     = State::STAND;
 }
 
@@ -96,42 +97,42 @@ void Player::move(DIRECTION d)
     switch (d) {
     case Direction::UPRIGHT:
         changeDirection(Direction::UP);
-        setPosition(getPosition() + Vec2(0.707,0.707));
+        setPosition(getPosition() + Vec2(PLAYER_DIAG_SPEED, PLAYER_DIAG_SPEED));
         setStateMoving();
         break;
     case Direction::UP:
         changeDirection(Direction::UP);
-        setPosition(getPosition() + Vec2(0,1));
+        setPosition(getPosition() + Vec2(0, PLAYER_MOVE_SPEED));
         setStateMoving();
         break;
     case Direction::RIGHT:
         changeDirection(Direction::RIGHT);
-        setPosition(getPosition() + Vec2(1,0));
+        setPosition(getPosition() + Vec2(PLAYER_MOVE_SPEED, 0));
         setStateMoving();
         break;
     case Direction::RIGHTDOWN:
 		changeDirection(Direction::DOWN);
-        setPosition(getPosition() + Vec2(0.707,-0.707));
+        setPosition(getPosition() + Vec2(PLAYER_DIAG_SPEED, -PLAYER_DIAG_SPEED));
         setStateMoving();
         break;
     case Direction::DOWN:
 		changeDirection(Direction::DOWN);
-        setPosition(getPosition() + Vec2(0,-1));
+        setPosition(getPosition() + Vec2(0, -PLAYER_MOVE_SPEED));
         setStateMoving();
         break;
     case Direction::DOWNLEFT:
 		changeDirection(Direction::DOWN);
-        setPosition(getPosition() + Vec2(-0.707,-0.707));
+        setPosition(getPosition() + Vec2(-PLAYER_DIAG_SPEED, -PLAYER_DIAG_SPEED));
         setStateMoving();
         break;
     case Direction::LEFT:
 		changeDirection(Direction::LEFT);
-        setPosition(getPosition() + Vec2(-1,0));
+        setPosition(getPosition() + Vec2(-PLAYER_MOVE_SPEED, 0));
         setStateMoving();
         break;
     case Direction::LEFTUP:
 		changeDirection(Direction::UP);
-        setPosition(getPosition() + Vec2(-0.707,0.707));
+        setPosition(getPosition() + Vec2(-PLAYER_DIAG_SPEED, PLAYER_DIAG_SPEED));
         setStateMoving();
         break;
     default:
@@ -154,6 +155,10 @@ void Player::setStateMoving()
     if (state == State::STAND)
     {
         state = State::WALK;
+		sprite->stopAllActions();
+        sprite->runAction(actionStateMoving[direction]);
+    } else if (state == State::WALK && direction != lastDirection) {
+        lastDirection = direction;
 		sprite->stopAllActions();
         sprite->runAction(actionStateMoving[direction]);
     }

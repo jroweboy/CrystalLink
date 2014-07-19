@@ -46,8 +46,6 @@ typedef struct NetworkMger {
     RakNet::FullyConnectedMesh2 *fullyConnectedMesh2;
     // Used to query the RakNet master server to join rooms
     RakNet::HTTPConnection2 *httpConnection2;
-    // 
-    RakNet::SocketDescriptor sd;
     // This computer's user object
     User *user;
     // change to atomic_flag if this is too slow
@@ -55,8 +53,10 @@ typedef struct NetworkMger {
 } NetworkMger;
 
 
+
 // the global state for the network manager :p
 // TOTALLY NOT EVIL I SWEAR
+extern RakNet::SocketDescriptor socketDescriptors[2];
 extern NetworkMger *nm;
 
 namespace NetworkManager {

@@ -4,7 +4,8 @@
 // #include "Box2D/Box2D.h"
 #include "Entity.h"
 
-// #define PTM_RATIO 32.0
+#define PLAYER_MOVE_SPEED 5
+#define PLAYER_DIAG_SPEED PLAYER_MOVE_SPEED / 1.414
 
 class Player : public Entity
 {
