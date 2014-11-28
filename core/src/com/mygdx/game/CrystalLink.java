@@ -13,14 +13,20 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.mygdx.game.actor.Player;
+import com.mygdx.game.input.PlayerInputProcessor;
 
 public class CrystalLink extends Game {
 	public SpriteBatch batch;
     public BitmapFont font;
     public AssetManager assetManager;
+    public Player player;
 
 	@Override
 	public void create() {
+        Player player = new Player();
+        PlayerInputProcessor inputProcessor = new PlayerInputProcessor(player);
+        Gdx.input.setInputProcessor(inputProcessor);
         batch = new SpriteBatch();
         assetManager = new AssetManager();
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
