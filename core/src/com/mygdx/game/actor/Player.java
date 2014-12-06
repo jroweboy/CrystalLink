@@ -14,8 +14,8 @@ import com.mygdx.game.CrystalLink;
  */
 public class Player extends Actor implements MovingActor {
 
-    private MovingActorState movementState;
     public Vector2 position;
+    private MovingActorState movementState;
     private TextureAtlas spriteSheet;
     private Animation walk_d;
     private Animation walk_l;
@@ -26,21 +26,35 @@ public class Player extends Actor implements MovingActor {
 //    private final int ANIMATION_LENGTH = 8;
     private float frameLength = 1.0f / 16;
     private float animDuration = 0;
-    private float walkSpeed = 1.0f;
+    private float walkSpeed = 0.1f;
     private float runSpeedMultiplier = 2.0f;
     //    private int currentFrame;
     private TextureRegion currentFrame;
 
-    public Player(CrystalLink game) {
-        position = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 2);
+    public Player(CrystalLink game, Vector2 position) {
+        //new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 2);
+        this.position = position;
         movementState = new MovingActorState();
         spriteSheet = game.assetManager.get("soldier.txt");
         walk_d = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
         walk_u = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
         walk_l = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
         walk_r = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
+        setCurrentFrame(Direction.DOWN, 0);
     }
 
+    private void setCurrentFrame(Direction d, float duration) {
+        if (d == Direction.DOWN) {
+            currentFrame = walk_d.getKeyFrame(duration, true);
+        } else if (d == Direction.UP) {
+            currentFrame = walk_u.getKeyFrame(duration, true);
+        } else if (d == Direction.RIGHT) {
+            currentFrame = walk_r.getKeyFrame(duration, true);
+        } else if (d == Direction.LEFT) {
+            currentFrame = walk_l.getKeyFrame(duration, true);
+
+        }
+    }
     @Override
     public void act(float dt) {
         processMovement(dt);
@@ -50,15 +64,18 @@ public class Player extends Actor implements MovingActor {
     public void draw(Batch batch, float alpha) {
 //        batch.draw(walk_d.get(currentFrame).getTexture(), position.x, position.y);
 //        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-        batch.draw(currentFrame, position.x, position.y);
+        // TODO: If we reach the edge of the screen, then the camera should snap to the wall
+        // and somehow the player should have free walking from here on out
+//        batch.draw(currentFrame, position.x, position.y);
+        batch.draw(currentFrame, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     }
 
     // The following 3 methods are for knowing which sprite to draw
-    public XDirection getXFacing() {
+    public Direction getXFacing() {
         return movementState.getXDirection();
     }
 
-    public YDirection getYFacing() {
+    public Direction getYFacing() {
         return movementState.getYDirection();
     }
 
@@ -70,19 +87,12 @@ public class Player extends Actor implements MovingActor {
         // TODO handle collisions
         animDuration += dt;
         MoveAction moveAction = movementState.getMoveAction();
-        XDirection xDirection = movementState.getXDirection();
-        YDirection yDirection = movementState.getYDirection();
+        Direction xDirection = movementState.getXDirection();
+        Direction yDirection = movementState.getYDirection();
 
         if (moveAction == MoveAction.IDLE) {
-            if (yDirection == YDirection.UP) {
-                currentFrame = walk_u.getKeyFrame(0, true);
-            } else if (yDirection == YDirection.DOWN) {
-                currentFrame = walk_d.getKeyFrame(0, true);
-            } else if (xDirection == XDirection.LEFT) {
-                currentFrame = walk_l.getKeyFrame(0, true);
-            } else if (xDirection == XDirection.RIGHT) {
-                currentFrame = walk_r.getKeyFrame(0, true);
-            }
+            // stop the animation and return it to idle state
+            setCurrentFrame(movementState.getFacingDirection(), 0);
             return;
         }
 
@@ -91,23 +101,27 @@ public class Player extends Actor implements MovingActor {
 
         if (xDirection == XDirection.LEFT) {
             dx = -walkSpeed;
-            currentFrame = walk_l.getKeyFrame(animDuration, true);
+            movementState.setFacingDirection(XDirection.LEFT);
+            setCurrentFrame(Direction.LEFT, animDuration);
         } else if (xDirection == XDirection.RIGHT) {
             dx = walkSpeed;
-            currentFrame = walk_r.getKeyFrame(animDuration, true);
+            movementState.setFacingDirection(XDirection.RIGHT);
+            setCurrentFrame(Direction.RIGHT, animDuration);
         }
 
         if (yDirection == YDirection.UP) {
             dy = walkSpeed;
-            currentFrame = walk_u.getKeyFrame(animDuration, true);
+            movementState.setFacingDirection(YDirection.UP);
+            setCurrentFrame(Direction.UP, animDuration);
         } else if (yDirection == YDirection.DOWN) {
             dy = -walkSpeed;
-            currentFrame = walk_d.getKeyFrame(animDuration, true);
+            movementState.setFacingDirection(YDirection.DOWN);
+            setCurrentFrame(Direction.DOWN, animDuration);
         }
 
         if (moveAction == MoveAction.RUN) {
-            dx *= 2;
-            dy *= 2;
+            dx *= runSpeedMultiplier;
+            dy *= runSpeedMultiplier;
         }
         // prevent faster diagonal movement by slowing it down by sqrt(2)
         if (yDirection != YDirection.NONE && xDirection != XDirection.NONE) {

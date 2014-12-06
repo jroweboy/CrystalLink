@@ -1,30 +1,70 @@
 package com.mygdx.game.actor;
 
-import java.awt.*;
+enum Direction {
+    UP,
+    LEFT,
+    DOWN,
+    RIGHT,
+    NONE
+}
 
 /**
  * Created by robert on 11/28/14.
  */
+
+
+class XDirection {
+    static final Direction LEFT = Direction.LEFT;
+    static final Direction RIGHT = Direction.RIGHT;
+    static final Direction NONE = Direction.NONE;
+}
+
+class YDirection {
+    static final Direction UP = Direction.UP;
+    static final Direction DOWN = Direction.DOWN;
+    static final Direction NONE = Direction.NONE;
+}
+
 public class MovingActorState {
 
     MoveAction action;
-    XDirection xDirection;
-    YDirection yDirection;
+    Direction xDirection;
+    Direction yDirection;
+
+    Direction facingDirection;
     boolean runningEngaged;
 
     public MovingActorState() {
         action = MoveAction.IDLE;
         xDirection = XDirection.NONE;
         yDirection = YDirection.DOWN;
+        facingDirection = YDirection.DOWN;
         runningEngaged = false;
     }
 
-    public XDirection getXDirection() {
+    public MovingActorState(Direction xd, Direction yd) {
+        action = MoveAction.IDLE;
+        xDirection = xd;
+        yDirection = yd;
+        facingDirection = (yd != Direction.NONE) ? yd : xd;
+        runningEngaged = false;
+
+    }
+
+    public Direction getXDirection() {
         return xDirection;
     }
 
-    public YDirection getYDirection() {
+    public Direction getYDirection() {
         return yDirection;
+    }
+
+    public Direction getFacingDirection() {
+        return facingDirection;
+    }
+
+    public void setFacingDirection(Direction d) {
+        facingDirection = d;
     }
 
     public MoveAction getMoveAction() {
@@ -33,7 +73,7 @@ public class MovingActorState {
 
     public void beginRun() {
         runningEngaged = true;
-        if(action == MoveAction.WALK) {
+        if (action == MoveAction.WALK) {
             action = MoveAction.RUN;
         }
     }
@@ -75,22 +115,23 @@ public class MovingActorState {
     }
 
     public void endLeft() {
-        xDirection = xDirection.NONE;
+        // we still want to know which way the person is facing for checks even if they aren't moving
+        xDirection = Direction.NONE;
         endMove();
     }
 
     public void endRight() {
-        xDirection = xDirection.NONE;
+        xDirection = Direction.NONE;
         endMove();
     }
 
     public void endUp() {
-        yDirection = yDirection.NONE;
+        yDirection = Direction.NONE;
         endMove();
     }
 
     public void endDown() {
-        yDirection = yDirection.NONE;
+        yDirection = Direction.NONE;
         endMove();
     }
 

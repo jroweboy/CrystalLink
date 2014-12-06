@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.actor.Player;
 import com.mygdx.game.input.PlayerInputProcessor;
@@ -17,7 +19,7 @@ import com.mygdx.game.input.PlayerInputProcessor;
 public class PlayState extends ScreenAdapter {
     private CrystalLink game;
     private OrthographicCamera camera;
-    private float cameraFollowLerp = 0.1f;
+    //    private float cameraFollowLerp = 0.1f;
     private OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private Stage stage;
@@ -36,7 +38,7 @@ public class PlayState extends ScreenAdapter {
         renderer = new OrthogonalTiledMapRenderer(map, unitScale);
         stage = new Stage();
 
-        game.player = new Player(game);
+        game.player = new Player(game, new Vector2(x, y));
         PlayerInputProcessor inputProcessor = new PlayerInputProcessor(game.player);
         Gdx.input.setInputProcessor(inputProcessor);
         stage.addActor(game.player);
@@ -56,6 +58,11 @@ public class PlayState extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
+        Vector3 position = camera.position;
+        position.x = game.player.position.x;
+        position.y = game.player.position.y;
+//        position.x = (game.player.position.x - position.x) * cameraFollowLerp;
+//        position.y = (game.player.position.y - position.y) * cameraFollowLerp;
         camera.update();
 
         // tell the SpriteBatch to render in the
@@ -65,9 +72,6 @@ public class PlayState extends ScreenAdapter {
         renderer.render();
         stage.act(dt);
         stage.draw();
-//        Vector3 position = camera.position;
-//        position.x = (game.player.position.x - position.x) * cameraFollowLerp;
-//        position.y = (game.player.position.y - position.y) * cameraFollowLerp;
 
     }
 }

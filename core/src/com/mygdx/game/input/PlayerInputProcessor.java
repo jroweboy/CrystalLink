@@ -34,13 +34,17 @@ public class PlayerInputProcessor extends InputAdapter {
                 player.beginDown();
                 ret = true;
                 break;
+            case Input.Keys.SHIFT_LEFT:
+                player.beginRun();
+                ret = true;
+                break;
         }
         return ret;
     }
 
     public boolean keyUp(int keycode) {
         boolean ret = false;
-        switch(keycode) {
+        switch (keycode) {
             case Input.Keys.A:
                 player.endLeft();
                 ret = true;
@@ -55,6 +59,10 @@ public class PlayerInputProcessor extends InputAdapter {
                 break;
             case Input.Keys.S:
                 player.endDown();
+                ret = true;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                player.endRun();
                 ret = true;
                 break;
         }
