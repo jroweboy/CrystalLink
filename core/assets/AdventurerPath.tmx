@@ -28,11 +28,7 @@
    eJzt2c0KgkAUBtDp/V9R3JWQi9r0Y4J1pUUtBhSJnOgc+IbLxYHZeBUmJYDfdIgcZzw3ZOp9pM3ULHcfl82yvbdIn6lZzzayizQTPb7jFDlHLuk1s957fFaVnt+LeqI3MrOYy/9GWby75bhGurUPAQAAAMDfce9VFvdeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACU6gFWqCwh
   </data>
  </layer>
- <layer name="Player" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJztzgENAAAIA6Br/9DG0E1IQAL3dG0PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICvBmlVAAQ=
-  </data>
- </layer>
+ <objectgroup name="Sprites" width="100" height="100"/>
  <layer name="Item Helper" width="100" height="100">
   <data encoding="base64" compression="zlib">
    eJzt2T0KwkAQBtC9/700oJJOjfECSZMzOBDQFAupkt3Ie/DBMNU0+wOTEv/qErlmarY3Zeo+8s7UlHOKnCPNSo993COPyDP97qxlj3LcWdu7pfm9aFd6tfPfqIuzW48u8io9BF9DZCw9BAAAAMAO7L3qYu8FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwPB8T+SYT

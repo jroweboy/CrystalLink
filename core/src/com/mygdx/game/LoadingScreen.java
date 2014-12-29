@@ -13,18 +13,19 @@ public class LoadingScreen extends ScreenAdapter {
         this.game = game;
     }
     public void render(float dt) {
-        if (game.assetManager.update()) {
+        if (Assets.manager.update()) {
             // we are done loading, let's move to another screen!
-            game.setScreen(new PlayState(game));
+            Assets.setupAfterLoad();
+            game.setScreen(new GameScreen(game));
 
         } else {
             // display loading information
-            float progress = game.assetManager.getProgress();
+            float progress = Assets.manager.getProgress();
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             game.batch.begin();
-            game.font.draw(game.batch, String.format("Loading: %2.0f%%", progress), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            game.font.draw(game.batch, String.format("Loading: %2.0f%%", progress), Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
             game.batch.end();
         }
     }

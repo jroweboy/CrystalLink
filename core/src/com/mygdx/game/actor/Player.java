@@ -34,12 +34,12 @@ public class Player extends Actor implements MovingActor {
     public Player(CrystalLink game, Vector2 position) {
         //new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 2);
         this.position = position;
-        movementState = new MovingActorState();
-        spriteSheet = game.assetManager.get("soldier.txt");
-        walk_d = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
-        walk_u = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
-        walk_l = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
-        walk_r = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
+//        movementState = new MovingActorState();
+//        spriteSheet = game.assetManager.get("soldier.txt");
+//        walk_d = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
+//        walk_u = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
+//        walk_l = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
+//        walk_r = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
         setCurrentFrame(Direction.DOWN, 0);
     }
 
