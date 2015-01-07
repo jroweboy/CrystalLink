@@ -29,7 +29,8 @@ public class PlayState extends ScreenAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 32, 32);
         float unitScale = 1 / 16f;
-        map = game.assetManager.get("AdventurerPath.tmx");
+//        map = Assets.manager.get("AdventurerPath.tmx");
+        map = Assets.loadLevel("AdventurerPath.tmx");
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * unitScale;
         float y = spawn_point.get("y", Float.class) * unitScale;

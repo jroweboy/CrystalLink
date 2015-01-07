@@ -28,9 +28,9 @@
    eJzt2c0KgkAUBtDp/V9R3JWQi9r0Y4J1pUUtBhSJnOgc+IbLxYHZeBUmJYDfdIgcZzw3ZOp9pM3ULHcfl82yvbdIn6lZzzayizQTPb7jFDlHLuk1s957fFaVnt+LeqI3MrOYy/9GWby75bhGurUPAQAAAMDfce9VFvdeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACU6gFWqCwh
   </data>
  </layer>
- <layer name="Player" width="100" height="100">
+ <layer name="Sprites" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJztzgENAAAIA6Br/9DG0E1IQAL3dG0PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICvBmlVAAQ=
+   eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
  <layer name="Item Helper" width="100" height="100">

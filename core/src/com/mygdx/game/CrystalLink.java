@@ -15,17 +15,14 @@ import com.mygdx.game.actor.Player;
 public class CrystalLink extends Game {
 	public SpriteBatch batch;
     public BitmapFont font;
-    public AssetManager assetManager;
+    public AssetManager manager;
     public Player player;
 
 	@Override
 	public void create() {
         batch = new SpriteBatch();
-        assetManager = new AssetManager();
-        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        assetManager.load("AdventurerPath.tmx", TiledMap.class);
-        assetManager.load("soldier.png", Texture.class);
-        assetManager.load("soldier.txt", TextureAtlas.class);
+        manager = new AssetManager();
+        Assets.loadMain(manager);
         font = new BitmapFont();
         font.setColor(Color.WHITE);
 
@@ -41,7 +38,7 @@ public class CrystalLink extends Game {
     public void dispose() {
         batch.dispose();
         font.dispose();
-        assetManager.dispose();
+        manager.dispose();
     }
 
 }
