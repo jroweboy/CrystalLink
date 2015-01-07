@@ -67,6 +67,7 @@ public class GameScreen extends ScreenAdapter {
         world = new World(engine);
 
         engine.addSystem(new PlayerSystem(world));
+        engine.addSystem(new InputSystem());
 //        engine.addSystem(new SquirrelSystem());
 //        engine.addSystem(new PlatformSystem());
         engine.addSystem(new CameraSystem());
@@ -91,7 +92,7 @@ public class GameScreen extends ScreenAdapter {
 //        lastScore = 0;
 //        scoreString = "SCORE: 0";
 
-        pauseSystems();
+//        pauseSystems();
     }
 
     public void update (float deltaTime) {
@@ -138,17 +139,22 @@ public class GameScreen extends ScreenAdapter {
 //        }
 //
 //        ApplicationType appType = Gdx.app.getType();
+
+        // should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
+//        float  = 0.0f;
 //
-//        // should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
-//        float accelX = 0.0f;
-//
-//        if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
-//            accelX = Gdx.input.getAccelerometerX();
-//        } else {
-//            if (Gdx.input.isKeyPressed(Keys.ANY_KEY)) accelX = 5f;
-//            if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT)) accelX = -5f;
+////        if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
+////            moving = Gdx.input.getAccelerometerX();
+////        } else {
+//        if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
+//            moving = 5f;
+//        } else if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.A)) {
+//            moving = -5f;
 //        }
+////        }
 //
+//        if
+
 //        engine.getSystem(PlayerSystem.class).setAccelX(accelX);
 //
 //        if (world.score != lastScore) {

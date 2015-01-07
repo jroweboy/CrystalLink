@@ -16,7 +16,10 @@ public class PlayerSystem extends IteratingSystem {
             TransformComponent.class,
             MovementComponent.class);
 
-    private float accelX = 0.0f;
+//    private float accelX = 0.0f;
+    private int direction;
+//    private int
+
     private World world;
 
     private ComponentMapper<PlayerComponent> bm;
@@ -35,15 +38,14 @@ public class PlayerSystem extends IteratingSystem {
         mm = ComponentMapper.getFor(MovementComponent.class);
     }
 
-    public void setAccelX(float accelX) {
-        this.accelX = accelX;
+    public void setDirection(int d) {
+        direction = d;
     }
+
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
-//        accelX = 0.0f;
     }
 
     @Override
@@ -51,7 +53,17 @@ public class PlayerSystem extends IteratingSystem {
         TransformComponent t = tm.get(entity);
         StateComponent state = sm.get(entity);
         MovementComponent mov = mm.get(entity);
-        PlayerComponent bob = bm.get(entity);
+        PlayerComponent ply = bm.get(entity);
+
+//        mov.velocity.x =
+//        if (yDirection != YDirection.NONE && xDirection != XDirection.NONE) {
+//            dx /= 1.41421356237f;
+//            dy /= 1.41421356237f;
+//        }
+//
+//        if (state.get() == StateComponent.STATE_HIT) {
+//            // ??
+//        }
 //
 //        if (state.get() != PlayerComponent.STATE_HIT && t.pos.y <= 0.5f) {
 //            hitPlatform(entity);

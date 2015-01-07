@@ -4,6 +4,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 
 public class TextureComponent extends Component {
-//    public TextureRegion region = null;
-    public TextureMapObject obj = null;
+    public TextureRegion region = null;
+//    public TextureMapObject obj = null;
+
+    private TextureComponent() {}
+
+    public TextureComponent(TextureRegion t){
+        region = t;
+    }
 }

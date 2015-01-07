@@ -42,8 +42,8 @@ public class Assets {
         float frameLength = 1.0f / 16;
         playerWalkSouth = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
         playerWalkNorth = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
-        playerWalkWest = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
-        playerWalkEast = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
+        playerWalkWest = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
+        playerWalkEast = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
     }
 
     public static void loadMain(AssetManager manager) {

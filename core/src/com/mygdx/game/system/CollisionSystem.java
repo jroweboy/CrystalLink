@@ -59,17 +59,16 @@ public class CollisionSystem extends EntitySystem {
 //        PlatformSystem platformSystem = engine.getSystem(PlatformSystem.class);
 
         for (int i = 0; i < players.size(); ++i) {
-            Entity bob = players.get(i);
+            Entity ply = players.get(i);
 
-//            StateComponent bobState = sm.get(bob);
-//
-//            if (bobState.get() == PlayerComponent.STATE_HIT) {
-//                continue;
-//            }
-//
-//            MovementComponent playerMov = mm.get(bob);
-//            BoundsComponent playerBounds = bm.get(bob);
-//
+            StateComponent plyState = sm.get(ply);
+            if (plyState.get() == StateComponent.STATE_HIT) {
+                continue;
+            }
+
+            MovementComponent playerMov = mm.get(ply);
+            BoundsComponent playerBounds = bm.get(ply);
+
 //            if (playerMov.velocity.y < 0.0f) {
 //                TransformComponent bobPos = tm.get(bob);
 //
