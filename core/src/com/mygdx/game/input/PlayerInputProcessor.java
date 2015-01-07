@@ -35,6 +35,7 @@ public class PlayerInputProcessor extends InputAdapter {
                 ret = true;
                 break;
             case Input.Keys.SHIFT_LEFT:
+            case Input.Keys.SHIFT_RIGHT:
                 player.beginRun();
                 ret = true;
                 break;
@@ -62,6 +63,7 @@ public class PlayerInputProcessor extends InputAdapter {
                 ret = true;
                 break;
             case Input.Keys.SHIFT_LEFT:
+            case Input.Keys.SHIFT_RIGHT:
                 player.endRun();
                 ret = true;
                 break;
