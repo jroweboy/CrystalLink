@@ -1,14 +1,22 @@
 package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.net.NetworkTransformComponent;
 import com.mygdx.game.system.*;
+
+import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
     static final int GAME_READY = 0;
@@ -21,17 +29,14 @@ public class GameScreen extends ScreenAdapter {
 
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-    World world;
+    public World world;
     CollisionSystem.CollisionListener collisionListener;
-//    Rectangle pauseBounds;
-//    Rectangle resumeBounds;
-//    Rectangle quitBounds;
-//    int lastScore;
-//    String scoreString;
 
     Engine engine;
 
     private int state;
+
+    private String typed = "";
 
     public GameScreen (CrystalLink game) {
         this.game = game;
@@ -92,14 +97,20 @@ public class GameScreen extends ScreenAdapter {
 //        lastScore = 0;
 //        scoreString = "SCORE: 0";
 
-//        pauseSystems();
     }
 
     public void update (float deltaTime) {
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
-
+        if (game.client.client != null) {
+            // update the server with my positions before next iteration
+            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkTransformComponent.class));
+            for (int i=0; i < entities.size(); ++i) {
+                Entity e = entities.get(i);
+                game.client.client.sendUDP(e.getComponent(NetworkTransformComponent.class));
+            }
+        }
         switch (state) {
             case GAME_READY:
                 updateReady();
@@ -127,6 +138,31 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning (float deltaTime) {
+        if (Gdx.input.isKeyJustPressed(Keys.P)) {
+            if (game.server.isRunning) {
+                Gdx.app.log("Server", "stopping server");
+                game.server.stopServer();
+            } else {
+                Gdx.app.log("Server", "starting server");
+                game.server.startServer(engine);
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Keys.O)) {
+            Gdx.input.getTextInput(new Input.TextInputListener(){
+                @Override
+                public void input(String text) {
+                    typed = text;
+                    game.client.joinGame(text, engine);
+                    resume();
+                }
+                @Override
+                public void canceled() {
+                    typed = "";
+                }
+            }, "Enter your friend\'s IP address", "");
+
+        }
 //        if (Gdx.input.justTouched()) {
 //            guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 //
@@ -265,9 +301,6 @@ public class GameScreen extends ScreenAdapter {
 
     private void pauseSystems() {
         engine.getSystem(PlayerSystem.class).setProcessing(false);
-//        engine.getSystem(SquirrelSystem.class).setProcessing(false);
-//        engine.getSystem(PlatformSystem.class).setProcessing(false);
-//        engine.getSystem(GravitySystem.class).setProcessing(false);
         engine.getSystem(MovementSystem.class).setProcessing(false);
         engine.getSystem(BoundsSystem.class).setProcessing(false);
         engine.getSystem(StateSystem.class).setProcessing(false);
@@ -277,9 +310,6 @@ public class GameScreen extends ScreenAdapter {
 
     private void resumeSystems() {
         engine.getSystem(PlayerSystem.class).setProcessing(true);
-//        engine.getSystem(SquirrelSystem.class).setProcessing(true);
-//        engine.getSystem(PlatformSystem.class).setProcessing(true);
-//        engine.getSystem(GravitySystem.class).setProcessing(true);
         engine.getSystem(MovementSystem.class).setProcessing(true);
         engine.getSystem(BoundsSystem.class).setProcessing(true);
         engine.getSystem(StateSystem.class).setProcessing(true);
@@ -298,6 +328,13 @@ public class GameScreen extends ScreenAdapter {
         if (state == GAME_RUNNING) {
             state = GAME_PAUSED;
             pauseSystems();
+        }
+    }
+
+    public void resume() {
+        if (state == GAME_PAUSED) {
+            state = GAME_RUNNING;
+            resumeSystems();
         }
     }
 }
