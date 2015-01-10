@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.*;
+import com.mygdx.game.net.NetworkEntity;
 import com.mygdx.game.system.RenderingSystem;
 
 import javax.xml.soap.Text;
@@ -68,7 +69,7 @@ public class World {
         animation.animations.put(MovementComponent.EAST, Assets.playerWalkEast);
         animation.animations.put(MovementComponent.WEST, Assets.playerWalkWest);
 
-        BoundsComponent bounds = new BoundsComponent(transform.width, transform.height);
+        BoundsComponent bounds = new BoundsComponent(30, 60);
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(
@@ -108,7 +109,6 @@ public class World {
 
     private void createBackground() {
         Entity entity = new Entity();
-
         BackgroundComponent background = new BackgroundComponent();
         TransformComponent position = new TransformComponent();
         background.tiledmap = Assets.currentMap;

@@ -11,12 +11,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.mygdx.game.actor.Player;
+import com.mygdx.game.net.GameClient;
+import com.mygdx.game.net.GameServer;
 
 public class CrystalLink extends Game {
 	public SpriteBatch batch;
     public BitmapFont font;
     public AssetManager manager;
     public Player player;
+    public GameServer server;
+    public GameClient client;
 
 	@Override
 	public void create() {
@@ -25,6 +29,8 @@ public class CrystalLink extends Game {
         Assets.loadMain(manager);
         font = new BitmapFont();
         font.setColor(Color.WHITE);
+        server = new GameServer();
+        client = new GameClient();
 
         this.setScreen(new LoadingScreen(this));
 	}
@@ -39,6 +45,7 @@ public class CrystalLink extends Game {
         batch.dispose();
         font.dispose();
         manager.dispose();
+        server.dispose();
     }
 
 }
