@@ -6,14 +6,15 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.net.NetworkTransformComponent;
+import com.mygdx.game.component.StateComponent;
+import com.mygdx.game.component.TransformComponent;
+import com.mygdx.game.component.basecomponent.NetworkComponent;
+import com.mygdx.game.component.basecomponent.State;
+import com.mygdx.game.component.basecomponent.Transform;
 import com.mygdx.game.system.*;
 
 import java.util.List;
@@ -71,8 +72,8 @@ public class GameScreen extends ScreenAdapter {
 
         world = new World(engine);
 
-        engine.addSystem(new PlayerSystem(world));
         engine.addSystem(new InputSystem());
+        engine.addSystem(new PlayerSystem(world));
 //        engine.addSystem(new SquirrelSystem());
 //        engine.addSystem(new PlatformSystem());
         engine.addSystem(new CameraSystem());
@@ -103,14 +104,39 @@ public class GameScreen extends ScreenAdapter {
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
-        if (game.client.client != null) {
-            // update the server with my positions before next iteration
-            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkTransformComponent.class));
+        // TODO This should be part of a Network system that goes after everything else
+        if (game.server.server != null) {
+
+            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkComponent.class));
             for (int i=0; i < entities.size(); ++i) {
                 Entity e = entities.get(i);
-                game.client.client.sendUDP(e.getComponent(NetworkTransformComponent.class));
+                Transform t = e.getComponent(TransformComponent.class).c;
+                State s = e.getComponent(StateComponent.class).c;
+//                NetworkComponent t = e.getComponent(NetworkComponent.class);
+//                t.set(e.getComponent(TransformComponent.class));
+                ((Transform)game.server.entity.components[0]).set(t);
+                ((State)game.server.entity.components[1]).set(s.get());
+                ((State)game.server.entity.components[1]).direction = s.direction;
+                game.server.server.sendToAllTCP(game.server.entity);
+            }
+        } else if (game.client.client != null) {
+            // update the server with my positions before next iteration
+            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkComponent.class));
+            for (int i=0; i < entities.size(); ++i) {
+                Entity e = entities.get(i);
+                Transform t = e.getComponent(TransformComponent.class).c;
+                State s = e.getComponent(StateComponent.class).c;
+                ((Transform)game.client.entity.components[0]).set(t);
+                ((State)game.client.entity.components[1]).set(s.get());
+                ((State)game.client.entity.components[1]).direction = s.direction;
+//                TransformComponent t = e.getComponent(TransformComponent.class);
+//                game.client.me.components
+                game.client.client.sendTCP(game.client.entity);
             }
         }
+
+
+
         switch (state) {
             case GAME_READY:
                 updateReady();

@@ -1,18 +1,26 @@
 package com.mygdx.game.net;
 
-import com.badlogic.ashley.core.Entity;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
+import com.mygdx.game.component.basecomponent.State;
+import com.mygdx.game.component.basecomponent.Transform;
 
 import java.util.UUID;
 
-import static com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.*;
+public class NetworkEntity {
+    public long id;
+    public Object[] components;
 
-public class NetworkEntity extends Entity {
-    @Tag(0) public Long id;
-    public NetworkEntity() {
+    private NetworkEntity() {
         id = UUID.randomUUID().getLeastSignificantBits();
     }
-    public NetworkEntity(long u) {
+
+    private NetworkEntity(long u, int size) {
         id = u;
+        components = new Object[size];
+        components[0] = new Transform();
+        components[1] = new State();
+    }
+
+    public static NetworkEntity createPlayer(long uid) {
+        return new NetworkEntity(uid, 2);
     }
 }

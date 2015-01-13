@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.esotericsoftware.minlog.Log;
 import com.mygdx.game.actor.Player;
 import com.mygdx.game.net.GameClient;
 import com.mygdx.game.net.GameServer;
@@ -24,6 +25,7 @@ public class CrystalLink extends Game {
 
 	@Override
 	public void create() {
+//        Log.set(Log.LEVEL_DEBUG);
         batch = new SpriteBatch();
         manager = new AssetManager();
         Assets.loadMain(manager);

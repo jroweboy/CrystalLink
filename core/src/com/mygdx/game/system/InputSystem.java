@@ -9,12 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.component.MovementComponent;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.StateComponent;
-
-import javax.swing.plaf.nimbus.State;
+import com.mygdx.game.component.TransformComponent;
+import com.mygdx.game.component.basecomponent.State;
 
 public class InputSystem extends IteratingSystem {
     public InputSystem() {
-        super(Family.getFor(PlayerComponent.class, MovementComponent.class));
+        // the Transform component is to differentiate it from the network players
+        super(Family.getFor(PlayerComponent.class, MovementComponent.class, TransformComponent.class));
     }
 
     @Override
@@ -25,7 +26,7 @@ public class InputSystem extends IteratingSystem {
         float dx = 0, dy = 0;
         if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
             dy = 1;
-            pos.direction = MovementComponent.NORTH;
+//            pos.direction = MovementComponent.NORTH;
             if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
                 dx = 1;
 //                pos.direction = MovementComponent.NORTHEAST;
@@ -37,7 +38,7 @@ public class InputSystem extends IteratingSystem {
             }
         } else if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
             dy = -1;
-            pos.direction = MovementComponent.SOUTH;
+//            pos.direction = MovementComponent.SOUTH;
             if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
                 dx = 1;
 //                pos.direction = MovementComponent.SOUTHEAST;
@@ -49,10 +50,10 @@ public class InputSystem extends IteratingSystem {
             }
         } else if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
             dx = -1;
-            pos.direction = MovementComponent.EAST;
+//            pos.direction = MovementComponent.EAST;
         } else if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
             dx = 1;
-            pos.direction = MovementComponent.WEST;
+//            pos.direction = MovementComponent.WEST;
         }
 
         // if you are going diagonally, limit the speed
@@ -63,16 +64,16 @@ public class InputSystem extends IteratingSystem {
 
 
         if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-            state.set(StateComponent.STATE_RUN);
+            state.set(State.STATE_RUN);
             pos.velocity.set(PlayerComponent.RUN_SPEED_MULT * PlayerComponent.WALK_SPEED * dx,
                     PlayerComponent.RUN_SPEED_MULT * PlayerComponent.WALK_SPEED * dy);
         } else {
-            state.set(StateComponent.STATE_WALK);
+            state.set(State.STATE_WALK);
             pos.velocity.set(PlayerComponent.WALK_SPEED * dx, PlayerComponent.WALK_SPEED * dy);
         }
 
         if (dx == 0 && dy == 0) {
-            state.set(StateComponent.STATE_IDLE);
+            state.set(State.STATE_IDLE);
         }
     }
 }

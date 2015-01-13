@@ -38,6 +38,6 @@ public class BackgroundSystem extends IteratingSystem {
 
 //        b.tiledMapRenderer.setView(camera);
 //        tiledMapRenderer.render();
-        t.pos.set(camera.position.x, camera.position.y, 10.0f);
+        t.c.pos.set(camera.position.x, camera.position.y, 10.0f);
     }
 }

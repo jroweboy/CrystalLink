@@ -33,7 +33,7 @@ public class CameraSystem extends IteratingSystem {
             return;
         }
 
-        cam.camera.position.x = target.pos.x;
-        cam.camera.position.y = target.pos.y;
+        cam.camera.position.x = target.c.pos.x;
+        cam.camera.position.y = target.c.pos.y;
     }
 }

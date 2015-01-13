@@ -10,14 +10,22 @@ import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.PlayerComponent;
+import com.mygdx.game.component.StateComponent;
 import com.mygdx.game.component.TransformComponent;
+import com.mygdx.game.component.basecomponent.NetworkComponent;
+import com.mygdx.game.component.basecomponent.Transform;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameClient {
 
     private static Thread thread;
     public Client client;
+    public NetworkEntity entity;
+    private Map<Long, Entity> connectedEntities = new HashMap<Long, Entity>();
+
     public GameClient() {}
 
     public void joinGame(final String IpAddr, final Engine engine) {
@@ -29,22 +37,49 @@ public class GameClient {
         client.addListener(new Listener() {
             @Override
             public void connected(Connection connection) {
-                // swap the player networked components with their counterparts
                 Entity player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
-//                        NetworkCommon.GameConnection player = (NetworkCommon.GameConnection) connection;
-                TransformComponent t = player.getComponent(TransformComponent.class);
-//                        player.remove(TransformComponent.class);
-                NetworkTransformComponent n = new NetworkTransformComponent();
-                n.set(t);
+                // -1 is refering to myself
+                entity = NetworkEntity.createPlayer(-1);
+                NetworkComponent n = new NetworkComponent();
                 player.add(n);
             }
             @Override
             public void disconnected(Connection connection) {
-
+                Gdx.app.log("Client", "Disconnecting...");
+                for (Entity e : connectedEntities.values()) {
+                    engine.removeEntity(e);
+                }
             }
             @Override
             public void received(Connection connection, Object object){
-
+                if (object instanceof NetworkNewPlayer) {
+                    // setup the new player and add them to the engine
+                    NetworkNewPlayer n = (NetworkNewPlayer) object;
+                    Entity e = new Entity();
+                    NetworkCommon.setupNetworkPlayer(e);
+                    e.getComponent(TransformComponent.class).set(n.transform);
+                    engine.addEntity(e);
+                    Gdx.app.log("Client", "Added a new player id: " + n.id + " entity: " + e);
+                    connectedEntities.put(n.id, e);
+                } else if (object instanceof NetworkEntity) {
+                    NetworkEntity entity = (NetworkEntity) object;
+                    for (Object o: entity.components) {
+                        if (o instanceof Transform) {
+                            Transform pos = (Transform) o;
+//                            Gdx.app.log("Client", "Position update: " + entity.id + " " + pos.pos.x + " " + pos.pos.y);
+                            TransformComponent p = connectedEntities.get(entity.id).getComponent(TransformComponent.class);
+                            p.set(pos);
+                        }  else if (o instanceof com.mygdx.game.component.basecomponent.State) {
+                            com.mygdx.game.component.basecomponent.State st = (com.mygdx.game.component.basecomponent.State) o;
+//                            Gdx.app.log("Client", "State update: " + entity.id + " " + st.direction);
+                            StateComponent state = connectedEntities.get(entity.id).getComponent(StateComponent.class);
+                            state.c.set(st.get());
+                            state.c.direction = st.direction;
+                        }
+                    }
+                } else {
+                    Gdx.app.log("Client", "Case not covered. Wat is it? " + object);
+                }
             }
         });
 
@@ -53,6 +88,7 @@ public class GameClient {
             public void run(){
                 try {
                     client.connect(5000, IpAddr, NetworkCommon.DEFAULT_TCP_PORT, NetworkCommon.DEFAULT_UDP_PORT);
+//                    Gdx.graphics.setTitle("CrystalLink - Client");
                 } catch (IOException e) {
                     Gdx.app.log("Client", "Failed to connect");
                 }

@@ -7,8 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.component.*;
+import com.mygdx.game.component.basecomponent.State;
 
-import javax.swing.plaf.nimbus.State;
 
 public class AnimationSystem extends IteratingSystem {
     private ComponentMapper<TextureComponent> tm;
@@ -31,21 +31,27 @@ public class AnimationSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         TextureComponent tex = tm.get(entity);
         AnimationComponent anim = am.get(entity);
-        StateComponent state = sm.get(entity);
+        State state = sm.get(entity).c;
 
 //        int s = state.get();
         Animation animation;
 //        if (s == StateComponent.STATE_WALK || s == StateComponent.STATE_RUN) {
-        if (state != null) {
-            int s = state.get();
-            MovementComponent pos = entity.getComponent(MovementComponent.class);
-            animation = anim.animations.get(pos.direction);
-        } else {
-            animation = anim.animations.get(state.get());
-        }
+//        if (state.direction == State.NO_DIRECTION) {
+//
+//        } else {
+//        Gdx.app.log("Animation", "state: " + state.direction);
+            animation = anim.animations.get(state.direction);
+//        }
+//        if (state != null) {
+//            int s = state.get();
+//            MovementComponent pos = entity.getComponent(MovementComponent.class);
+//            animation = anim.animations.get(state.c.direction);
+//        } else {
+//            animation = anim.animations.get(state.get());
+//        }
 
         if (animation != null) {
-            if (state != null && state.get() == StateComponent.STATE_IDLE) {
+            if (state != null && state.get() == State.STATE_IDLE) {
                 tex.region = animation.getKeyFrame(0);
             } else {
                 tex.region = animation.getKeyFrame(state.time, true);

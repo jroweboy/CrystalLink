@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.*;
+import com.mygdx.game.component.basecomponent.State;
 import com.mygdx.game.net.NetworkEntity;
 import com.mygdx.game.system.RenderingSystem;
 
@@ -55,32 +56,32 @@ public class World {
         return Assets.loadLevel("AdventurerPath.tmx");
     }
 
-    private Entity createPlayer() {
+    public Entity createPlayer() {
         Entity entity = new Entity();
 
         AnimationComponent animation = new AnimationComponent();
         PlayerComponent player = new PlayerComponent();
-        MovementComponent movement = new MovementComponent(MovementComponent.SOUTH);
+        MovementComponent movement = new MovementComponent();
         TransformComponent transform = new TransformComponent();
         StateComponent state = new StateComponent();
 
-        animation.animations.put(MovementComponent.NORTH, Assets.playerWalkNorth);
-        animation.animations.put(MovementComponent.SOUTH, Assets.playerWalkSouth);
-        animation.animations.put(MovementComponent.EAST, Assets.playerWalkEast);
-        animation.animations.put(MovementComponent.WEST, Assets.playerWalkWest);
+        animation.animations.put(State.NORTH, Assets.playerWalkNorth);
+        animation.animations.put(State.SOUTH, Assets.playerWalkSouth);
+        animation.animations.put(State.EAST, Assets.playerWalkEast);
+        animation.animations.put(State.WEST, Assets.playerWalkWest);
 
         BoundsComponent bounds = new BoundsComponent(30, 60);
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(
-                animation.animations.get(MovementComponent.SOUTH).getKeyFrame(0));
+                animation.animations.get(State.SOUTH).getKeyFrame(0));
         TiledMap map = Assets.currentMap;
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
         float y = spawn_point.get("y", Float.class) * RenderingSystem.unitScale;
-        transform.pos.set(x, y, 0);
+        transform.c.pos.set(x, y, 0);
 
-        state.set(StateComponent.STATE_IDLE);
+        state.set(State.STATE_IDLE);
 
         entity.add(animation);
         entity.add(player);

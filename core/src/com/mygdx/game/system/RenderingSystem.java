@@ -56,8 +56,8 @@ public class RenderingSystem extends IteratingSystem {
         comparator = new Comparator<Entity>() {
             @Override
             public int compare(Entity entityA, Entity entityB) {
-                return (int)Math.signum(transformM.get(entityB).pos.z -
-                        transformM.get(entityA).pos.z);
+                return (int)Math.signum(transformM.get(entityB).c.pos.z -
+                        transformM.get(entityA).c.pos.z);
             }
         };
 
@@ -96,11 +96,11 @@ public class RenderingSystem extends IteratingSystem {
                 float originX = width * 0.5f;
                 float originY = height * 0.5f;
                 batch.draw(tex.region,
-                        t.pos.x - originX, t.pos.y - originY,
+                        t.c.pos.x - originX, t.c.pos.y - originY,
                         originX, originY,
                         width, height,
-                        t.scale.x * unitScale, t.scale.y * unitScale,
-                        MathUtils.radiansToDegrees * t.rotation);
+                        t.c.scale.x * unitScale, t.c.scale.y * unitScale,
+                        MathUtils.radiansToDegrees * t.c.rotation);
             }
 //            } else {
 //                wallsToRender.add(entity);

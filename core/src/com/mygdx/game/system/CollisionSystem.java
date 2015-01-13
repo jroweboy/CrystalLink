@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.World;
 import com.mygdx.game.component.*;
+import com.mygdx.game.component.basecomponent.State;
 
 import java.util.Random;
 
@@ -62,7 +63,7 @@ public class CollisionSystem extends EntitySystem {
             Entity ply = players.get(i);
 
             StateComponent plyState = sm.get(ply);
-            if (plyState.get() == StateComponent.STATE_HIT) {
+            if (plyState.get() == State.STATE_HIT) {
                 continue;
             }
 
