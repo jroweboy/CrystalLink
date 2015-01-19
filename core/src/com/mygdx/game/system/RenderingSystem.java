@@ -9,17 +9,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
 import com.mygdx.game.Assets;
 import com.mygdx.game.OrthogonalTiledMapRendererWithSprites;
 import com.mygdx.game.World;
-import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.BackgroundComponent;
-import com.mygdx.game.component.BoundsComponent;
+import com.mygdx.game.component.CollisionComponent;
 import com.mygdx.game.component.TextureComponent;
 import com.mygdx.game.component.TransformComponent;
 
@@ -36,20 +34,21 @@ public class RenderingSystem extends IteratingSystem {
     private Comparator<Entity> comparator;
     private OrthographicCamera cam;
     private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
-
+    private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    private com.badlogic.gdx.physics.box2d.World world;
     public static float unitScale = 1 / 16f;
 
     private ComponentMapper<TextureComponent> textureM;
     private ComponentMapper<TransformComponent> transformM;
-//    private ComponentMapper<BoundsComponent> boundsM;
+//    private ComponentMapper<CollisionComponent> boundsM;
 
-    public RenderingSystem(SpriteBatch batch) {
+    public RenderingSystem(SpriteBatch batch, com.badlogic.gdx.physics.box2d.World world) {
         super(Family.getFor(ComponentType.getBitsFor(TransformComponent.class),
-                ComponentType.getBitsFor(BackgroundComponent.class, TextureComponent.class, BoundsComponent.class), new Bits()));
+                ComponentType.getBitsFor(BackgroundComponent.class, TextureComponent.class, CollisionComponent.class), new Bits()));
 //        super(Family.getFor(TransformComponent.class, TextureComponent.class));
         textureM = ComponentMapper.getFor(TextureComponent.class);
         transformM = ComponentMapper.getFor(TransformComponent.class);
-//        boundsM = ComponentMapper.getFor(BoundsComponent.class);
+//        boundsM = ComponentMapper.getFor(CollisionComponent.class);
 
         renderQueue = new Array<Entity>();
 
@@ -62,6 +61,7 @@ public class RenderingSystem extends IteratingSystem {
         };
 
         this.batch = batch;
+        this.world = world;
 
         cam = new OrthographicCamera();
         cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
@@ -108,6 +108,7 @@ public class RenderingSystem extends IteratingSystem {
         }
         tiledMapRenderer.renderFront();
         batch.end();
+        debugRenderer.render(world, cam.combined);
 //        debugDrawWalls(wallsToRender);
         renderQueue.clear();
     }
@@ -121,9 +122,9 @@ public class RenderingSystem extends IteratingSystem {
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 ////        shapeRenderer.setProjectionMatrix(cam.combined);
 //        shapeRenderer.setColor(.33f, .33f, .33f, .33f);
-//        Gdx.app.log("pos", "" + walls.get(0).getComponent(BoundsComponent.class).bounds.x*unitScale);
+//        Gdx.app.log("pos", "" + walls.get(0).getComponent(CollisionComponent.class).bounds.x*unitScale);
 //        for (Entity wall : walls) {
-//            BoundsComponent b = wall.getComponent(BoundsComponent.class);
+//            CollisionComponent b = wall.getComponent(CollisionComponent.class);
 //            shapeRenderer.rect(b.bounds.x * unitScale, b.bounds.y * unitScale, b.bounds.width, b.bounds.height);
 //        }
 //        shapeRenderer.end();

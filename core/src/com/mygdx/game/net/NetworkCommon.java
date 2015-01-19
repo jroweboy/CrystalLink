@@ -1,18 +1,11 @@
 package com.mygdx.game.net;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.signals.Signal;
-import com.badlogic.ashley.utils.Bag;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Bits;
-import com.badlogic.gdx.utils.SnapshotArray;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.mygdx.game.Assets;
@@ -20,8 +13,6 @@ import com.mygdx.game.component.*;
 import com.mygdx.game.component.basecomponent.State;
 import com.mygdx.game.component.basecomponent.Transform;
 import com.mygdx.game.system.RenderingSystem;
-
-import javax.swing.text.html.HTML;
 
 public class NetworkCommon {
 
@@ -79,7 +70,7 @@ public class NetworkCommon {
         animation.animations.put(State.EAST, Assets.playerWalkEast);
         animation.animations.put(State.WEST, Assets.playerWalkWest);
 
-        BoundsComponent bounds = new BoundsComponent(30, 60);
+        CollisionComponent bounds = new CollisionComponent(30, 60);
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(

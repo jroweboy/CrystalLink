@@ -7,13 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.mygdx.game.GameScreen;
-import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.StateComponent;
 import com.mygdx.game.component.TransformComponent;
 import com.mygdx.game.component.basecomponent.NetworkComponent;
 import com.mygdx.game.component.basecomponent.Transform;
+import com.mygdx.game.system.NetworkSystem;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,8 +38,9 @@ public class GameClient {
             public void connected(Connection connection) {
                 Entity player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
                 // -1 is refering to myself
-                entity = NetworkEntity.createPlayer(-1);
-                NetworkComponent n = new NetworkComponent();
+                entity = NetworkEntity.createPlayer();
+                NetworkSystem.addEntity(entity);
+                NetworkComponent n = new NetworkComponent(entity.id);
                 player.add(n);
             }
             @Override
@@ -67,8 +67,13 @@ public class GameClient {
                         if (o instanceof Transform) {
                             Transform pos = (Transform) o;
 //                            Gdx.app.log("Client", "Position update: " + entity.id + " " + pos.pos.x + " " + pos.pos.y);
-                            TransformComponent p = connectedEntities.get(entity.id).getComponent(TransformComponent.class);
-                            p.set(pos);
+                            try {
+                                TransformComponent p = connectedEntities.get(entity.id).getComponent(TransformComponent.class);
+                                p.set(pos);
+                            } catch (NullPointerException e) {
+                                Gdx.app.log("Client", "Failed to find entity for id " + entity.id);
+                                Gdx.app.log("Client", "All ids: " + connectedEntities.keySet());
+                            }
                         }  else if (o instanceof com.mygdx.game.component.basecomponent.State) {
                             com.mygdx.game.component.basecomponent.State st = (com.mygdx.game.component.basecomponent.State) o;
 //                            Gdx.app.log("Client", "State update: " + entity.id + " " + st.direction);

@@ -4,24 +4,17 @@ package com.mygdx.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.*;
 import com.mygdx.game.component.basecomponent.State;
-import com.mygdx.game.net.NetworkEntity;
+import com.mygdx.game.system.PhysicsSystem;
 import com.mygdx.game.system.RenderingSystem;
 
-import javax.xml.soap.Text;
-import java.security.DigestException;
 import java.util.Random;
 
 
@@ -37,10 +30,12 @@ public class World {
     public final Random rand;
     public int state;
     private Engine engine;
+    private PhysicsSystem physicsSystem;
 
-    public World (Engine engine) {
+    public World (Engine engine, PhysicsSystem physicsSystem) {
         this.engine = engine;
         this.rand = new Random();
+        this.physicsSystem = physicsSystem;
     }
 
     public void create() {
@@ -70,7 +65,8 @@ public class World {
         animation.animations.put(State.EAST, Assets.playerWalkEast);
         animation.animations.put(State.WEST, Assets.playerWalkWest);
 
-        BoundsComponent bounds = new BoundsComponent(30, 60);
+        // TODO: determine sprite width dynamically?
+        CollisionComponent bounds = new CollisionComponent(30, 50);
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(
@@ -92,6 +88,7 @@ public class World {
         entity.add(texture);
 
         engine.addEntity(entity);
+        physicsSystem.createMovableBody(entity);
 
         return entity;
     }
@@ -127,12 +124,13 @@ public class World {
                 Entity e = new Entity();
                 WallComponent w = new WallComponent();
                 Rectangle r = ((RectangleMapObject) obj).getRectangle();
-                BoundsComponent b = new BoundsComponent(r);
-
+                CollisionComponent b = new CollisionComponent(r);
                 // comment out to stop drawing walls
-                TransformComponent t = new TransformComponent(); e.add(t);
+//                TransformComponent t = new TransformComponent(); e.add(t);
                 e.add(w);
                 e.add(b);
+
+                physicsSystem.createStationaryBody(e);
                 engine.addEntity(e);
             } else {
                 Gdx.app.log("Error", "Cannot use non rectangle walls yet");

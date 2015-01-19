@@ -67,7 +67,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
                 if (layer instanceof TiledMapTileLayer) {
                     renderTileLayer((TiledMapTileLayer)layer);
                 } else {
-                    boolean debug_draw_walls = true;
+                    boolean debug_draw_walls = false;
                     if (debug_draw_walls && layer.getName().equals("Collisions")) {
                         for (MapObject object : layer.getObjects()) {
                             renderObject(object);

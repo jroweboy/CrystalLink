@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Input;
@@ -27,11 +28,12 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_OVER = 4;
 
     CrystalLink game;
-
     OrthographicCamera guiCam;
-    Vector3 touchPoint;
+//    Vector3 touchPoint;
     public World world;
-    CollisionSystem.CollisionListener collisionListener;
+    public PhysicsSystem physics;
+
+//    CollisionSystem.CollisionListener collisionListener;
 
     Engine engine;
 
@@ -45,32 +47,32 @@ public class GameScreen extends ScreenAdapter {
         state = GAME_READY;
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-        touchPoint = new Vector3();
-        collisionListener = new CollisionSystem.CollisionListener() {
-            @Override
-            public void jump () {
-//                Assets.playSound(Assets.jumpSound);
-            }
-
-            @Override
-            public void highJump () {
-//                Assets.playSound(Assets.highJumpSound);
-            }
-
-            @Override
-            public void hit () {
-//                Assets.playSound(Assets.hitSound);
-            }
-
-            @Override
-            public void coin () {
-//                Assets.playSound(Assets.coinSound);
-            }
-        };
+//        touchPoint = new Vector3();
+//        collisionListener = new CollisionSystem.CollisionListener() {
+//            @Override
+//            public void jump () {
+////                Assets.playSound(Assets.jumpSound);
+//            }
+//
+//            @Override
+//            public void highJump () {
+////                Assets.playSound(Assets.highJumpSound);
+//            }
+//
+//            @Override
+//            public void hit () {
+////                Assets.playSound(Assets.hitSound);
+//            }
+//
+//            @Override
+//            public void coin () {
+////                Assets.playSound(Assets.coinSound);
+//            }
+//        };
 
         engine = new Engine();
-
-        world = new World(engine);
+        physics = new PhysicsSystem();
+        world = new World(engine, physics);
 
         engine.addSystem(new InputSystem());
         engine.addSystem(new PlayerSystem(world));
@@ -83,59 +85,22 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new BoundsSystem());
         engine.addSystem(new StateSystem());
         engine.addSystem(new AnimationSystem());
-        engine.addSystem(new CollisionSystem(world, collisionListener));
-        engine.addSystem(new RenderingSystem(game.batch));
+        engine.addSystem(new CollisionSystem(world));
+        engine.addSystem(physics);
+        engine.addSystem(new RenderingSystem(game.batch, physics.world));
+        engine.addSystem(new NetworkSystem(game, engine));
 
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
         // maybe make a Level system?
 //        engine.getSystem(BackgroundSystem.class).setMap(Assets.currentMap);
 
         world.create();
-
-//        pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
-//        resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
-//        quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
-//        lastScore = 0;
-//        scoreString = "SCORE: 0";
-
     }
 
     public void update (float deltaTime) {
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
-        // TODO This should be part of a Network system that goes after everything else
-        if (game.server.server != null) {
-
-            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkComponent.class));
-            for (int i=0; i < entities.size(); ++i) {
-                Entity e = entities.get(i);
-                Transform t = e.getComponent(TransformComponent.class).c;
-                State s = e.getComponent(StateComponent.class).c;
-//                NetworkComponent t = e.getComponent(NetworkComponent.class);
-//                t.set(e.getComponent(TransformComponent.class));
-                ((Transform)game.server.entity.components[0]).set(t);
-                ((State)game.server.entity.components[1]).set(s.get());
-                ((State)game.server.entity.components[1]).direction = s.direction;
-                game.server.server.sendToAllTCP(game.server.entity);
-            }
-        } else if (game.client.client != null) {
-            // update the server with my positions before next iteration
-            ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.getFor(NetworkComponent.class));
-            for (int i=0; i < entities.size(); ++i) {
-                Entity e = entities.get(i);
-                Transform t = e.getComponent(TransformComponent.class).c;
-                State s = e.getComponent(StateComponent.class).c;
-                ((Transform)game.client.entity.components[0]).set(t);
-                ((State)game.client.entity.components[1]).set(s.get());
-                ((State)game.client.entity.components[1]).direction = s.direction;
-//                TransformComponent t = e.getComponent(TransformComponent.class);
-//                game.client.me.components
-                game.client.client.sendTCP(game.client.entity);
-            }
-        }
-
-
 
         switch (state) {
             case GAME_READY:
@@ -326,21 +291,30 @@ public class GameScreen extends ScreenAdapter {
 //    }
 
     private void pauseSystems() {
-        engine.getSystem(PlayerSystem.class).setProcessing(false);
-        engine.getSystem(MovementSystem.class).setProcessing(false);
-        engine.getSystem(BoundsSystem.class).setProcessing(false);
-        engine.getSystem(StateSystem.class).setProcessing(false);
-        engine.getSystem(AnimationSystem.class).setProcessing(false);
-        engine.getSystem(CollisionSystem.class).setProcessing(false);
+//        for (EntitySystem e : (EntitySystem[]) engine.getSystems().toArray(EntitySystem.class)) {
+//            e.setProcessing(false);
+//        }
+        // don't let the network stop! (not sure if this system does anything right now anyway
+//        engine.getSystem(NetworkSystem.class).setProcessing(true);
+
+//        engine.getSystem(PlayerSystem.class).setProcessing(false);
+//        engine.getSystem(MovementSystem.class).setProcessing(false);
+//        engine.getSystem(BoundsSystem.class).setProcessing(false);
+//        engine.getSystem(StateSystem.class).setProcessing(false);
+//        engine.getSystem(AnimationSystem.class).setProcessing(false);
+//        engine.getSystem(CollisionSystem.class).setProcessing(false);
     }
 
     private void resumeSystems() {
-        engine.getSystem(PlayerSystem.class).setProcessing(true);
-        engine.getSystem(MovementSystem.class).setProcessing(true);
-        engine.getSystem(BoundsSystem.class).setProcessing(true);
-        engine.getSystem(StateSystem.class).setProcessing(true);
-        engine.getSystem(AnimationSystem.class).setProcessing(true);
-        engine.getSystem(CollisionSystem.class).setProcessing(true);
+        for (EntitySystem e : (EntitySystem[]) engine.getSystems().toArray(EntitySystem.class)) {
+            e.setProcessing(true);
+        }
+//        engine.getSystem(PlayerSystem.class).setProcessing(true);
+//        engine.getSystem(MovementSystem.class).setProcessing(true);
+//        engine.getSystem(BoundsSystem.class).setProcessing(true);
+//        engine.getSystem(StateSystem.class).setProcessing(true);
+//        engine.getSystem(AnimationSystem.class).setProcessing(true);
+//        engine.getSystem(CollisionSystem.class).setProcessing(true);
     }
 
     @Override

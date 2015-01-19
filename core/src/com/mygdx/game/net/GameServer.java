@@ -12,6 +12,7 @@ import com.mygdx.game.component.TransformComponent;
 import com.mygdx.game.component.basecomponent.NetworkComponent;
 import com.mygdx.game.component.basecomponent.Transform;
 import com.mygdx.game.net.NetworkCommon.GameConnection;
+import com.mygdx.game.system.NetworkSystem;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
 import org.bitlet.weupnp.PortMappingEntry;
@@ -37,12 +38,16 @@ public class GameServer {
 
     public Server server;
 
-    public long server_id = UUID.randomUUID().getLeastSignificantBits();
-    public NetworkEntity entity = NetworkEntity.createPlayer(server_id);
+//    public long server_id = UUID.randomUUID().getLeastSignificantBits();
+    public NetworkEntity entity = NetworkEntity.createPlayer();
 
     public boolean isRunning = false;
 
     public void startServer(final Engine engine) {
+        if (isRunning) {
+            return;
+        }
+        NetworkSystem.addEntity(entity);
         thread = new Thread() {
             public void run() {
                 server = new Server() {
@@ -56,10 +61,11 @@ public class GameServer {
                 upnpMapPort(NetworkCommon.DEFAULT_UDP_PORT, "UDP");
                 NetworkCommon.register(server);
                 server.start();
+
                 try {
                     server.bind(NetworkCommon.DEFAULT_TCP_PORT, NetworkCommon.DEFAULT_UDP_PORT);
                     Entity me = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
-                    me.add(new NetworkComponent());
+                    me.add(new NetworkComponent(entity.id));
 //                    Gdx.graphics.setTitle("CrystalLink - Server");
                 } catch (IOException e) {
                     return;
@@ -75,7 +81,7 @@ public class GameServer {
                         // send myself to the new client
                         ImmutableArray<Entity> players = engine.getEntitiesFor(Family.getFor(PlayerComponent.class));
                         Transform t = players.first().getComponent(TransformComponent.class).c;
-                        connection.sendTCP(new NetworkNewPlayer(server_id, t));
+                        connection.sendTCP(new NetworkNewPlayer(entity.id, t));
                         engine.addEntity(newPlayer);
                         g.player = newPlayer;
                     }

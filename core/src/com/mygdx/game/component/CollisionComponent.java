@@ -2,28 +2,36 @@ package com.mygdx.game.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Disposable;
 
-public class BoundsComponent extends Component {
+public class CollisionComponent extends Component implements Disposable {
+    public Body body;
     public Rectangle bounds = new Rectangle();
-    private BoundsComponent() {}
-    public BoundsComponent(float width, float height) {
+    private CollisionComponent() {}
+    public CollisionComponent(float width, float height) {
         bounds.width = width;
         bounds.height = height;
         bounds.x = 0;
         bounds.y = 0;
     }
 
-    public BoundsComponent(float x, float y, float width, float height) {
+    public CollisionComponent(float x, float y, float width, float height) {
         bounds.width = width;
         bounds.height = height;
         bounds.x = x;
         bounds.y = y;
     }
 
-    public BoundsComponent(Rectangle r) {
+    public CollisionComponent(Rectangle r) {
         bounds.width = r.width;
         bounds.height = r.height;
         bounds.x = r.x;
         bounds.y = r.y;
+    }
+
+    @Override
+    public void dispose() {
+        body.getWorld().destroyBody(body);
     }
 }

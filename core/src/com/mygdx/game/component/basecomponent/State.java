@@ -1,5 +1,7 @@
 package com.mygdx.game.component.basecomponent;
 
+import com.mygdx.game.component.StateComponent;
+
 public class State {
     public static final int STATE_IDLE = 10;
     public static final int STATE_HIT = 11;
@@ -32,5 +34,15 @@ public class State {
             state = newState;
             time = 0.0f;
         }
+    }
+
+    public void set(State s) {
+        this.set(s.get());
+        this.direction = s.direction;
+    }
+
+    public void set(StateComponent s){
+        this.set(s.get());
+        this.direction = s.c.direction;
     }
 }

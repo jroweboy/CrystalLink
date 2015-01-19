@@ -9,21 +9,21 @@ import com.mygdx.game.component.basecomponent.State;
 import java.util.Random;
 
 public class CollisionSystem extends EntitySystem {
-    private ComponentMapper<BoundsComponent> bm;
+    private ComponentMapper<CollisionComponent> bm;
     private ComponentMapper<MovementComponent> mm;
     private ComponentMapper<StateComponent> sm;
     private ComponentMapper<TransformComponent> tm;
 
-    public static interface CollisionListener {
-        public void jump ();
-        public void highJump ();
-        public void hit ();
-        public void coin ();
-    }
+//    public static interface CollisionListener {
+//        public void jump ();
+//        public void highJump ();
+//        public void hit ();
+//        public void coin ();
+//    }
 
     private Engine engine;
     private World world;
-    private CollisionListener listener;
+//    private CollisionListener listener;
     private Random rand = new Random();
     private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> coins;
@@ -32,11 +32,11 @@ public class CollisionSystem extends EntitySystem {
     private ImmutableArray<Entity> castles;
     private ImmutableArray<Entity> platforms;
 
-    public CollisionSystem(World world, CollisionListener listener) {
+    public CollisionSystem(World world) { //, CollisionListener listener) {
         this.world = world;
-        this.listener = listener;
+//        this.listener = listener;
 
-        bm = ComponentMapper.getFor(BoundsComponent.class);
+        bm = ComponentMapper.getFor(CollisionComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
         sm = ComponentMapper.getFor(StateComponent.class);
         tm = ComponentMapper.getFor(TransformComponent.class);
@@ -46,12 +46,12 @@ public class CollisionSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         this.engine = engine;
 
-        players = engine.getEntitiesFor(Family.getFor(PlayerComponent.class, BoundsComponent.class, TransformComponent.class, StateComponent.class));
-//        coins = engine.getEntitiesFor(Family.getFor(CoinComponent.class, BoundsComponent.class));
-//        squirrels = engine.getEntitiesFor(Family.getFor(SquirrelComponent.class, BoundsComponent.class));
-//        springs = engine.getEntitiesFor(Family.getFor(SpringComponent.class, BoundsComponent.class, TransformComponent.class));
-//        castles = engine.getEntitiesFor(Family.getFor(CastleComponent.class, BoundsComponent.class));
-//        platforms = engine.getEntitiesFor(Family.getFor(PlatformComponent.class, BoundsComponent.class, TransformComponent.class));
+        players = engine.getEntitiesFor(Family.getFor(PlayerComponent.class, CollisionComponent.class, TransformComponent.class, StateComponent.class));
+//        coins = engine.getEntitiesFor(Family.getFor(CoinComponent.class, CollisionComponent.class));
+//        squirrels = engine.getEntitiesFor(Family.getFor(SquirrelComponent.class, CollisionComponent.class));
+//        springs = engine.getEntitiesFor(Family.getFor(SpringComponent.class, CollisionComponent.class, TransformComponent.class));
+//        castles = engine.getEntitiesFor(Family.getFor(CastleComponent.class, CollisionComponent.class));
+//        platforms = engine.getEntitiesFor(Family.getFor(PlatformComponent.class, CollisionComponent.class, TransformComponent.class));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CollisionSystem extends EntitySystem {
             }
 
             MovementComponent playerMov = mm.get(ply);
-            BoundsComponent playerBounds = bm.get(ply);
+            CollisionComponent playerBounds = bm.get(ply);
 
 //            if (playerMov.velocity.y < 0.0f) {
 //                TransformComponent bobPos = tm.get(bob);
@@ -79,7 +79,7 @@ public class CollisionSystem extends EntitySystem {
 //                    TransformComponent platPos = tm.get(platform);
 //
 //                    if (bobPos.pos.y > platPos.pos.y) {
-//                        BoundsComponent platBounds = bm.get(platform);
+//                        CollisionComponent platBounds = bm.get(platform);
 //
 //                        if (playerBounds.bounds.overlaps(platBounds.bounds)) {
 //                            playerSystem.hitPlatform(bob);
@@ -97,7 +97,7 @@ public class CollisionSystem extends EntitySystem {
 //                    Entity spring = springs.get(j);
 //
 //                    TransformComponent springPos = tm.get(spring);
-//                    BoundsComponent springBounds = bm.get(spring);
+//                    CollisionComponent springBounds = bm.get(spring);
 //
 //                    if (bobPos.pos.y > springPos.pos.y) {
 //                        if (playerBounds.bounds.overlaps(springBounds.bounds)) {
@@ -111,7 +111,7 @@ public class CollisionSystem extends EntitySystem {
 //            for (int j = 0; j < squirrels.size(); ++j) {
 //                Entity squirrel = squirrels.get(j);
 //
-//                BoundsComponent squirrelBounds = bm.get(squirrel);
+//                CollisionComponent squirrelBounds = bm.get(squirrel);
 //
 //                if (squirrelBounds.bounds.overlaps(playerBounds.bounds)) {
 //                    bobSystem.hitSquirrel(bob);
@@ -122,7 +122,7 @@ public class CollisionSystem extends EntitySystem {
 //            for (int j = 0; j < coins.size(); ++j) {
 //                Entity coin = coins.get(j);
 //
-//                BoundsComponent coinBounds = bm.get(coin);
+//                CollisionComponent coinBounds = bm.get(coin);
 //
 //                if (coinBounds.bounds.overlaps(playerBounds.bounds)) {
 //                    engine.removeEntity(coin);
@@ -134,7 +134,7 @@ public class CollisionSystem extends EntitySystem {
 //            for (int j = 0; j < castles.size(); ++j) {
 //                Entity castle = castles.get(j);
 //
-//                BoundsComponent castleBounds = bm.get(castle);
+//                CollisionComponent castleBounds = bm.get(castle);
 //
 //                if (castleBounds.bounds.overlaps(playerBounds.bounds)) {
 //                    world.state = World.WORLD_STATE_NEXT_LEVEL;

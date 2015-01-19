@@ -13,14 +13,20 @@ public class NetworkEntity {
         id = UUID.randomUUID().getLeastSignificantBits();
     }
 
+    private NetworkEntity(int size) {
+        id = UUID.randomUUID().getLeastSignificantBits();
+        components = new Object[size];
+    }
+
     private NetworkEntity(long u, int size) {
         id = u;
         components = new Object[size];
-        components[0] = new Transform();
-        components[1] = new State();
     }
 
-    public static NetworkEntity createPlayer(long uid) {
-        return new NetworkEntity(uid, 2);
+    public static NetworkEntity createPlayer() {
+        NetworkEntity e = new NetworkEntity(2);
+        e.components[0] = new Transform();
+        e.components[1] = new State();
+        return e;
     }
 }
