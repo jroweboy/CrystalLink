@@ -50,7 +50,10 @@ public class Assets {
         // load every thing needed from
         Assets.manager = manager;
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        manager.load("AdventurerPath.tmx", TiledMap.class);
+        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
+        params.textureMinFilter = Texture.TextureFilter.MipMapNearestLinear;
+        params.textureMagFilter = Texture.TextureFilter.MipMapNearestLinear;
+        manager.load("AdventurerPath.tmx", TiledMap.class, new TmxMapLoader.Parameters());
         manager.load("soldier.png", Texture.class);
         manager.load("soldier.txt", TextureAtlas.class);
 

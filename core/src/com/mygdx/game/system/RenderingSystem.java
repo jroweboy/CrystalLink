@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Assets;
 import com.mygdx.game.OrthogonalTiledMapRendererWithSprites;
 import com.mygdx.game.World;
@@ -25,22 +27,20 @@ import java.util.Comparator;
 
 
 public class RenderingSystem extends IteratingSystem {
-//    static final float FRUSTUM_WIDTH = 10;
-//    static final float FRUSTUM_HEIGHT = 15;
-//    static final float PIXELS_TO_METRES = 1.0f / 32.0f;
-
     private SpriteBatch batch;
     private Array<Entity> renderQueue;
     private Comparator<Entity> comparator;
     private OrthographicCamera cam;
+    private ScreenViewport viewport;
     private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     private com.badlogic.gdx.physics.box2d.World world;
     public static float unitScale = 1 / 16f;
 
+    private FPSLogger fpsLogger = new FPSLogger();
+
     private ComponentMapper<TextureComponent> textureM;
     private ComponentMapper<TransformComponent> transformM;
-//    private ComponentMapper<CollisionComponent> boundsM;
 
     public RenderingSystem(SpriteBatch batch, com.badlogic.gdx.physics.box2d.World world) {
         super(Family.getFor(ComponentType.getBitsFor(TransformComponent.class),
@@ -64,6 +64,8 @@ public class RenderingSystem extends IteratingSystem {
         this.world = world;
 
         cam = new OrthographicCamera();
+        viewport = new ScreenViewport(cam);
+        viewport.setUnitsPerPixel(unitScale);
         cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
 
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(Assets.currentMap, unitScale, batch);
@@ -102,8 +104,9 @@ public class RenderingSystem extends IteratingSystem {
         }
         tiledMapRenderer.renderFront();
         batch.end();
-        debugRenderer.render(world, cam.combined);
+//        debugRenderer.render(world, cam.combined);
         renderQueue.clear();
+//        fpsLogger.log();
     }
 
     @Override
@@ -120,5 +123,9 @@ public class RenderingSystem extends IteratingSystem {
 
     public OrthographicCamera getCamera() {
         return cam;
+    }
+
+    public void resize(int w, int h) {
+        viewport.update(w, h , true);
     }
 }

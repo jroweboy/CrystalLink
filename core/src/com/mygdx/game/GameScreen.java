@@ -32,6 +32,8 @@ public class GameScreen extends ScreenAdapter {
 //    Vector3 touchPoint;
     public World world;
     public PhysicsSystem physics;
+    public RenderingSystem renderer;
+    public CameraSystem cameraSystem;
 
 //    CollisionSystem.CollisionListener collisionListener;
 
@@ -78,7 +80,8 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PlayerSystem(world));
 //        engine.addSystem(new SquirrelSystem());
 //        engine.addSystem(new PlatformSystem());
-        engine.addSystem(new CameraSystem());
+        cameraSystem = new CameraSystem();
+        engine.addSystem(cameraSystem);
         engine.addSystem(new BackgroundSystem());
 //        engine.addSystem(new GravitySystem());
         engine.addSystem(new MovementSystem());
@@ -87,7 +90,8 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new CollisionSystem(world));
         engine.addSystem(physics);
-        engine.addSystem(new RenderingSystem(game.batch, physics.world));
+        renderer = new RenderingSystem(game.batch, physics.world);
+        engine.addSystem(renderer);
         engine.addSystem(new NetworkSystem(game, engine));
 
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -336,5 +340,12 @@ public class GameScreen extends ScreenAdapter {
             state = GAME_RUNNING;
             resumeSystems();
         }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        renderer.resize(width, height);
+        cameraSystem.resize(width, height);
     }
 }

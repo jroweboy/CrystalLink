@@ -22,13 +22,13 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale, SpriteBatch b) {
         super(map, unitScale, b);
         setMap(map);
-        if (square == null) {
-            Pixmap p = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
-            p.setColor(.33f, .33f, .33f, .5f);
-            p.fill();
-            square = new Texture(p);
-            p.dispose();
-        }
+//        if (square == null) {
+//            Pixmap p = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
+//            p.setColor(.33f, .33f, .33f, .5f);
+//            p.fill();
+//            square = new Texture(p);
+//            p.dispose();
+//        }
     }
 
     @Override
@@ -66,26 +66,27 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
                     renderTileLayer((TiledMapTileLayer)layer);
-                } else {
-                    boolean debug_draw_walls = false;
-                    if (debug_draw_walls && layer.getName().equals("Collisions")) {
-                        for (MapObject object : layer.getObjects()) {
-                            renderObject(object);
-                        }
-                    }
                 }
+//                else {
+//                    boolean debug_draw_walls = false;
+//                    if (debug_draw_walls && layer.getName().equals("Collisions")) {
+//                        for (MapObject object : layer.getObjects()) {
+//                            renderObject(object);
+//                        }
+//                    }
+//                }
             }
         }
     }
     @Override
     public void renderObject(MapObject obj) {
-        if (obj instanceof RectangleMapObject) {
-            Rectangle o = ((RectangleMapObject) obj).getRectangle();
-            TextureRegion reg = new TextureRegion(square, 0, 0,
-                    o.width, o.height);
-//            spriteBatch.draw(square,0,0);
-            spriteBatch.draw(square, o.x * RenderingSystem.unitScale, o.y* RenderingSystem.unitScale, o.width* RenderingSystem.unitScale, o.height* RenderingSystem.unitScale);
-        }
+//        if (obj instanceof RectangleMapObject) {
+//            Rectangle o = ((RectangleMapObject) obj).getRectangle();
+//            TextureRegion reg = new TextureRegion(square, 0, 0,
+//                    o.width, o.height);
+////            spriteBatch.draw(square,0,0);
+//            spriteBatch.draw(square, o.x * RenderingSystem.unitScale, o.y* RenderingSystem.unitScale, o.width* RenderingSystem.unitScale, o.height* RenderingSystem.unitScale);
+//        }
 //        Gdx.app.log("test", "keys: " + obj.getProperties().getKeys() + " values: "+ obj.getProperties().getValues());
     }
 
