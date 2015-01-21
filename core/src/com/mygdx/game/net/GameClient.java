@@ -37,7 +37,6 @@ public class GameClient {
             @Override
             public void connected(Connection connection) {
                 Entity player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
-                // -1 is refering to myself
                 entity = NetworkEntity.createPlayer();
                 NetworkSystem.addEntity(entity);
                 NetworkComponent n = new NetworkComponent(entity.id);

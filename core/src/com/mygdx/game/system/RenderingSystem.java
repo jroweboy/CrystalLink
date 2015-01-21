@@ -84,9 +84,6 @@ public class RenderingSystem extends IteratingSystem {
 
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.renderBack();
-
-//        Array<Entity> wallsToRender = new Array<Entity>();
-
         for (Entity entity : renderQueue) {
             TextureComponent tex = textureM.get(entity);
             TransformComponent t = transformM.get(entity);
@@ -102,33 +99,12 @@ public class RenderingSystem extends IteratingSystem {
                         t.c.scale.x * unitScale, t.c.scale.y * unitScale,
                         MathUtils.radiansToDegrees * t.c.rotation);
             }
-//            } else {
-//                wallsToRender.add(entity);
-//            }
         }
         tiledMapRenderer.renderFront();
         batch.end();
         debugRenderer.render(world, cam.combined);
-//        debugDrawWalls(wallsToRender);
         renderQueue.clear();
     }
-
-//    private void debugDrawWalls(Array<Entity> walls) {
-//        // Stub this out to disable debug wall drawing
-//        // or just remove all that junk up above
-//        // but i will need lots of things drawn completely after so i think i'll keep this here
-//        ShapeRenderer shapeRenderer = new ShapeRenderer();
-//        shapeRenderer.setProjectionMatrix(cam.combined);
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-////        shapeRenderer.setProjectionMatrix(cam.combined);
-//        shapeRenderer.setColor(.33f, .33f, .33f, .33f);
-//        Gdx.app.log("pos", "" + walls.get(0).getComponent(CollisionComponent.class).bounds.x*unitScale);
-//        for (Entity wall : walls) {
-//            CollisionComponent b = wall.getComponent(CollisionComponent.class);
-//            shapeRenderer.rect(b.bounds.x * unitScale, b.bounds.y * unitScale, b.bounds.width, b.bounds.height);
-//        }
-//        shapeRenderer.end();
-//    }
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {

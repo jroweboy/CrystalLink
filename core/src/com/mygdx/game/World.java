@@ -66,7 +66,9 @@ public class World {
         animation.animations.put(State.WEST, Assets.playerWalkWest);
 
         // TODO: determine sprite width dynamically?
-        CollisionComponent bounds = new CollisionComponent(30, 50);
+        CollisionComponent bounds = new CollisionComponent(30, 24);
+        // used as the offset from the center of the sprite
+        bounds.bounds.y = 1;
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(

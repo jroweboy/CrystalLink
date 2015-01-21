@@ -67,8 +67,8 @@ public class PhysicsSystem extends IteratingSystem {
             TransformComponent tr = entity.getComponent(TransformComponent.class);
             CollisionComponent col = cm.get(entity);
 
-            tr.c.pos.x = (col.body.getPosition().x);
-            tr.c.pos.y = (col.body.getPosition().y);
+            tr.c.pos.x = (col.body.getPosition().x) + col.bounds.x;
+            tr.c.pos.y = (col.body.getPosition().y) + col.bounds.y;
         }
         bodies.clear();
     }
@@ -109,7 +109,7 @@ public class PhysicsSystem extends IteratingSystem {
         TransformComponent tr = e.getComponent(TransformComponent.class);
 //        Gdx.app.log("Physics", "Player coords: " + tr.c.pos.x + " " + tr.c.pos.y);
         Body body = createBody(
-                tr.c.pos.x, tr.c.pos.y,
+                tr.c.pos.x + col.bounds.x, tr.c.pos.y + col.bounds.y,
                 col.bounds.width * RenderingSystem.unitScale, col.bounds.height * RenderingSystem.unitScale);
         body.setType(BodyDef.BodyType.DynamicBody);
         body.setFixedRotation(true);
