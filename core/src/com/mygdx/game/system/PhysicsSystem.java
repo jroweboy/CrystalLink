@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
 import com.mygdx.game.component.*;
 
-import java.util.Set;
 
 
 /**
@@ -66,40 +65,24 @@ public class PhysicsSystem extends IteratingSystem {
         for (Entity entity : bodies) {
             TransformComponent tr = entity.getComponent(TransformComponent.class);
             CollisionComponent col = cm.get(entity);
-
-            tr.c.pos.x = (col.body.getPosition().x) + col.bounds.x;
-            tr.c.pos.y = (col.body.getPosition().y) + col.bounds.y;
+            tr.c.pos.x = (col.body.getPosition().x);
+            tr.c.pos.y = (col.body.getPosition().y);
         }
         bodies.clear();
     }
 
-    private Body createBody(float x, float y, float w, float h) {
+    private Body createBody(Shape p) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x, y);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(w / 2, h / 2);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
 
         Body body = world.createBody(bodyDef);
-        body.createFixture(fixtureDef);
-        body.setTransform(x, y, 0);
-
-        shape.dispose();
+        body.createFixture(p, 0);
 
         return body;
     }
 
     public void createStationaryBody(Entity e) {
         CollisionComponent col = cm.get(e);
-//        Gdx.app.log("Physics", "Wall coords: " + col.bounds.x + " " + col.bounds.y);
-        float width = col.bounds.width * RenderingSystem.unitScale;
-        float height = col.bounds.height * RenderingSystem.unitScale;
-        float x = col.bounds.x * RenderingSystem.unitScale + width / 2;
-        float y = col.bounds.y * RenderingSystem.unitScale + height / 2;
-        Body body = createBody(x, y, width, height);
+        Body body = createBody(col.bounds);
         body.setType(BodyDef.BodyType.StaticBody);
         col.body = body;
     }
@@ -107,12 +90,11 @@ public class PhysicsSystem extends IteratingSystem {
     public void createMovableBody(Entity e) {
         CollisionComponent col = cm.get(e);
         TransformComponent tr = e.getComponent(TransformComponent.class);
-//        Gdx.app.log("Physics", "Player coords: " + tr.c.pos.x + " " + tr.c.pos.y);
-        Body body = createBody(
-                tr.c.pos.x + col.bounds.x, tr.c.pos.y + col.bounds.y,
-                col.bounds.width * RenderingSystem.unitScale, col.bounds.height * RenderingSystem.unitScale);
+        Body body = createBody(col.bounds);
+        body.setTransform(tr.c.pos.x, tr.c.pos.y, 0);
         body.setType(BodyDef.BodyType.DynamicBody);
         body.setFixedRotation(true);
         col.body = body;
     }
+
 }

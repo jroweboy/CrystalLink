@@ -70,7 +70,6 @@ public class NetworkCommon {
         animation.animations.put(State.EAST, Assets.playerWalkEast);
         animation.animations.put(State.WEST, Assets.playerWalkWest);
 
-        CollisionComponent bounds = new CollisionComponent(30, 60);
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(
@@ -79,13 +78,14 @@ public class NetworkCommon {
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
         float y = spawn_point.get("y", Float.class) * RenderingSystem.unitScale;
+//        CollisionComponent bounds = new CollisionComponent(x, y, 30, 24);
         transform.c.pos.set(x, y, 0);
 
         state.c.set(State.STATE_IDLE);
 
         entity.add(animation);
 //        entity.add(player);
-        entity.add(bounds);
+//        entity.add(bounds);
         entity.add(movement);
         entity.add(transform);
         entity.add(state);
