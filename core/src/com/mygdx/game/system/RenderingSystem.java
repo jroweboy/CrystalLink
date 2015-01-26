@@ -1,9 +1,6 @@
 package com.mygdx.game.system;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.ComponentType;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -35,7 +32,7 @@ public class RenderingSystem extends IteratingSystem {
     private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     private com.badlogic.gdx.physics.box2d.World world;
-    public static float unitScale = 1 / 16f;
+    public static float unitScale = 1 / 8f;
 
     private FPSLogger fpsLogger = new FPSLogger();
 

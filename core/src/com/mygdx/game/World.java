@@ -54,7 +54,7 @@ public class World {
     }
 
     private TiledMap generateLevel () {
-        return Assets.loadLevel("AdventurerPath.tmx");
+        return Assets.loadLevel("NewTiles.tmx");
     }
 
     public Entity createPlayer() {

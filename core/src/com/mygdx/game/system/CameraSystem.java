@@ -57,10 +57,10 @@ public class CameraSystem extends IteratingSystem {
         if (topBound == 0) {
             resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
-//        Gdx.app.log("CameraSystem", "x " + target.c.pos.x);
-//        cam.camera.position.x = Math.min(Math.max(target.c.pos.x, leftBound), rightBound);
-//        cam.camera.position.y = Math.min(Math.max(target.c.pos.y, bottomBound), topBound);
-        cam.camera.position.x = target.c.pos.x;
-        cam.camera.position.y = target.c.pos.y;
+        // swap the lines out to toggle camera lock to edges or follow player camera
+        cam.camera.position.x = Math.min(Math.max(target.c.pos.x, leftBound), rightBound);
+        cam.camera.position.y = Math.min(Math.max(target.c.pos.y, bottomBound), topBound);
+//        cam.camera.position.x = target.c.pos.x;
+//        cam.camera.position.y = target.c.pos.y;
     }
 }

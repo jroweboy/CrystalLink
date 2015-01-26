@@ -21,7 +21,7 @@ public class Assets {
     public static AssetManager manager;
 
     public static TiledMap currentMap;
-    public static TextureAtlas spriteSheet;
+//    public static TextureAtlas spriteSheet;
     public static Animation playerWalkNorth;
     public static Animation playerWalkWest;
     public static Animation playerWalkEast;
@@ -38,25 +38,31 @@ public class Assets {
     }
 
     public static void setupAfterLoad() {
-        spriteSheet = manager.get("soldier.txt");
         float frameLength = 1.0f / 16;
-        playerWalkSouth = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
-        playerWalkNorth = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
-        playerWalkWest = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
-        playerWalkEast = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
+        TextureAtlas player_walk = manager.get("HighFantasyInUse/raen_walk.txt");
+        playerWalkSouth = new Animation(frameLength, player_walk.createSprites("Raen_W_D"));
+        playerWalkNorth = new Animation(frameLength, player_walk.createSprites("Raen_W_U"));
+        playerWalkEast = new Animation(frameLength, player_walk.createSprites("Raen_W_L"));
+        playerWalkWest = new Animation(frameLength, player_walk.createSprites("Raen_W_R"));
+//        playerWalkSouth = new Animation(frameLength, spriteSheet.createSprites("soldier_d"));
+//        playerWalkNorth = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
+//        playerWalkWest = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
+//        playerWalkEast = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
     }
 
     public static void loadMain(AssetManager manager) {
         // load every thing needed from
         Assets.manager = manager;
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
-        params.textureMinFilter = Texture.TextureFilter.MipMapNearestLinear;
-        params.textureMagFilter = Texture.TextureFilter.MipMapNearestLinear;
-        manager.load("AdventurerPath.tmx", TiledMap.class, new TmxMapLoader.Parameters());
-        manager.load("soldier.png", Texture.class);
-        manager.load("soldier.txt", TextureAtlas.class);
-
+//        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
+//        params.textureMinFilter = Texture.TextureFilter.MipMapNearestLinear;
+//        params.textureMagFilter = Texture.TextureFilter.MipMapNearestLinear;
+//        manager.load("AdventurerPath.tmx", TiledMap.class, new TmxMapLoader.Parameters());
+        manager.load("NewTiles.tmx", TiledMap.class, new TmxMapLoader.Parameters());
+//        manager.load("soldier.png", Texture.class);
+//        manager.load("soldier.txt", TextureAtlas.class);
+        manager.load("HighFantasyInUse/raen_walk.txt", TextureAtlas.class);
+        manager.load("HighFantasyInUse/raen_walk.png", Texture.class);
     }
 
     public static void playSound (Sound sound) {
