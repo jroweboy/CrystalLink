@@ -101,7 +101,7 @@ public class RenderingSystem extends IteratingSystem {
         }
         tiledMapRenderer.renderFront();
         batch.end();
-        debugRenderer.render(world, cam.combined);
+//        debugRenderer.render(world, cam.combined);
         renderQueue.clear();
 //        fpsLogger.log();
     }

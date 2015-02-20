@@ -33,7 +33,7 @@ public class GameServer {
 
     public void dispose() {
         upnpRemoveMap(NetworkCommon.DEFAULT_TCP_PORT, "TCP");
-        upnpRemoveMap(NetworkCommon.DEFAULT_TCP_PORT, "UDP");
+        upnpRemoveMap(NetworkCommon.DEFAULT_UDP_PORT, "UDP");
     }
 
     public Server server;
