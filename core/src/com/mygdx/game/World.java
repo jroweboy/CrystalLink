@@ -25,6 +25,7 @@ import java.util.Random;
 
 
 public class World {
+    // TODO: Move these into a Level class? World should have levels which represent screens
     public static final float WIDTH = 40;
     public static final float HEIGHT = 30;
     public static final float PIXEL_WIDTH = WIDTH * 32;
@@ -54,7 +55,7 @@ public class World {
     }
 
     private TiledMap generateLevel () {
-        return Assets.loadLevel("NewTiles.tmx");
+        return Assets.get().loadLevel("NewTiles.tmx");
     }
 
     public Entity createPlayer() {
@@ -66,14 +67,15 @@ public class World {
         TransformComponent transform = new TransformComponent();
         StateComponent state = new StateComponent();
 
-        animation.animations.put(State.NORTH, Assets.playerWalkNorth);
-        animation.animations.put(State.SOUTH, Assets.playerWalkSouth);
-        animation.animations.put(State.EAST, Assets.playerWalkEast);
-        animation.animations.put(State.WEST, Assets.playerWalkWest);
+        // TODO: we don't actually want the assets in two places do we?
+        animation.animations.put(State.NORTH, Assets.get().animations.get("playerWalkNorth"));
+        animation.animations.put(State.SOUTH, Assets.get().animations.get("playerWalkSouth"));
+        animation.animations.put(State.EAST, Assets.get().animations.get("playerWalkEast"));
+        animation.animations.put(State.WEST, Assets.get().animations.get("playerWalkWest"));
 
         TextureComponent texture = new TextureComponent(
                 animation.animations.get(State.SOUTH).getKeyFrame(0));
-        TiledMap map = Assets.currentMap;
+        TiledMap map = Assets.get().currentMap;
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
         float y = spawn_point.get("y", Float.class) * RenderingSystem.unitScale;
@@ -113,7 +115,7 @@ public class World {
         Entity entity = new Entity();
         BackgroundComponent background = new BackgroundComponent();
         TransformComponent position = new TransformComponent();
-        background.tiledmap = Assets.currentMap;
+        background.tiledmap = Assets.get().currentMap;
 
         entity.add(background);
         entity.add(position);

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
@@ -21,9 +22,11 @@ import com.mygdx.game.component.TextureComponent;
 import com.mygdx.game.component.TransformComponent;
 
 import java.util.Comparator;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public class RenderingSystem extends IteratingSystem {
+public class RenderingSystem extends IteratingSystem implements Observer {
     private SpriteBatch batch;
     private Array<Entity> renderQueue;
     private Comparator<Entity> comparator;
@@ -52,20 +55,23 @@ public class RenderingSystem extends IteratingSystem {
         comparator = new Comparator<Entity>() {
             @Override
             public int compare(Entity entityA, Entity entityB) {
-                return (int)Math.signum(transformM.get(entityB).c.pos.z -
-                        transformM.get(entityA).c.pos.z);
+                return (int)Math.signum(transformM.get(entityB).c.pos.y -
+                        transformM.get(entityA).c.pos.y);
             }
         };
 
         this.batch = batch;
         this.world = world;
 
+        onMapLoad(Assets.get().currentMap);
+    }
+
+    private void onMapLoad(TiledMap map) {
         cam = new OrthographicCamera();
         viewport = new ScreenViewport(cam);
         viewport.setUnitsPerPixel(unitScale);
         cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
-
-        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(Assets.currentMap, unitScale, batch);
+        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale, batch);
     }
 
     @Override
@@ -124,5 +130,12 @@ public class RenderingSystem extends IteratingSystem {
 
     public void resize(int w, int h) {
         viewport.update(w, h , true);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof TiledMap) {
+            onMapLoad((TiledMap) arg);
+        }
     }
 }

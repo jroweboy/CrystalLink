@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="60" tilewidth="16" tileheight="16" nextobjectid="11">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="60" tilewidth="16" tileheight="16" nextobjectid="19">
  <tileset firstgid="1" name="A1_Outdoors" tilewidth="16" tileheight="16">
   <image source="HighFantasyResource_PCK/Tiles/A1_Outdoors.png" trans="ffffff" width="512" height="384"/>
  </tileset>
@@ -76,7 +76,7 @@
    eJzt0DEKw0AQBEEp9//f6x8YBb5mQFWw+U5fFwAANO7P7+M/dG7o3NC5oXND54bODZ0bOjd0bujceEPnhY0LP5y2sHHhh9MWNi78cNrCxoUfTnvDxgU6N3Ru6NzQuaFzQ+eGzg2dGzo3dG7oDAAAAAAAAAAAPPUF3lQNAQ==
   </data>
  </layer>
- <layer name="dynamic_trees" width="90" height="60">
+ <layer name="dynamic_trees" width="90" height="60" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt2rkuRGEchvEztjmZuQqDmbkErW24A1rMdge0tqEVCVq7loaExq6lIaGxa2kpPMkUGuX5Pl/O9z7JL0TC5LzNTP4RBEoppZRSStU7SAfBYdrc30+kgqABjWhCM1qQRJgy97qudcfG9wZ3bmXLDNrQjg5kkUPeo52/2Pjb4M5dbNmNHvSiDwX0Y8CjnU03zJYjGEURJZRRQVU7R9YEW05iCtOYQQ2zmNPOkbXClqtYwzo2sIktbGvnyDpiy2Oc4BRnOMcFLrVzZD2w5SOe8IwXvOIN79o5shJ8lmlAI5rQjBYkERr8nONCOzzfrqVnbOV1MmhDOzqQRQ75mO98xfNdW3rGLl6nGz3oRR8K6MdAzHf+4Pk+LT3jMK8zglEUUUIZFVRjsrMLt4UJtpzEFKYxgxpmMReTnV24Layw5SrWsI4NbGIL2zHZ2YXbwhFbHuMEpzjDOS5wGZOdXbgtPLDlI57wjBe84g3vMdlZtwU76bZgJ90W7KTbgp18vi3YzOfbgs18vi3YzIfbggv5cFtwIR9uCy7kw23BhVy8LcyH9a8L4e/PFvl+Ccvh37+jomuPjfe1s/FutLFSKqL0/mgnvT+a71b7KqWUUkoppZRSxuvU/04Zb5CNh7Sz0cbZdyxV/6qUUkqp/+kHI/GVKg==
   </data>
@@ -106,5 +106,11 @@
  </objectgroup>
  <objectgroup name="Spawn">
   <object id="4" name="Player" x="335" y="212" width="14.5" height="13.5"/>
+ </objectgroup>
+ <objectgroup name="Exits">
+  <object id="15" x="288" y="0" width="1152" height="16"/>
+  <object id="16" x="1424" y="0" height="816"/>
+  <object id="17" x="-16" y="944" width="944" height="16"/>
+  <object id="18" x="-16" y="672" width="32" height="288"/>
  </objectgroup>
 </map>

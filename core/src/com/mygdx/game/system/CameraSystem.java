@@ -5,11 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.mygdx.game.Assets;
 import com.mygdx.game.component.CameraComponent;
 import com.mygdx.game.component.TransformComponent;
 
-public class CameraSystem extends IteratingSystem {
+import java.util.Observable;
+import java.util.Observer;
+
+public class CameraSystem extends IteratingSystem implements Observer {
 
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<CameraComponent> cm;
@@ -22,6 +26,7 @@ public class CameraSystem extends IteratingSystem {
     private int height;
     private int map_width;
     private int map_height;
+    private TiledMap currentMap;
 
     public CameraSystem() {
         super(Family.getFor(CameraComponent.class));
@@ -69,15 +74,26 @@ public class CameraSystem extends IteratingSystem {
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
-        leftBound = width / 2.0f * RenderingSystem.unitScale;
-        bottomBound = height / 2.0f * RenderingSystem.unitScale;
-        if (Assets.currentMap != null) {
-            map_width = Assets.currentMap.getProperties().get("width", Integer.class);
-            map_height = Assets.currentMap.getProperties().get("height", Integer.class);
+        if (currentMap != null) {
+            leftBound = width / 2.0f * RenderingSystem.unitScale;
+            bottomBound = height / 2.0f * RenderingSystem.unitScale;
+            map_width = currentMap.getProperties().get("width", Integer.class);
+            map_height = currentMap.getProperties().get("height", Integer.class);
 //            Gdx.app.log("CameraSystem", "w " + map_width + " h " + map_height);
             topBound = map_height * 2 - bottomBound;
             rightBound = map_width * 2 - leftBound;
         }
 //        Gdx.app.log("CameraSystem", "l " + leftBound + " r " + rightBound + " u " + topBound + " d " + bottomBound);
+    }
+    private void onMapLoad(TiledMap map) {
+        currentMap = map;
+        resize(width, height);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof TiledMap) {
+            onMapLoad((TiledMap) arg);
+        }
     }
 }

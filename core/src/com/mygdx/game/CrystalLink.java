@@ -22,13 +22,14 @@ public class CrystalLink extends Game {
     public Player player;
     public GameServer server;
     public GameClient client;
+    public Assets assets = Assets.get();
 
 	@Override
 	public void create() {
 //        Log.set(Log.LEVEL_DEBUG);
         batch = new SpriteBatch();
         manager = new AssetManager();
-        Assets.loadMain(manager);
+        assets.loadBasicRequirements(manager);
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         server = new GameServer();

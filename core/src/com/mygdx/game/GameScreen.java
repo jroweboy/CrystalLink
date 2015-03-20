@@ -98,6 +98,8 @@ public class GameScreen extends ScreenAdapter {
         // maybe make a Level system?
 //        engine.getSystem(BackgroundSystem.class).setMap(Assets.currentMap);
 
+        game.assets.addObserver(cameraSystem);
+        game.assets.addObserver(renderer);
         world.create();
     }
 
