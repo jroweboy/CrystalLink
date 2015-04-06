@@ -1,6 +1,5 @@
 package com.mygdx.game.net;
 
-import com.mygdx.game.component.TransformComponent;
 import com.mygdx.game.component.basecomponent.Transform;
 
 public class NetworkNewPlayer {

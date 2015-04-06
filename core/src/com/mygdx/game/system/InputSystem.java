@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.component.MovementComponent;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.StateComponent;

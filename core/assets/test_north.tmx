@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" nextobjectid="2">
+ <tileset firstgid="1" name="A2_HF1R_Outdoors" tilewidth="16" tileheight="16">
+  <image source="HighFantasyResource_PCK/Tiles/A2_HF1R_Outdoors.png" trans="ffffff" width="512" height="384"/>
+ </tileset>
+ <layer name="Grass" width="200" height="200">
+  <data encoding="base64" compression="zlib">
+   eJztwYEAAAAAw6D5U1/hAFUBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwGcR4AAQ==
+  </data>
+ </layer>
+ <layer name="Sprites" width="200" height="200">
+  <data encoding="base64" compression="zlib">
+   eJzt2LERHTQAwFAZWMTAIg4s4sAiBhZxYFBc5e5voEKFireCBvDD68fXT6+Rc/7u+fr59cvr15zzh9fry+u31+855w/v19fXH68/c84fPq+/Xn+//sk5f/i+vr3+ff2Xc/7wwPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZu8cP2CnE3euH5BziYfXL8gZ5Mvrl+Qs8kD1y/I2eSJ6xfkbPLC9QtyNnnj+gU5m3xw/YKcTb64fkHOJg9cvyBnkyeuX5CzyQvXL8jZ5I3rF+Rs8sH1C3I2+eL6BTmbPHD9gpxNnrh+Qc4mL1y/IGeTN65fkLPJB9cvyNnki+sX5GzywPULcjZ54voFOZv8P7Zq+YA=
+  </data>
+ </layer>
+ <objectgroup name="Exits"/>
+ <objectgroup name="Spawn">
+  <object id="1" name="Player" x="272" y="3088" width="16" height="16"/>
+ </objectgroup>
+</map>

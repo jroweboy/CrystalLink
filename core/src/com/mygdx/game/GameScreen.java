@@ -1,24 +1,15 @@
 package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.component.StateComponent;
-import com.mygdx.game.component.TransformComponent;
-import com.mygdx.game.component.basecomponent.NetworkComponent;
-import com.mygdx.game.component.basecomponent.State;
-import com.mygdx.game.component.basecomponent.Transform;
 import com.mygdx.game.system.*;
 
-import java.util.List;
+import static com.badlogic.gdx.Input.*;
 
 public class GameScreen extends ScreenAdapter {
     static final int GAME_READY = 0;
@@ -93,11 +84,13 @@ public class GameScreen extends ScreenAdapter {
         renderer = new RenderingSystem(game.batch, physics.world);
         engine.addSystem(renderer);
         engine.addSystem(new NetworkSystem(game, engine));
-
+        LevelSystem levelSystem = new LevelSystem();
+        engine.addSystem(levelSystem);
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
         // maybe make a Level system?
 //        engine.getSystem(BackgroundSystem.class).setMap(Assets.currentMap);
 
+        game.assets.addObserver(levelSystem);
         game.assets.addObserver(cameraSystem);
         game.assets.addObserver(renderer);
         world.create();
@@ -146,7 +139,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.O)) {
-            Gdx.input.getTextInput(new Input.TextInputListener(){
+            Gdx.input.getTextInput(new TextInputListener(){
                 @Override
                 public void input(String text) {
                     typed = text;
@@ -157,7 +150,7 @@ public class GameScreen extends ScreenAdapter {
                 public void canceled() {
                     typed = "";
                 }
-            }, "Enter your friend\'s IP address", "");
+            }, "Enter your friend\'s IP address", "", "");
 
         }
 //        if (Gdx.input.justTouched()) {

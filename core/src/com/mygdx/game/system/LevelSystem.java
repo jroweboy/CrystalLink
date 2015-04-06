@@ -5,10 +5,15 @@ import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Bits;
+import com.mygdx.game.Assets;
 import com.mygdx.game.component.BackgroundComponent;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.TransformComponent;
@@ -32,12 +37,30 @@ public class LevelSystem extends IteratingSystem implements Observer{
     private ArrayList<LevelExit> exits = new ArrayList<LevelExit>();
     private void buildLevelExits(TiledMap map){
         exits.clear();
-        
-//        map.getLayers().get("Exits")
+
+        MapObjects rects = map.getLayers().get("Exits").getObjects();
+        for (MapObject r : rects) {
+            // Only supporting rectangle exits for now others should be trivial to add.
+            if (!(r instanceof RectangleMapObject)) {
+                continue;
+            }
+            RectangleMapObject rect = (RectangleMapObject) r;
+            LevelExit l = new LevelExit(rect);
+            Gdx.app.log("LevelSystem", l.bounds.toString());
+            exits.add(l);
+        }
     }
 
-    private boolean isOnNextLevelSquare(Vector3 player_pos) {
-        return false;
+    // Return the name of the next map or null if not on an exit
+    // maybe to do? make this return an optional :p
+    private String isOnNextLevelSquare(Vector3 player_pos) {
+        for (LevelExit exit : exits) {
+//            Gdx.app.log("LevelSystem", "x: " + player_pos.x + " y: " + player_pos.y);
+            if (exit.bounds.contains(player_pos.x, player_pos.y)) {
+                return exit.next_map;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -48,8 +71,10 @@ public class LevelSystem extends IteratingSystem implements Observer{
 
         } else {
             // we must be a player
-            if (isOnNextLevelSquare(pos.c.pos)) {
-
+            String next_map = isOnNextLevelSquare(pos.c.pos);
+            if (next_map != null) {
+//                Gdx.app.log("LevelSystem", "YO! Time to change the level!");
+                Assets.get().loadLevel(next_map);
             }
         }
     }
@@ -67,6 +92,18 @@ public class LevelSystem extends IteratingSystem implements Observer{
 }
 
 class LevelExit {
-    public Vector2 pos;
-    public int next_map;
+    public Rectangle bounds;
+    public String next_map;
+
+    private LevelExit(){}
+
+    public LevelExit(RectangleMapObject r) {
+        next_map = r.getName();
+        bounds = r.getRectangle();
+        bounds.x *= RenderingSystem.unitScale;
+        bounds.y *= RenderingSystem.unitScale;
+        bounds.width *= RenderingSystem.unitScale;
+        bounds.height *= RenderingSystem.unitScale;
+    }
+
 }

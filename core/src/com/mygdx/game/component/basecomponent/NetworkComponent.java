@@ -1,7 +1,6 @@
 package com.mygdx.game.component.basecomponent;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.utils.Array;
 
 public class NetworkComponent extends Component {
     private NetworkComponent() {}

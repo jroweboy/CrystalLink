@@ -22,7 +22,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
-import java.util.UUID;
 
 public class GameServer {
     private static GatewayDevice activeGW;

@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.mygdx.game.Assets;
 import com.mygdx.game.component.CameraComponent;
 import com.mygdx.game.component.TransformComponent;
 

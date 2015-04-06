@@ -3,21 +3,16 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.Observer;
 
 // Classes can listen for changes to be loaded and for changes in the map
 // they can be registered to be notified when the map changes
@@ -50,8 +45,20 @@ public final class Assets extends Observable {
         return new Texture(Gdx.files.internal(file));
     }
 
+    private void loadConnectedMaps() {
+        for (MapObject obj : this.currentMap.getLayers().get("Exits").getObjects()) {
+            // TODO: clear out older unused maps
+            manager.load(obj.getName(), TiledMap.class, new TmxMapLoader.Parameters());
+        }
+    }
+
     public TiledMap loadLevel(String file) {
+        if (!manager.isLoaded(file)){
+            manager.load(file, TiledMap.class, new TmxMapLoader.Parameters());
+            manager.finishLoading();
+        }
         this.currentMap = manager.get(file);
+        loadConnectedMaps();
         setChanged();
         notifyObservers(currentMap);
         return this.currentMap;

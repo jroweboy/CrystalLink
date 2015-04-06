@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.World;
-import com.mygdx.game.actor.Player;
 import com.mygdx.game.component.MovementComponent;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.StateComponent;
