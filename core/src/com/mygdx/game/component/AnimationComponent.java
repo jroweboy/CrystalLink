@@ -11,4 +11,5 @@ import com.badlogic.gdx.utils.IntMap;
 
 public class AnimationComponent extends Component {
     public IntMap<Animation> animations = new IntMap<Animation>();
+    public IntMap<Animation> animation_normals = new IntMap<Animation>();   //normals for the animation
 }

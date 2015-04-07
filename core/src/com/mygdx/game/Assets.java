@@ -60,11 +60,16 @@ public final class Assets extends Observable {
     public void setupAfterLoad() {
         float frameLength = 1.0f / 16;
         TextureAtlas player_walk = manager.get("HighFantasyInUse/raen_walk.txt");
+        TextureAtlas player_walk_normals = manager.get("HighFantasyInUse/raen_walk_normals.txt");
         animations.put("playerWalkSouth", new Animation(frameLength, player_walk.createSprites("Raen_W_D")));
         animations.put("playerWalkNorth", new Animation(frameLength, player_walk.createSprites("Raen_W_U")));
         animations.put("playerWalkEast", new Animation(frameLength, player_walk.createSprites("Raen_W_L")));
         animations.put("playerWalkWest", new Animation(frameLength, player_walk.createSprites("Raen_W_R")));
 
+        animations.put("playerWalkSouthNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_D")));
+        animations.put("playerWalkNorthNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_U")));
+        animations.put("playerWalkEastNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_L")));
+        animations.put("playerWalkWestNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_R")));
 //        playerWalkSouth = new Animation(frameLength, player_walk.createSprites("Raen_W_D"));
 //        playerWalkNorth = new Animation(frameLength, player_walk.createSprites("Raen_W_U"));
 //        playerWalkEast = new Animation(frameLength, player_walk.createSprites("Raen_W_L"));
@@ -88,6 +93,9 @@ public final class Assets extends Observable {
 //        manager.load("soldier.txt", TextureAtlas.class);
         manager.load("HighFantasyInUse/raen_walk.txt", TextureAtlas.class);
         manager.load("HighFantasyInUse/raen_walk.png", Texture.class);
+        //Load normals and normal animation
+        manager.load("HighFantasyInUse/raen_walk_normals.txt", TextureAtlas.class);
+        manager.load("HighFantasyInUse/raen_walk_normals.png", Texture.class);
     }
 
     public void playSound (Sound sound) {

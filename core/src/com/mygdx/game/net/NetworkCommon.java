@@ -73,7 +73,8 @@ public class NetworkCommon {
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(
-                animation.animations.get(State.SOUTH).getKeyFrame(0));
+                animation.animations.get(State.SOUTH).getKeyFrame(0),
+                animation.animation_normals.get(State.SOUTH).getKeyFrame(0));
         TiledMap map = Assets.get().currentMap;
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
