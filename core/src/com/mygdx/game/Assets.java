@@ -43,6 +43,9 @@ public final class Assets extends Observable {
     public AssetManager manager;
 
     public TiledMap currentMap;
+    public Texture grassNormals, cliffNormals, treesNormals;
+    public Texture cliffAmbient, grassAmbient, treesAmbient;
+    public Texture mapBackAmbient, mapBackNormals;
 //    public static TextureAtlas spriteSheet;
     public HashMap<String, Animation> animations = new HashMap<String, Animation>();
 
@@ -65,6 +68,15 @@ public final class Assets extends Observable {
         animations.put("playerWalkNorth", new Animation(frameLength, player_walk.createSprites("Raen_W_U")));
         animations.put("playerWalkEast", new Animation(frameLength, player_walk.createSprites("Raen_W_L")));
         animations.put("playerWalkWest", new Animation(frameLength, player_walk.createSprites("Raen_W_R")));
+
+        grassNormals = manager.get("GrassNormals.png");
+        grassAmbient = manager.get("Grass.png");
+        cliffAmbient = manager.get("Rocks.png");
+        cliffNormals = manager.get("RocksNormals.png");
+        treesAmbient = manager.get("Trees.png");
+        treesNormals = manager.get("TreesNormals.png");
+        mapBackAmbient = manager.get("MapBackAmbient.png");
+        mapBackNormals = manager.get("MapBackNormals.png");
 
         animations.put("playerWalkSouthNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_D")));
         animations.put("playerWalkNorthNormal", new Animation(frameLength, player_walk_normals.createSprites("Raen_Normal_W_U")));
@@ -89,6 +101,14 @@ public final class Assets extends Observable {
 //        params.textureMagFilter = Texture.TextureFilter.MipMapNearestLinear;
 //        manager.load("AdventurerPath.tmx", TiledMap.class, new TmxMapLoader.Parameters());
         manager.load("NewTiles.tmx", TiledMap.class, new TmxMapLoader.Parameters());
+        manager.load("GrassNormals.png", Texture.class);    //this is an ugly hack
+        manager.load("Grass.png", Texture.class);
+        manager.load("RocksNormals.png", Texture.class);
+        manager.load("Rocks.png", Texture.class);
+        manager.load("TreesNormals.png", Texture.class);
+        manager.load("Trees.png", Texture.class);
+        manager.load("MapBackNormals.png", Texture.class);
+        manager.load("MapBackAmbient.png", Texture.class);
 //        manager.load("soldier.png", Texture.class);
 //        manager.load("soldier.txt", TextureAtlas.class);
         manager.load("HighFantasyInUse/raen_walk.txt", TextureAtlas.class);
@@ -96,6 +116,7 @@ public final class Assets extends Observable {
         //Load normals and normal animation
         manager.load("HighFantasyInUse/raen_walk_normals.txt", TextureAtlas.class);
         manager.load("HighFantasyInUse/raen_walk_normals.png", Texture.class);
+
     }
 
     public void playSound (Sound sound) {

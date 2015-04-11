@@ -42,20 +42,20 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     public static float unitScale = 1 / 8f;
 
     //our constants...
-    public static final float DEFAULT_LIGHT_Z = 0.075f;
-    public static final float AMBIENT_INTENSITY = 0.2f;
-    public static final float LIGHT_INTENSITY = 1f;
+    public static final float DEFAULT_LIGHT_Z = .1f;
+    public static final float AMBIENT_INTENSITY = .2f;
+    public static final float LIGHT_INTENSITY = 3f;
 
-    public static final Vector3 LIGHT_POS = new Vector3(0f,0f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS = new Vector3(.5f, .5f,DEFAULT_LIGHT_Z);
 
     //Light RGB and intensity (alpha)
     public static final Vector3 LIGHT_COLOR = new Vector3(1f, 0.8f, 0.6f);
 
     //Ambient RGB and intensity (alpha)
-    public static final Vector3 AMBIENT_COLOR = new Vector3(0.6f, 0.6f, 1f);
+    public static final Vector3 AMBIENT_COLOR = new Vector3(0.5f, .5f, .5f);
 
     //Attenuation coefficients for light falloff
-    public static final Vector3 FALLOFF = new Vector3(.4f, 3f, 20f);
+    public static final Vector3 FALLOFF = new Vector3(.4f, 4f, 20);
 
     private FPSLogger fpsLogger = new FPSLogger();
 
@@ -98,8 +98,8 @@ public class RenderingSystem extends IteratingSystem implements Observer {
         viewport = new ScreenViewport(cam);
         viewport.setUnitsPerPixel(unitScale);
         cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
-//        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale, batch);
-        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale);
+//        new SpriteBatch(1000, setupShader())
+        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale, batch);
     }
 
     @Override
@@ -127,19 +127,17 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                 float originY = height * 0.5f;
 
                 //send a Vector4f to GLSL
-                Vector3 LIGHT_POS = new Vector3();
-                LIGHT_POS.x = Gdx.input.getX() * RenderingSystem.unitScale;
-                LIGHT_POS.y = -Gdx.input.getY() * RenderingSystem.unitScale;
-//                System.out.println(LIGHT_POS.x + " " + LIGHT_POS.y);
+                LIGHT_POS = new Vector3();
+                LIGHT_POS.x = Gdx.input.getX();
+                LIGHT_POS.y = viewport.getScreenHeight()- Gdx.input.getY();
+                LIGHT_POS.z = DEFAULT_LIGHT_Z;
+                LIGHT_POS = scaleScreenCoord(LIGHT_POS);
                 shader.setUniformf("LightPos", LIGHT_POS);
 
                 tex.normal.getTexture().bind(1);
                 tex.region.getTexture().bind(0);
 
-    //draw the texture unit 0 with our shader effect applied
-    //                batch.draw(rock, 50, 50);
-
-                batch.draw(tex.region,                          //this is where we draw crap
+                batch.draw(tex.region,
                         t.c.pos.x - originX, t.c.pos.y - originY,
                         originX, originY,
                         width, height,
@@ -147,11 +145,30 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                         MathUtils.radiansToDegrees * t.c.rotation);
             }
         }
-//        tiledMapRenderer.renderFront();
+
+        batch.end();
+
+        batch.begin();
+        tiledMapRenderer.renderFront();
         batch.end();
 //        debugRenderer.render(world, cam.combined);
         renderQueue.clear();
 //        fpsLogger.log();
+    }
+
+    //only x and y translation, no rotation or zooming
+    private Vector3 worldToCamera(Vector3 position) {
+        float xTrans = position.x - cam.position.x;
+        float yTrans = position.y - cam.position.y;
+
+        return scaleScreenCoord(new Vector3(xTrans, yTrans, position.z));
+    }
+
+    private Vector3 scaleScreenCoord(Vector3 position) {
+        float x = position.x / (float)viewport.getScreenWidth();
+        float y = position.y / (float)viewport.getScreenHeight();
+
+        return new Vector3(x, y, position.z);
     }
 
     @Override
@@ -184,7 +201,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
         }
     }
 
-    final String VERT =
+    public static final String VERT =
             "attribute vec4 "+ ShaderProgram.POSITION_ATTRIBUTE+";\n" +
                     "attribute vec4 "+ShaderProgram.COLOR_ATTRIBUTE+";\n" +
                     "attribute vec2 "+ShaderProgram.TEXCOORD_ATTRIBUTE+"0;\n" +
@@ -202,7 +219,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 
     //no changes except for LOWP for color values
     //we would store this in a file for increased readability
-    final String FRAG =
+    public static final String FRAG =
             //GL ES specific stuff
             "#ifdef GL_ES\n" //
                     + "#define LOWP lowp\n" //
