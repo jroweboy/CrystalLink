@@ -46,7 +46,7 @@ public class LevelSystem extends IteratingSystem implements Observer{
             }
             RectangleMapObject rect = (RectangleMapObject) r;
             LevelExit l = new LevelExit(rect);
-            Gdx.app.log("LevelSystem", l.bounds.toString());
+//            Gdx.app.log("LevelSystem", l.bounds.toString());
             exits.add(l);
         }
     }
@@ -65,18 +65,18 @@ public class LevelSystem extends IteratingSystem implements Observer{
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent pos = tm.get(entity);
-        BackgroundComponent bc = bm.get(entity);
-        if (bc != null && bc.tiledmap != null) {
-
-        } else {
-            // we must be a player
-            String next_map = isOnNextLevelSquare(pos.c.pos);
-            if (next_map != null) {
-//                Gdx.app.log("LevelSystem", "YO! Time to change the level!");
-                Assets.get().loadLevel(next_map);
-            }
-        }
+//        TransformComponent pos = tm.get(entity);
+//        BackgroundComponent bc = bm.get(entity);
+//        if (bc != null && bc.tiledmap != null) {
+//
+//        } else {
+//            // we must be a player
+//            String next_map = isOnNextLevelSquare(pos.c.pos);
+//            if (next_map != null) {
+////                Gdx.app.log("LevelSystem", "YO! Time to change the level!");
+//                Assets.get().loadLevel(next_map);
+//            }
+//        }
     }
 
     private void onMapLoad(TiledMap map) {
@@ -89,21 +89,21 @@ public class LevelSystem extends IteratingSystem implements Observer{
             onMapLoad((TiledMap) arg);
         }
     }
-}
 
-class LevelExit {
-    public Rectangle bounds;
-    public String next_map;
+    class LevelExit {
+        public Rectangle bounds;
+        public String next_map;
 
-    private LevelExit(){}
+        private LevelExit(){}
 
-    public LevelExit(RectangleMapObject r) {
-        next_map = r.getName();
-        bounds = r.getRectangle();
-        bounds.x *= RenderingSystem.unitScale;
-        bounds.y *= RenderingSystem.unitScale;
-        bounds.width *= RenderingSystem.unitScale;
-        bounds.height *= RenderingSystem.unitScale;
+        public LevelExit(RectangleMapObject r) {
+            next_map = r.getName();
+            bounds = r.getRectangle();
+            bounds.x *= RenderingSystem.unitScale;
+            bounds.y *= RenderingSystem.unitScale;
+            bounds.width *= RenderingSystem.unitScale;
+            bounds.height *= RenderingSystem.unitScale;
+        }
+
     }
-
 }

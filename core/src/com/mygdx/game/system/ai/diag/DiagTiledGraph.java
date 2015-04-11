@@ -42,7 +42,7 @@ public class DiagTiledGraph extends DefaultIndexedGraph<DiagTiledNode> implement
 
 	public void init (TiledMap tiledMap) {
 //		int map[][] = DungeonUtils.generate(sizeX, sizeY, roomCount, roomMinSize, roomMaxSize, squashIterations);
-		int map[][] = tiles(tiledMap);
+		int[][] map = tiles(tiledMap);
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				nodes.add(new DiagTiledNode(x, y, map[x][y], 4, sizeY));
@@ -63,7 +63,13 @@ public class DiagTiledGraph extends DefaultIndexedGraph<DiagTiledNode> implement
 	}
 
 	private int[][] tiles(TiledMap map) {
-		return null;
+//		int sizeX = map.getProperties().get("width", Integer.class);
+//		int sizeY = map.getProperties().get("height", Integer.class);
+		int[][] ret = new int[sizeX][sizeY];
+		for (int i=0; i<sizeX; ++i)
+			for (int j=0; j<sizeY; ++j)
+				ret[i][j] = DiagTiledNode.TILE_FLOOR;
+		return ret;
 	}
 
 	@Override

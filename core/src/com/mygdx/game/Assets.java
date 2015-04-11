@@ -46,10 +46,10 @@ public final class Assets extends Observable {
     }
 
     private void loadConnectedMaps() {
-        for (MapObject obj : this.currentMap.getLayers().get("Exits").getObjects()) {
-            // TODO: clear out older unused maps
-            manager.load(obj.getName(), TiledMap.class, new TmxMapLoader.Parameters());
-        }
+//        for (MapObject obj : this.currentMap.getLayers().get("Exits").getObjects()) {
+//            // TODO: clear out older unused maps
+//            manager.load(obj.getName(), TiledMap.class, new TmxMapLoader.Parameters());
+//        }
     }
 
     public TiledMap loadLevel(String file) {
@@ -66,7 +66,7 @@ public final class Assets extends Observable {
 
     public void setupAfterLoad() {
         float frameLength = 1.0f / 16;
-        TextureAtlas player_walk = manager.get("HighFantasyInUse/raen_walk.txt");
+        TextureAtlas player_walk = manager.get("chars/raen_walk.txt");
         animations.put("playerWalkSouth", new Animation(frameLength, player_walk.createSprites("Raen_W_D")));
         animations.put("playerWalkNorth", new Animation(frameLength, player_walk.createSprites("Raen_W_U")));
         animations.put("playerWalkEast", new Animation(frameLength, player_walk.createSprites("Raen_W_L")));
@@ -80,6 +80,11 @@ public final class Assets extends Observable {
 //        playerWalkNorth = new Animation(frameLength, spriteSheet.createSprites("soldier_u"));
 //        playerWalkWest = new Animation(frameLength, spriteSheet.createSprites("soldier_r"));
 //        playerWalkEast = new Animation(frameLength, spriteSheet.createSprites("soldier_l"));
+        TextureAtlas dragonfly = manager.get("chars/dragonfly.txt");
+        animations.put("dragonfly_south", new Animation(frameLength, dragonfly.createSprites("d")));
+        animations.put("dragonfly_north", new Animation(frameLength, dragonfly.createSprites("u")));
+        animations.put("dragonfly_east", new Animation(frameLength, dragonfly.createSprites("l")));
+        animations.put("dragonfly_west", new Animation(frameLength, dragonfly.createSprites("r")));
     }
 
     public void loadBasicRequirements(AssetManager m) {
@@ -90,11 +95,14 @@ public final class Assets extends Observable {
 //        params.textureMinFilter = Texture.TextureFilter.MipMapNearestLinear;
 //        params.textureMagFilter = Texture.TextureFilter.MipMapNearestLinear;
 //        manager.load("AdventurerPath.tmx", TiledMap.class, new TmxMapLoader.Parameters());
-        manager.load("NewTiles.tmx", TiledMap.class, new TmxMapLoader.Parameters());
+        manager.load("maps/NewTiles.tmx", TiledMap.class, new TmxMapLoader.Parameters());
 //        manager.load("soldier.png", Texture.class);
 //        manager.load("soldier.txt", TextureAtlas.class);
-        manager.load("HighFantasyInUse/raen_walk.txt", TextureAtlas.class);
-        manager.load("HighFantasyInUse/raen_walk.png", Texture.class);
+        manager.load("chars/raen_walk.txt", TextureAtlas.class);
+        manager.load("chars/raen_walk.png", Texture.class);
+        manager.load("chars/dragonfly.txt", TextureAtlas.class);
+        manager.load("chars/dragonfly.png", Texture.class);
+        manager.load("chars/dragonfly_n.png", Texture.class);
     }
 
     public void playSound (Sound sound) {

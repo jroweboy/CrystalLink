@@ -90,6 +90,8 @@ public class RenderingSystem extends IteratingSystem implements Observer {
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.renderBack();
         for (Entity entity : renderQueue) {
+
+//            Gdx.app.log("RenderSystem", entity.getComponents().toString());
             TextureComponent tex = textureM.get(entity);
             TransformComponent t = transformM.get(entity);
             if (tex != null) {
@@ -103,11 +105,13 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                         width, height,
                         t.c.scale.x * unitScale, t.c.scale.y * unitScale,
                         MathUtils.radiansToDegrees * t.c.rotation);
+            } else {
+                Gdx.app.log("RenderSystem", "Nope can\'t find the texture");
             }
         }
         tiledMapRenderer.renderFront();
         batch.end();
-//        debugRenderer.render(world, cam.combined);
+        debugRenderer.render(world, cam.combined);
         renderQueue.clear();
 //        fpsLogger.log();
     }

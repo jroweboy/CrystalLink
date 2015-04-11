@@ -25,6 +25,7 @@ public class PhysicsSystem extends IteratingSystem {
     private ComponentMapper<CollisionComponent> cm;
     private ComponentMapper<WallComponent> wm;
     private ComponentMapper<PlayerComponent> pm;
+    private ComponentMapper<PathFindingComponent> path;
 
     public static final float BOX2D_TIME_STEP = 1.0f / 16;
     public static final int BOX2D_VELOCITY_ITER = 5;
@@ -33,18 +34,19 @@ public class PhysicsSystem extends IteratingSystem {
     public PhysicsSystem() {
         super(Family.getFor(
                 ComponentType.getBitsFor(CollisionComponent.class),
-                ComponentType.getBitsFor(WallComponent.class, PlayerComponent.class),
+                ComponentType.getBitsFor(WallComponent.class, PlayerComponent.class, PathFindingComponent.class),
                 new Bits()));
         cm = ComponentMapper.getFor(CollisionComponent.class);
         wm = ComponentMapper.getFor(WallComponent.class);
         pm = ComponentMapper.getFor(PlayerComponent.class);
+        path = ComponentMapper.getFor(PathFindingComponent.class);
         bodies = new Array<Entity>();
         // Zero gravity, and true means bodies can sleep... whatever that means :p
         world = new World(Vector2.Zero, true);
     }
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        if (pm.get(entity) != null) {
+        if (pm.get(entity) != null || path.get(entity) != null) {
             // only the movable bodys need up dating
             bodies.add(entity);
         }

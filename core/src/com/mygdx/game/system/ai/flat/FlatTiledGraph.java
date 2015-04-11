@@ -35,8 +35,7 @@ public class FlatTiledGraph extends DefaultIndexedGraph<FlatTiledNode> implement
 		this.diagonal = false;
 		this.startNode = null;
 	}
-	
-	@Override
+
 	public void init (int roomCount, int roomMinSize, int roomMaxSize, int squashIterations) {
 		int map[][] = DungeonUtils.generate(sizeX, sizeY, roomCount, roomMinSize, roomMaxSize, squashIterations);
 		for (int x = 0; x < sizeX; x++) {

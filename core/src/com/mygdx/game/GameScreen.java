@@ -69,6 +69,8 @@ public class GameScreen extends ScreenAdapter {
 
         engine.addSystem(new InputSystem());
         engine.addSystem(new PlayerSystem(world));
+        AISystem pathfinder = new AISystem();
+        engine.addSystem(pathfinder);
 //        engine.addSystem(new SquirrelSystem());
 //        engine.addSystem(new PlatformSystem());
         cameraSystem = new CameraSystem();
@@ -93,6 +95,7 @@ public class GameScreen extends ScreenAdapter {
         game.assets.addObserver(levelSystem);
         game.assets.addObserver(cameraSystem);
         game.assets.addObserver(renderer);
+        game.assets.addObserver(pathfinder);
         world.create();
     }
 

@@ -1,0 +1,228 @@
+dragonfly.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+d
+  rotate: false
+  xy: 82, 53
+  size: 79, 52
+  orig: 100, 75
+  offset: 10, 5
+  index: 0
+d
+  rotate: false
+  xy: 150, 2
+  size: 76, 49
+  orig: 100, 75
+  offset: 11, 7
+  index: 1
+d
+  rotate: false
+  xy: 2, 2
+  size: 70, 44
+  orig: 100, 75
+  offset: 14, 9
+  index: 2
+d
+  rotate: false
+  xy: 228, 2
+  size: 76, 49
+  orig: 100, 75
+  offset: 11, 7
+  index: 3
+d
+  rotate: false
+  xy: 163, 53
+  size: 79, 52
+  orig: 100, 75
+  offset: 10, 5
+  index: 4
+d
+  rotate: false
+  xy: 306, 2
+  size: 78, 49
+  orig: 100, 75
+  offset: 11, 4
+  index: 5
+d
+  rotate: false
+  xy: 74, 2
+  size: 74, 48
+  orig: 100, 75
+  offset: 12, 1
+  index: 6
+d
+  rotate: false
+  xy: 2, 52
+  size: 78, 49
+  orig: 100, 75
+  offset: 11, 4
+  index: 7
+l
+  rotate: false
+  xy: 162, 107
+  size: 67, 56
+  orig: 100, 75
+  offset: 19, 9
+  index: 0
+l
+  rotate: false
+  xy: 140, 297
+  size: 67, 73
+  orig: 100, 75
+  offset: 19, 0
+  index: 1
+l
+  rotate: false
+  xy: 278, 303
+  size: 67, 74
+  orig: 100, 75
+  offset: 19, 0
+  index: 2
+l
+  rotate: false
+  xy: 209, 300
+  size: 67, 73
+  orig: 100, 75
+  offset: 19, 0
+  index: 3
+l
+  rotate: false
+  xy: 231, 108
+  size: 67, 56
+  orig: 100, 75
+  offset: 19, 9
+  index: 4
+l
+  rotate: false
+  xy: 2, 218
+  size: 67, 69
+  orig: 100, 75
+  offset: 19, 0
+  index: 5
+l
+  rotate: false
+  xy: 71, 225
+  size: 67, 69
+  orig: 100, 75
+  offset: 19, 0
+  index: 6
+l
+  rotate: false
+  xy: 140, 226
+  size: 67, 69
+  orig: 100, 75
+  offset: 19, 0
+  index: 7
+r
+  rotate: false
+  xy: 300, 108
+  size: 68, 56
+  orig: 100, 75
+  offset: 18, 12
+  index: 0
+r
+  rotate: false
+  xy: 2, 289
+  size: 67, 72
+  orig: 100, 75
+  offset: 18, 3
+  index: 1
+r
+  rotate: false
+  xy: 347, 305
+  size: 66, 74
+  orig: 100, 75
+  offset: 19, 1
+  index: 2
+r
+  rotate: false
+  xy: 71, 296
+  size: 67, 72
+  orig: 100, 75
+  offset: 18, 3
+  index: 3
+r
+  rotate: false
+  xy: 2, 160
+  size: 68, 56
+  orig: 100, 75
+  offset: 18, 12
+  index: 4
+r
+  rotate: false
+  xy: 209, 228
+  size: 67, 70
+  orig: 100, 75
+  offset: 18, 2
+  index: 5
+r
+  rotate: false
+  xy: 347, 231
+  size: 66, 72
+  orig: 100, 75
+  offset: 19, 0
+  index: 6
+r
+  rotate: false
+  xy: 278, 231
+  size: 67, 70
+  orig: 100, 75
+  offset: 18, 2
+  index: 7
+u
+  rotate: false
+  xy: 244, 53
+  size: 78, 53
+  orig: 100, 75
+  offset: 11, 7
+  index: 0
+u
+  rotate: false
+  xy: 72, 164
+  size: 76, 59
+  orig: 100, 75
+  offset: 12, 6
+  index: 1
+u
+  rotate: false
+  xy: 228, 166
+  size: 71, 60
+  orig: 100, 75
+  offset: 15, 5
+  index: 2
+u
+  rotate: false
+  xy: 150, 165
+  size: 76, 59
+  orig: 100, 75
+  offset: 12, 6
+  index: 3
+u
+  rotate: false
+  xy: 324, 53
+  size: 78, 53
+  orig: 100, 75
+  offset: 11, 7
+  index: 4
+u
+  rotate: false
+  xy: 2, 103
+  size: 78, 55
+  orig: 100, 75
+  offset: 11, 3
+  index: 5
+u
+  rotate: false
+  xy: 301, 166
+  size: 73, 63
+  orig: 100, 75
+  offset: 14, 0
+  index: 6
+u
+  rotate: false
+  xy: 82, 107
+  size: 78, 55
+  orig: 100, 75
+  offset: 11, 3
+  index: 7

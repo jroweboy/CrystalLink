@@ -41,7 +41,6 @@ public class HierarchicalTiledGraph extends IndexedHierarchicalGraph<Hierarchica
 		this.startNode = null;
 	}
 
-	@Override
 	public void init (int roomCount, int roomMinSize, int roomMaxSize, int squashIterations) {
 		int tilesX = sizeX[0];
 		int tilesY = sizeY[0];

@@ -51,11 +51,24 @@ public class World {
         createCamera(player);
         createBackground();
         createWalls(map);
+
+        for (MapObject obj : map.getLayers().get("Spawn").getObjects()) {
+            if (obj.getName().equals("Enemy")) {
+                switch (obj.getProperties().get("type", String.class).toLowerCase()) {
+                    case "dragonfly":
+                        createDragonfly(obj);
+                        break;
+                    default:
+                        Gdx.app.log("World|EnemyLoad", "No known enemy type: " +obj.getProperties().get("type", String.class));
+                        break;
+                }
+            }
+        }
         this.state = WORLD_STATE_RUNNING;
     }
 
     private TiledMap generateLevel () {
-        return Assets.get().loadLevel("NewTiles.tmx");
+        return Assets.get().loadLevel("maps/NewTiles.tmx");
     }
 
     public Entity createPlayer() {
@@ -97,6 +110,37 @@ public class World {
         physicsSystem.createMovableBody(entity);
 
         return entity;
+    }
+
+    private void createDragonfly(MapObject snake) {
+        Entity entity = new Entity();
+
+        AnimationComponent animation = new AnimationComponent();
+        PathFindingComponent ai = new PathFindingComponent();
+        MovementComponent movement = new MovementComponent();
+        TransformComponent transform = new TransformComponent();
+        StateComponent state = new StateComponent();
+        animation.animations.put(State.NORTH, Assets.get().animations.get("dragonfly_north"));
+        animation.animations.put(State.SOUTH, Assets.get().animations.get("dragonfly_south"));
+        animation.animations.put(State.EAST, Assets.get().animations.get("dragonfly_east"));
+        animation.animations.put(State.WEST, Assets.get().animations.get("dragonfly_west"));
+
+        TextureComponent texture = new TextureComponent(
+                animation.animations.get(State.SOUTH).getKeyFrame(0));
+        MapProperties spawn_point = snake.getProperties();
+        float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
+        float y = spawn_point.get("y", Float.class) * RenderingSystem.unitScale;
+        CollisionComponent bounds = new CollisionComponent(getRectangle(new RectangleMapObject(-15, -24, 30, 24)));
+        transform.c.pos.set(x, y, 0);
+        entity.add(animation);
+        entity.add(movement);
+        entity.add(transform);
+        entity.add(state);
+        entity.add(ai);
+        entity.add(bounds);
+        entity.add(texture);
+        engine.addEntity(entity);
+        physicsSystem.createMovableBody(entity);
     }
 
     private void createCamera(Entity target) {

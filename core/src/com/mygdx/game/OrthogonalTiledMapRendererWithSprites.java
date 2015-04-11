@@ -13,6 +13,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
 
     public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale, SpriteBatch b) {
         super(map, unitScale, b);
+
         setMap(map);
 //        if (square == null) {
 //            Pixmap p = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
@@ -57,6 +58,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
             MapLayer layer = map.getLayers().get(i);
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
+
                     renderTileLayer((TiledMapTileLayer)layer);
                 }
 //                else {
