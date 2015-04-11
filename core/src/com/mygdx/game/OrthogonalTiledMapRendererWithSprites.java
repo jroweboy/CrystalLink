@@ -10,16 +10,18 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRenderer {
     private int drawSpritesAfterLayer;
     private static Texture square;
+    private SpriteBatch batch;
 
-    public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale) {
-        super(map, unitScale);
+//    public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale) {
+//        super(map, unitScale);
+//        setMap(map);
+//    }
+
+    public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale, SpriteBatch batch) {
+        super(map, unitScale, batch);
         setMap(map);
-    }
+        this.batch = batch;
 
-    public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale, SpriteBatch b) {
-        super(map, unitScale, b);
-
-        setMap(map);
 //        if (square == null) {
 //            Pixmap p = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
 //            p.setColor(.33f, .33f, .33f, .5f);
@@ -32,6 +34,10 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     @Override
     public void setMap(TiledMap nmap){
         super.setMap(nmap);
+
+//        int map_width = map.getProperties().get("width", Integer.class);
+//        int map_height = map.getProperties().get("height", Integer.class);
+//        rockTarget = new FrameBuffer(Pixmap.Format.RGBA8888, map_width, map_height, false);
         if (nmap != null) {
             int iter = 1;
             for (MapLayer layer : nmap.getLayers()) {
@@ -45,12 +51,27 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     }
 
     public void renderBack() {
-        spriteBatch.begin();
+        batch.begin();
         for (int i=0; i<drawSpritesAfterLayer; ++i) {
             MapLayer layer = map.getLayers().get(i);
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
-                    renderTileLayer((TiledMapTileLayer)layer);
+                   /* Assets.get().mapBackNormals.bind(1);
+                    Assets.get().mapBackAmbient.bind(0);*/
+                    if (layer.getName().toLowerCase().equals("grass")) {
+                        Assets.get().grassNormals.bind(1);
+                        Assets.get().grassAmbient.bind(0);
+                    }
+                    /*if (layer.getName().toLowerCase().equals("rocks")) {
+                        Assets.get().cliffNormals.bind(1);
+                        Assets.get().cliffAmbient.bind(0);
+                    }*/
+
+                    renderTileLayer((TiledMapTileLayer) layer);
+//                    else {
+//                        Gdx.app.log("OrthoRender", layer.getName().toLowerCase());
+//                        renderTileLayer((TiledMapTileLayer)layer);
+//                    }
                 } else {
                     for (MapObject object : layer.getObjects()) {
                         renderObject(object);
@@ -58,13 +79,18 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
                 }
             }
         }
-        spriteBatch.end();
-    }
+        batch.end();
+    } //end renderBack
+
     public void renderFront() {
         for (int i=drawSpritesAfterLayer; i<map.getLayers().getCount(); ++i) {
             MapLayer layer = map.getLayers().get(i);
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
+                    if (layer.getName().toLowerCase().equals("trees")) {
+                        Assets.get().treesNormals.bind(1);
+                        Assets.get().treesAmbient.bind(0);
+                    }
 
                     renderTileLayer((TiledMapTileLayer)layer);
                 }

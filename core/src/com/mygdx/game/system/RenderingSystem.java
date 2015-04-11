@@ -42,20 +42,20 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     public static float unitScale = 1 / 8f;
 
     //our constants...
-    public static final float DEFAULT_LIGHT_Z = 0.075f;
-    public static final float AMBIENT_INTENSITY = 0.2f;
-    public static final float LIGHT_INTENSITY = 1f;
+    public static final float DEFAULT_LIGHT_Z = .1f;
+    public static final float AMBIENT_INTENSITY = .2f;
+    public static final float LIGHT_INTENSITY = 3f;
 
-    public static final Vector3 LIGHT_POS = new Vector3(0f,0f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS = new Vector3(.5f, .5f,DEFAULT_LIGHT_Z);
 
     //Light RGB and intensity (alpha)
     public static final Vector3 LIGHT_COLOR = new Vector3(1f, 0.8f, 0.6f);
 
     //Ambient RGB and intensity (alpha)
-    public static final Vector3 AMBIENT_COLOR = new Vector3(0.6f, 0.6f, 1f);
+    public static final Vector3 AMBIENT_COLOR = new Vector3(0.5f, .5f, .5f);
 
     //Attenuation coefficients for light falloff
-    public static final Vector3 FALLOFF = new Vector3(.4f, 3f, 20f);
+    public static final Vector3 FALLOFF = new Vector3(.4f, 4f, 20);
 
     private FPSLogger fpsLogger = new FPSLogger();
 
@@ -64,11 +64,14 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 
     private ShaderProgram shader;
 
-    public RenderingSystem(SpriteBatch batch, com.badlogic.gdx.physics.box2d.World world) {
+    public RenderingSystem(com.badlogic.gdx.physics.box2d.World world) {
         super(Family.getFor(ComponentType.getBitsFor(TransformComponent.class),
                 ComponentType.getBitsFor(BackgroundComponent.class, TextureComponent.class, CollisionComponent.class), new Bits()));
 //        super(Family.getFor(TransformComponent.class, TextureComponent.class));
+//        this.shader = shader;
+
         shader = setupShader();
+        batch = new SpriteBatch(1000, shader);
         batch.setShader(shader);
         textureM = ComponentMapper.getFor(TextureComponent.class);
         transformM = ComponentMapper.getFor(TransformComponent.class);
@@ -90,7 +93,115 @@ public class RenderingSystem extends IteratingSystem implements Observer {
         onMapLoad(Assets.get().currentMap);
     }
 
-    final String VERT =
+    private void onMapLoad(TiledMap map) {
+        cam = new OrthographicCamera();
+        viewport = new ScreenViewport(cam);
+        viewport.setUnitsPerPixel(unitScale);
+        cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
+//        new SpriteBatch(1000, setupShader())
+        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale, batch);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        super.update(deltaTime);
+        renderQueue.sort(comparator);
+
+        cam.update();
+        batch.setProjectionMatrix(cam.combined);
+
+        tiledMapRenderer.setView(cam);
+        tiledMapRenderer.renderBack();
+        batch.begin();
+
+        for (Entity entity : renderQueue) {
+            TextureComponent tex = textureM.get(entity);
+            TransformComponent t = transformM.get(entity);
+            if (tex != null) {
+                float width = tex.region.getRegionWidth();
+                float height = tex.region.getRegionHeight();
+                float originX = width * 0.5f;
+                float originY = height * 0.5f;
+
+                //send a Vector4f to GLSL
+                LIGHT_POS = new Vector3();
+                LIGHT_POS.x = Gdx.input.getX();
+                LIGHT_POS.y = viewport.getScreenHeight()- Gdx.input.getY();
+                LIGHT_POS.z = DEFAULT_LIGHT_Z;
+                LIGHT_POS = scaleScreenCoord(LIGHT_POS);
+                shader.setUniformf("LightPos", LIGHT_POS);
+
+                tex.normal.getTexture().bind(1);
+                tex.region.getTexture().bind(0);
+
+                batch.draw(tex.region,
+                        t.c.pos.x - originX, t.c.pos.y - originY,
+                        originX, originY,
+                        width, height,
+                        t.c.scale.x * unitScale, t.c.scale.y * unitScale,
+                        MathUtils.radiansToDegrees * t.c.rotation);
+            }
+        }
+
+        batch.end();
+
+        batch.begin();
+        tiledMapRenderer.renderFront();
+        batch.end();
+//        debugRenderer.render(world, cam.combined);
+        renderQueue.clear();
+//        fpsLogger.log();
+    }
+
+    //only x and y translation, no rotation or zooming
+    private Vector3 worldToCamera(Vector3 position) {
+        float xTrans = position.x - cam.position.x;
+        float yTrans = position.y - cam.position.y;
+
+        return scaleScreenCoord(new Vector3(xTrans, yTrans, position.z));
+    }
+
+    private Vector3 scaleScreenCoord(Vector3 position) {
+        float x = position.x / (float)viewport.getScreenWidth();
+        float y = position.y / (float)viewport.getScreenHeight();
+
+        return new Vector3(x, y, position.z);
+    }
+
+    @Override
+    public void processEntity(Entity entity, float deltaTime) {
+        BackgroundComponent bc = entity.getComponent(BackgroundComponent.class);
+        if (bc != null && bc.tiledmap != null) {
+            if (bc.tiledmap != tiledMapRenderer.getMap()) {
+                tiledMapRenderer.setMap(bc.tiledmap);
+            }
+        } else {
+            renderQueue.add(entity);
+        }
+    }
+
+    public OrthographicCamera getCamera() {
+        return cam;
+    }
+
+    public void resize(int w, int h) {
+        viewport.update(w, h , true);
+        shader.begin();
+        shader.setUniformf("Resolution", w, h);
+        shader.end();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof TiledMap) {
+            onMapLoad((TiledMap) arg);
+        }
+    }
+
+    public static final String VERT =
             "attribute vec4 "+ ShaderProgram.POSITION_ATTRIBUTE+";\n" +
                     "attribute vec4 "+ShaderProgram.COLOR_ATTRIBUTE+";\n" +
                     "attribute vec2 "+ShaderProgram.TEXCOORD_ATTRIBUTE+"0;\n" +
@@ -108,7 +219,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 
     //no changes except for LOWP for color values
     //we would store this in a file for increased readability
-    final String FRAG =
+    public static final String FRAG =
             //GL ES specific stuff
             "#ifdef GL_ES\n" //
                     + "#define LOWP lowp\n" //
@@ -193,101 +304,4 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 
         return shader;
     } //end setupShader
-
-    private void onMapLoad(TiledMap map) {
-        cam = new OrthographicCamera();
-        viewport = new ScreenViewport(cam);
-        viewport.setUnitsPerPixel(unitScale);
-        cam.setToOrtho(false, World.WIDTH, World.HEIGHT);
-//        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale, batch);
-        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale);
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        super.update(deltaTime);
-        renderQueue.sort(comparator);
-
-        cam.update();
-        batch.setProjectionMatrix(cam.combined);
-
-        tiledMapRenderer.setView(cam);
-        tiledMapRenderer.renderBack();
-        batch.begin();
-
-        for (Entity entity : renderQueue) {
-
-//            Gdx.app.log("RenderSystem", entity.getComponents().toString());
-            TextureComponent tex = textureM.get(entity);
-            TransformComponent t = transformM.get(entity);
-            if (tex != null) {
-                float width = tex.region.getRegionWidth();
-                float height = tex.region.getRegionHeight();
-                float originX = width * 0.5f;
-                float originY = height * 0.5f;
-
-                //send a Vector4f to GLSL
-                Vector3 LIGHT_POS = new Vector3();
-                LIGHT_POS.x = Gdx.input.getX();
-                LIGHT_POS.y = Gdx.input.getY();
-                System.out.println(LIGHT_POS.x + " " + LIGHT_POS.y);
-                shader.setUniformf("LightPos", LIGHT_POS);
-                //      manager.getAsset
-                //bind normal map to texture unit 1
-//                glActiveTexture(1);
-                tex.normal.getTexture().bind(1);
-
-                //bind diffuse color to texture unit 0
-//                glActiveTexture(0);
-                tex.region.getTexture().bind(0);
-
-//draw the texture unit 0 with our shader effect applied
-//                batch.draw(rock, 50, 50);
-
-                batch.draw(tex.region,                          //this is where we draw crap
-                        t.c.pos.x - originX, t.c.pos.y - originY,
-                        originX, originY,
-                        width, height,
-                        t.c.scale.x * unitScale, t.c.scale.y * unitScale,
-                        MathUtils.radiansToDegrees * t.c.rotation);
-            } else {
-                Gdx.app.log("RenderSystem", "Nope can\'t find the texture");
-            }
-        }
-//        tiledMapRenderer.renderFront();
-        batch.end();
-        debugRenderer.render(world, cam.combined);
-        renderQueue.clear();
-//        fpsLogger.log();
-    }
-
-    @Override
-    public void processEntity(Entity entity, float deltaTime) {
-        BackgroundComponent bc = entity.getComponent(BackgroundComponent.class);
-        if (bc != null && bc.tiledmap != null) {
-            if (bc.tiledmap != tiledMapRenderer.getMap()) {
-                tiledMapRenderer.setMap(bc.tiledmap);
-            }
-        } else {
-            renderQueue.add(entity);
-        }
-    }
-
-    public OrthographicCamera getCamera() {
-        return cam;
-    }
-
-    public void resize(int w, int h) {
-        viewport.update(w, h , true);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        if (arg instanceof TiledMap) {
-            onMapLoad((TiledMap) arg);
-        }
-    }
 }

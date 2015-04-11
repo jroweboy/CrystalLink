@@ -40,28 +40,6 @@ public class GameScreen extends ScreenAdapter {
         state = GAME_READY;
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-//        touchPoint = new Vector3();
-//        collisionListener = new CollisionSystem.CollisionListener() {
-//            @Override
-//            public void jump () {
-////                Assets.playSound(Assets.jumpSound);
-//            }
-//
-//            @Override
-//            public void highJump () {
-////                Assets.playSound(Assets.highJumpSound);
-//            }
-//
-//            @Override
-//            public void hit () {
-////                Assets.playSound(Assets.hitSound);
-//            }
-//
-//            @Override
-//            public void coin () {
-////                Assets.playSound(Assets.coinSound);
-//            }
-//        };
 
         engine = new Engine();
         physics = new PhysicsSystem();
@@ -83,7 +61,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new CollisionSystem(world));
         engine.addSystem(physics);
-        renderer = new RenderingSystem(game.batch, physics.world);
+        renderer = new RenderingSystem(physics.world);
         engine.addSystem(renderer);
         engine.addSystem(new NetworkSystem(game, engine));
         LevelSystem levelSystem = new LevelSystem();
@@ -154,7 +132,6 @@ public class GameScreen extends ScreenAdapter {
                     typed = "";
                 }
             }, "Enter your friend\'s IP address", "", "");
-
         }
 //        if (Gdx.input.justTouched()) {
 //            guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
