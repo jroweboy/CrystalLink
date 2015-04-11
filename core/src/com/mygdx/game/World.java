@@ -86,8 +86,14 @@ public class World {
         animation.animations.put(State.EAST, Assets.get().animations.get("playerWalkEast"));
         animation.animations.put(State.WEST, Assets.get().animations.get("playerWalkWest"));
 
+        animation.animation_normals.put(State.NORTH, Assets.get().animations.get("playerWalkNorthNormal"));
+        animation.animation_normals.put(State.SOUTH, Assets.get().animations.get("playerWalkSouthNormal"));
+        animation.animation_normals.put(State.EAST, Assets.get().animations.get("playerWalkEastNormal"));
+        animation.animation_normals.put(State.WEST, Assets.get().animations.get("playerWalkWestNormal"));
+
         TextureComponent texture = new TextureComponent(
-                animation.animations.get(State.SOUTH).getKeyFrame(0));
+                animation.animations.get(State.SOUTH).getKeyFrame(0),
+                animation.animation_normals.get(State.SOUTH).getKeyFrame(0));
         TiledMap map = Assets.get().currentMap;
         MapProperties spawn_point = map.getLayers().get("Spawn").getObjects().get(0).getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
@@ -125,8 +131,14 @@ public class World {
         animation.animations.put(State.EAST, Assets.get().animations.get("dragonfly_east"));
         animation.animations.put(State.WEST, Assets.get().animations.get("dragonfly_west"));
 
+        animation.animation_normals.put(State.NORTH, Assets.get().animations.get("playerWalkNorthNormal"));
+        animation.animation_normals.put(State.SOUTH, Assets.get().animations.get("playerWalkSouthNormal"));
+        animation.animation_normals.put(State.EAST, Assets.get().animations.get("playerWalkEastNormal"));
+        animation.animation_normals.put(State.WEST, Assets.get().animations.get("playerWalkWestNormal"));
+
         TextureComponent texture = new TextureComponent(
-                animation.animations.get(State.SOUTH).getKeyFrame(0));
+                animation.animations.get(State.SOUTH).getKeyFrame(0),
+                animation.animation_normals.get(State.SOUTH).getKeyFrame(0));
         MapProperties spawn_point = snake.getProperties();
         float x = spawn_point.get("x", Float.class) * RenderingSystem.unitScale;
         float y = spawn_point.get("y", Float.class) * RenderingSystem.unitScale;

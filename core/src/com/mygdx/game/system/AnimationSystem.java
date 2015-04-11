@@ -51,8 +51,10 @@ public class AnimationSystem extends IteratingSystem {
         if (animation != null) {
             if (state != null && state.get() == State.STATE_IDLE) {
                 tex.region = animation.getKeyFrame(0);
+                tex.normal = anim.animation_normals.get(state.direction).getKeyFrame(0);
             } else {
                 tex.region = animation.getKeyFrame(state.time, true);
+                tex.normal = anim.animation_normals.get(state.direction).getKeyFrame(state.time, true);
             }
         }
 

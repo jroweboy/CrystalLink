@@ -11,6 +11,11 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     private int drawSpritesAfterLayer;
     private static Texture square;
 
+    public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale) {
+        super(map, unitScale);
+        setMap(map);
+    }
+
     public OrthogonalTiledMapRendererWithSprites(TiledMap map, float unitScale, SpriteBatch b) {
         super(map, unitScale, b);
 
@@ -40,6 +45,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     }
 
     public void renderBack() {
+        spriteBatch.begin();
         for (int i=0; i<drawSpritesAfterLayer; ++i) {
             MapLayer layer = map.getLayers().get(i);
             if (layer.isVisible()) {
@@ -52,6 +58,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
                 }
             }
         }
+        spriteBatch.end();
     }
     public void renderFront() {
         for (int i=drawSpritesAfterLayer; i<map.getLayers().getCount(); ++i) {
