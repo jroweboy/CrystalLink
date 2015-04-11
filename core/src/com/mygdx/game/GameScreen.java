@@ -90,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new CollisionSystem(world));
         engine.addSystem(physics);
-        renderer = new RenderingSystem(game.batch, physics.world);
+        renderer = new RenderingSystem(physics.world);
         engine.addSystem(renderer);
         engine.addSystem(new NetworkSystem(game, engine));
 
@@ -158,7 +158,6 @@ public class GameScreen extends ScreenAdapter {
                     typed = "";
                 }
             }, "Enter your friend\'s IP address", "");
-
         }
 //        if (Gdx.input.justTouched()) {
 //            guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
