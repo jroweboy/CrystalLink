@@ -70,6 +70,11 @@ public class NetworkCommon {
         animation.animations.put(State.EAST, Assets.get().animations.get("playerWalkEast"));
         animation.animations.put(State.WEST, Assets.get().animations.get("playerWalkWest"));
 
+        animation.animation_normals.put(State.NORTH, Assets.get().animations.get("playerWalkNorthNormal"));
+        animation.animation_normals.put(State.SOUTH, Assets.get().animations.get("playerWalkSouthNormal"));
+        animation.animation_normals.put(State.EAST, Assets.get().animations.get("playerWalkEastNormal"));
+        animation.animation_normals.put(State.WEST, Assets.get().animations.get("playerWalkWestNormal"));
+
 //        bounds.bounds.width = transform.width;
 //        bounds.bounds.height = transform.height;
         TextureComponent texture = new TextureComponent(

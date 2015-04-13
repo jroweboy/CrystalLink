@@ -8,6 +8,7 @@ import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.LongMap;
 import com.mygdx.game.CrystalLink;
+import com.mygdx.game.component.PathFindingComponent;
 import com.mygdx.game.component.PlayerComponent;
 import com.mygdx.game.component.StateComponent;
 import com.mygdx.game.component.TransformComponent;
@@ -25,7 +26,7 @@ public class NetworkSystem extends IntervalIteratingSystem {
 
     public NetworkSystem(CrystalLink game, Engine engine) {
         // network updates 10 times a second instead of whatever framerate it was before
-        super(Family.getFor(NetworkComponent.class), 1.0f / 10.0f);
+        super(Family.getFor(NetworkComponent.class), 1.0f / 60.0f);
         nm = ComponentMapper.getFor(NetworkComponent.class);
         this.game = game;
         this.engine = engine;
@@ -34,7 +35,7 @@ public class NetworkSystem extends IntervalIteratingSystem {
     @Override
     protected void processEntity(Entity entity) {
         NetworkEntity toSend;
-        if (entity.getComponent(PlayerComponent.class) != null) {
+        if (entity.getComponent(PlayerComponent.class) != null || entity.getComponent(PathFindingComponent.class) != null) {
             long id = nm.get(entity).id;
             if (networkEntities.containsKey(id)) {
                 toSend = networkEntities.get(id);

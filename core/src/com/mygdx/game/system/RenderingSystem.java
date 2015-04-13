@@ -43,7 +43,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 
     //our constants...
     public static final float DEFAULT_LIGHT_Z = .1f;
-    public static final float AMBIENT_INTENSITY = .2f;
+    public static final float AMBIENT_INTENSITY = .4f;
     public static final float LIGHT_INTENSITY = 3f;
 
     public static Vector3 LIGHT_POS = new Vector3(.5f, .5f,DEFAULT_LIGHT_Z);
@@ -51,9 +51,15 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     public static Vector3 LIGHT_POS3 = new Vector3(.0f, .9f,DEFAULT_LIGHT_Z);
 
     //Light RGB and intensity (alpha)
+<<<<<<< .merge_file_a12184
     public static final Vector3 LIGHT_COLOR = new Vector3(1f, 0.8f, 0.6f);
     public static final Vector3 LIGHT_COLOR2 = new Vector3(.5f, 0f, 0f);
     public static final Vector3 LIGHT_COLOR3 = new Vector3(0f, .5f, 0f);
+=======
+    public static final Vector3 LIGHT_COLOR = new Vector3(1f, .8f, .8f);
+    public static final Vector3 LIGHT_COLOR2 = new Vector3(1f, 0f, 0f);
+    public static final Vector3 LIGHT_COLOR3 = new Vector3(0f, 1f, 0f);
+>>>>>>> .merge_file_a09256
 
     //Ambient RGB and intensity (alpha)
     public static final Vector3 AMBIENT_COLOR = new Vector3(0.5f, .5f, .5f);

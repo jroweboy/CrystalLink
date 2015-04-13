@@ -32,7 +32,7 @@
         <key>premultiplyAlpha</key>
         <false/>
         <key>shapeDebug</key>
-        <false/>
+        <true/>
         <key>dpi</key>
         <uint>72</uint>
         <key>dataFormat</key>
@@ -102,7 +102,7 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
@@ -119,7 +119,7 @@
             <key>basic</key>
             <struct type="AlgorithmBasicSettings">
                 <key>sortBy</key>
-                <enum type="AlgorithmBasicSettings::SortBy">Best</enum>
+                <enum type="AlgorithmBasicSettings::SortBy">Name</enum>
                 <key>order</key>
                 <enum type="AlgorithmBasicSettings::Order">Ascending</enum>
             </struct>
@@ -180,7 +180,7 @@
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">None</enum>
             <key>heuristicMask</key>
             <false/>
             <key>pivotPoint</key>
@@ -189,69 +189,37 @@
         <key>fileList</key>
         <array>
             <filename>../split/raen_walk_noshadows/raen_walk_d_0.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_0_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_1.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_1_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_2.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_2_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_3.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_3_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_4.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_4_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_5.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_5_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_6.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_6_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_d_7.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_d_7_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_0.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_0_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_1.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_1_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_2.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_2_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_3.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_3_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_4.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_4_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_5.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_5_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_6.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_6_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_l_7.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_l_7_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_0.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_0_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_1.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_1_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_2.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_2_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_3.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_3_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_4.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_4_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_5.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_5_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_6.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_6_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_r_7.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_r_7_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_0.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_0_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_1.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_1_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_2.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_2_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_3.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_3_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_4.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_4_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_5.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_5_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_6.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_6_n.png</filename>
             <filename>../split/raen_walk_noshadows/raen_walk_u_7.png</filename>
-            <filename>../split/raen_walk_noshadows/raen_walk_u_7_n.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
@@ -264,7 +232,7 @@
         <key>commonDivisorY</key>
         <uint>1</uint>
         <key>packNormalMaps</key>
-        <true/>
+        <false/>
         <key>autodetectNormalMaps</key>
         <false/>
         <key>normalMapFilter</key>
