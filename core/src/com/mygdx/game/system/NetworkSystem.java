@@ -25,7 +25,7 @@ public class NetworkSystem extends IntervalIteratingSystem {
 
     public NetworkSystem(CrystalLink game, Engine engine) {
         // network updates 10 times a second instead of whatever framerate it was before
-        super(Family.getFor(NetworkComponent.class), 1.0f / 10.0f);
+        super(Family.getFor(NetworkComponent.class), 1.0f / 60.0f);
         nm = ComponentMapper.getFor(NetworkComponent.class);
         this.game = game;
         this.engine = engine;
