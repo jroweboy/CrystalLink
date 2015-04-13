@@ -47,9 +47,13 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     public static final float LIGHT_INTENSITY = 3f;
 
     public static Vector3 LIGHT_POS = new Vector3(.5f, .5f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS2 = new Vector3(0f, 0f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS3 = new Vector3(.9f, .1f,DEFAULT_LIGHT_Z);
 
     //Light RGB and intensity (alpha)
     public static final Vector3 LIGHT_COLOR = new Vector3(1f, .8f, .8f);
+    public static final Vector3 LIGHT_COLOR2 = new Vector3(1f, 0f, 0f);
+    public static final Vector3 LIGHT_COLOR3 = new Vector3(0f, 1f, 0f);
 
     //Ambient RGB and intensity (alpha)
     public static final Vector3 AMBIENT_COLOR = new Vector3(0.5f, .5f, .5f);
@@ -133,6 +137,8 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                 LIGHT_POS.z = DEFAULT_LIGHT_Z;
                 LIGHT_POS = scaleScreenCoord(LIGHT_POS);
                 shader.setUniformf("LightPos", LIGHT_POS);
+                shader.setUniformf("LightPos2", worldToCamera(LIGHT_POS2));
+                shader.setUniformf("LightPos3", LIGHT_POS3);
 
                 tex.normal.getTexture().bind(1);
                 tex.region.getTexture().bind(0);
@@ -157,11 +163,16 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     }
 
     //only x and y translation, no rotation or zooming
-    private Vector3 worldToCamera(Vector3 position) {
-        float xTrans = position.x - cam.position.x;
-        float yTrans = position.y - cam.position.y;
+    private Vector3 worldToCamera(Vector3 pos) {
+//        System.out.println(cam.position.x + ", " + cam.position.y );
+//        float xTrans = position.x + cam.position.x;
+//        float yTrans = position.y + cam.position.y;
+//        Vector3 result = scaleScreenCoord(new Vector3(xTrans, yTrans, position.z));
 
-        return scaleScreenCoord(new Vector3(xTrans, yTrans, position.z));
+        Vector3 cameraCoord = cam.project(new Vector3(pos.x, pos.y, pos.z));
+        System.out.println(cameraCoord.x + ", " + cameraCoord.y );
+
+        return scaleScreenCoord(cameraCoord);
     }
 
     private Vector3 scaleScreenCoord(Vector3 position) {
@@ -238,19 +249,20 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                     "//values used for shading algorithm...\n" +
                     "uniform vec2 Resolution;         //resolution of screen\n" +
                     "uniform vec3 LightPos;           //light position, normalized\n" +
+                    "uniform vec3 LightPos2;\n" +
+                    "uniform vec3 LightPos3;\n" +
                     "uniform LOWP vec4 LightColor;    //light RGBA -- alpha is intensity\n" +
+                    "uniform LOWP vec4 LightColor2;" +
+                    "uniform LOWP vec4 LightColor3;" +
                     "uniform LOWP vec4 AmbientColor;  //ambient RGBA -- alpha is intensity \n" +
                     "uniform vec3 Falloff;            //attenuation coefficients\n" +
                     "\n" +
-                    "void main() {\n" +
-                    "	//RGBA of our diffuse color\n" +
-                    "	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);\n" +
-                    "	\n" +
+                    "vec3 calculateLight(vec3 posLight, vec4 colorLight, vec4 DiffuseColor) {\n" +
                     "	//RGB of our normal map\n" +
                     "	vec3 NormalMap = texture2D(u_normals, vTexCoord).rgb;\n" +
                     "	\n" +
                     "	//The delta position of light\n" +
-                    "	vec3 LightDir = vec3(LightPos.xy - (gl_FragCoord.xy / Resolution.xy), LightPos.z);\n" +
+                    "	vec3 LightDir = vec3(posLight.xy - (gl_FragCoord.xy / Resolution.xy), posLight.z);\n" +
                     "	\n" +
                     "	//Correct for aspect ratio\n" +
                     "	LightDir.x *= Resolution.x / Resolution.y;\n" +
@@ -264,7 +276,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                     "	\n" +
                     "	//Pre-multiply light color with intensity\n" +
                     "	//Then perform \"N dot L\" to determine our diffuse term\n" +
-                    "	vec3 Diffuse = (LightColor.rgb * LightColor.a) * max(dot(N, L), 0.0);\n" +
+                    "	vec3 Diffuse = (colorLight.rgb * colorLight.a) * max(dot(N, L), 0.0);\n" +
                     "\n" +
                     "	//pre-multiply ambient color with intensity\n" +
                     "	vec3 Ambient = AmbientColor.rgb * AmbientColor.a;\n" +
@@ -274,9 +286,19 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                     "	\n" +
                     "	//the calculation which brings it all together\n" +
                     "	vec3 Intensity = Ambient + Diffuse * Attenuation;\n" +
-                    "	vec3 FinalColor = DiffuseColor.rgb * Intensity;\n" +
-                    "	gl_FragColor = vColor * vec4(FinalColor, DiffuseColor.a);\n" +
-                    "}";
+                    "	return DiffuseColor.rgb * Intensity;\n" +
+                    "}\n" +
+                    "\n" +
+                    "void main() {\n" +
+                    "   //sum of all of the light in the world\n" +
+                    "   vec3 sumOfLight = vec3(0.0);\n" +
+                    "	//RGBA of our diffuse color\n" +
+                    "	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);\n" +
+                    "   sumOfLight += calculateLight(LightPos, LightColor, DiffuseColor);\n" +
+                    "   sumOfLight += calculateLight(LightPos2, LightColor2, DiffuseColor);\n" +
+                    "	gl_FragColor = vec4(sumOfLight, DiffuseColor.a);\n" +
+                    "}\n" +
+                    "\n";
 
     private ShaderProgram setupShader() {
         ShaderProgram.pedantic = false;
@@ -296,6 +318,7 @@ public class RenderingSystem extends IteratingSystem implements Observer {
         //light/ambient colors
         //LibGDX doesn't have Vector4 class at the moment, so we pass them individually...
         shader.setUniformf("LightColor", LIGHT_COLOR.x, LIGHT_COLOR.y, LIGHT_COLOR.z, LIGHT_INTENSITY);
+        shader.setUniformf("LightColor2", LIGHT_COLOR2.x, LIGHT_COLOR2.y, LIGHT_COLOR2.z, LIGHT_INTENSITY);
         shader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, AMBIENT_INTENSITY);
         shader.setUniformf("Falloff", FALLOFF);
 

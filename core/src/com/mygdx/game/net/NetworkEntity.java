@@ -29,4 +29,11 @@ public class NetworkEntity {
         e.components[1] = new State();
         return e;
     }
+
+    public static NetworkEntity createDragonfly() {
+        NetworkEntity e = new NetworkEntity(2);
+        e.components[0] = new Transform();
+        e.components[1] = new State();
+        return e;
+    }
 }
