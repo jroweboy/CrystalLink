@@ -47,8 +47,8 @@ public class RenderingSystem extends IteratingSystem implements Observer {
     public static final float LIGHT_INTENSITY = 3f;
 
     public static Vector3 LIGHT_POS = new Vector3(.5f, .5f,DEFAULT_LIGHT_Z);
-    public static Vector3 LIGHT_POS2 = new Vector3(.7f, .1f,DEFAULT_LIGHT_Z);
-    public static Vector3 LIGHT_POS3 = new Vector3(.0f, .9f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS2 = new Vector3(20f, 20f,DEFAULT_LIGHT_Z);
+    public static Vector3 LIGHT_POS3 = new Vector3(150f, 90f,DEFAULT_LIGHT_Z);
 
     //Light RGB and intensity (alpha)
     public static final Vector3 LIGHT_COLOR = new Vector3(1f, 0.8f, 0.6f);
@@ -137,8 +137,8 @@ public class RenderingSystem extends IteratingSystem implements Observer {
                 LIGHT_POS.z = DEFAULT_LIGHT_Z;
                 LIGHT_POS = scaleScreenCoord(LIGHT_POS);
                 shader.setUniformf("LightPos", LIGHT_POS);
-                shader.setUniformf("LightPos2", LIGHT_POS2);
-                shader.setUniformf("LightPos3", LIGHT_POS3);
+                shader.setUniformf("LightPos2", scaleToWorld(LIGHT_POS2));
+                shader.setUniformf("LightPos3", scaleToWorld(LIGHT_POS3));
 
                 tex.normal.getTexture().bind(1);
                 tex.region.getTexture().bind(0);
@@ -160,6 +160,13 @@ public class RenderingSystem extends IteratingSystem implements Observer {
 //        debugRenderer.render(world, cam.combined);
         renderQueue.clear();
 //        fpsLogger.log();
+    }
+
+    private Vector3 scaleToWorld(Vector3 p) {
+        p = new Vector3( ( p.x - cam.position.x + cam.viewportWidth / 2 ) / World.WIDTH  / 2,
+                (p.y - cam.position.y + cam.viewportHeight / 2) / World.HEIGHT / 2, p.z);
+//        Gdx.app.log("Render", p.toString());
+        return p;
     }
 
     private Vector3 scaleScreenCoord(Vector3 position) {
